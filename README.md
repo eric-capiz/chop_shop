@@ -1,16 +1,43 @@
-# Sanchez Barber Shop Management System
+# Chop Shop - Multi-Barber Management System (2.0)
 
 ## Overview
 
-A full-stack web application for managing a barber shop's appointments, services, and customer interactions. The system provides a seamless experience for both customers and administrators, featuring a modern, responsive design with a gold and black theme.
+A full-stack web application for managing a multi-barber shop's appointments, services, and customer interactions. This is the 2.0 version featuring support for multiple barbers, each with their own profile, gallery, services, and availability.
+
+> **Note:** This is the multi-barber version. The original single-barber version (1.0) is maintained separately at [barbershop-booking](https://github.com/eric-capiz/barbershop-booking).
+
+## What's New in 2.0
+
+### Multi-Barber Support
+- **Barber Listing Page**: Main About page displays all barbers as cards (name, short bio, main specialty)
+- **Individual Barber Profiles**: Each barber has their own profile page (`/barber/:id`) featuring:
+  - Full bio and experience
+  - Specialties and skills
+  - Personal work gallery
+  - Individual pricing/services
+  - "Book with [Name]" call-to-action
+- **Per-Barber Data**: Availability, services, and gallery are unique to each barber
+
+### Updated Booking Flow
+1. Select a barber (or arrive from barber profile with barber pre-selected)
+2. Choose date/time from that barber's availability
+3. Select service from that barber's service list
+4. Enter contact information
+5. Confirm booking
+
+### Admin Enhancements
+- **Add New Barber**: Create new barber accounts (username + password)
+- New barbers log in and complete their own profile, services, availability, and gallery
+- Each barber manages their own dashboard
 
 ## Key Features
 
 ### User Features
 
 - **Authentication**: Secure user registration and login system
+- **Browse Barbers**: View all available barbers and their specialties
 - **Appointment Management**:
-  - Book new appointments with preferred time slots
+  - Book appointments with a specific barber
   - View upcoming and past appointments
   - Reschedule or cancel existing appointments
   - Receive status updates on appointments
@@ -19,10 +46,13 @@ A full-stack web application for managing a barber shop's appointments, services
   - View other customers' reviews
   - Edit or remove own reviews
 
-### Admin/Barber Features
+### Barber Features
 
+- **Profile Management**:
+  - Edit personal bio and experience
+  - Showcase specialties
 - **Appointment Control**:
-  - View and manage all appointments
+  - View and manage personal appointments
   - Accept or reject appointment requests
   - Handle reschedule requests
   - Mark appointments as completed
@@ -82,7 +112,23 @@ A full-stack web application for managing a barber shop's appointments, services
   - CORS for cross-origin requests
   - dotenv for environment variables
 
-This application streamlines the barber shop management process while providing a professional and user-friendly experience for both customers and administrators.
+## Development Roadmap
+
+### Phase 1: Frontend UI (Current)
+- [ ] Barber listing page with dummy data
+- [ ] Individual barber profile page with dummy data
+- [ ] Updated routing structure
+
+### Phase 2: Backend API
+- [ ] List all barbers endpoint
+- [ ] Get barber by ID endpoint
+- [ ] Per-barber availability, services, and gallery endpoints
+- [ ] Admin: Add new barber endpoint
+
+### Phase 3: Integration
+- [ ] Connect frontend to new backend endpoints
+- [ ] Per-barber booking flow
+- [ ] Barber-specific dashboards
 
 ## Getting Started
 
@@ -97,8 +143,8 @@ This application streamlines the barber shop management process while providing 
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/sanchez-barber.git
-cd sanchez-barber
+git clone https://github.com/eric-capiz/chop_shop.git
+cd chop_shop
 ```
 
 2. Install dependencies for both frontend and backend:
@@ -134,10 +180,10 @@ The application should now be running at:
 - Frontend: http://localhost:5173
 - Backend: http://localhost:3000
 
-### Contributing
+## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-### License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
