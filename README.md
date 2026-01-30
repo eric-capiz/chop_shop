@@ -46,56 +46,109 @@ Multi-barber barbershop app. Frontend UI is implemented with dummy data; backend
 
 ## Backend (TODO)
 
-Backend is still the 1.0 single-barber setup. MongoDB connection is **disabled**. The following updates are needed for 2.0.
+Backend is still 1.0 single-barber. MongoDB connection is **disabled**. Use a **new MongoDB database** for 2.0 (separate from the original app). Below is what to implement.
 
-### 1. Database & config
+---
 
-- [ ] Re-enable MongoDB connection in `server.js` and use `MONGODB_URI` from `.env`.
-- [ ] Confirm BarberProfile (or equivalent) supports **multiple** barbers (e.g. distinct `adminId` or barber identifier per doc).
+### 1. MongoDB & config
 
-### 2. Barbers
+- [ ] **New MongoDB**
+  - Create a new database (or cluster) for Chop Shop 2.0. Do not reuse the 1.0 production DB.
+  - Add `MONGODB_URI` to `backend/.env` pointing at the new DB.
+- [ ] **Re-enable connection**
+  - In `server.js`, uncomment and re-enable the Mongoose `mongoose.connect(...)` block.
+  - Remove or update the “MongoDB connection disabled” log.
+- [ ] Confirm `.env` has all required vars (e.g. `JWT_SECRET`, `MONGODB_URI`, Cloudinary if used).
 
-- [ ] **`GET /api/barbers`** (or similar) — list all barbers (id, name, slug/username, bio snippet, main specialty, profile image). Public.
-- [ ] **`GET /api/barbers/:id`** — barber by id. Public. Used for `/barber/:id` and booking.
+---
 
-### 3. Per-barber content
+### 2. Schemas (models)
 
-- [ ] **Availability:**
-  - `GET /api/availability?barberId=...` (or `/:barberId/availability`) — working days, slots, booked slots.
-  - Ensure availability is stored and queried **per barber** (e.g. `barberId` / `adminId`).
-- [ ] **Services:**
-  - `GET /api/barbers/:id/services` (or scoped `GET /api/services?barberId=...`) — services for that barber.
-  - Admin CRUD for services scoped to logged-in barber.
-- [ ] **Gallery:**
-  - `GET /api/barbers/:id/gallery` (or scoped gallery) — gallery items for that barber.
-  - Admin CRUD for gallery scoped to logged-in barber.
-- [ ] **Reviews:**
-  - `GET /api/barbers/:id/reviews` (or scoped) — reviews for that barber (e.g. top N, pagination).
-  - Create/update/delete review tied to appointment (and thus barber).
+Existing: `User`, `BarberProfile`, `BarberAvailability`, `Service`, `GalleryItem`, `Appointment`, `Review`.
 
-### 4. Auth
+- [ ] **BarberProfile**
+  - Ensure it represents **one barber per document** (e.g. unique `username`). Add `barberId` or use `_id` as the barber identifier for APIs.
+  - Support multiple barbers: no global “single” profile; each barber has their own doc.
+- [ ] **BarberAvailability** (`model/admin/BarberAvailability.js`)
+  - Add (or confirm) `barberId` (ref to BarberProfile). All queries filter by `barberId`.
+- [ ] **Service** (`model/admin/Service.js`)
+  - Add (or confirm) `barberId`. Scoped per barber.
+- [ ] **GalleryItem** (`model/admin/GalleryItem.js`)
+  - Add (or confirm) `barberId`. Scoped per barber.
+- [ ] **Review** (`model/review/Review.js`)
+  - Add (or confirm) `barberId`. Reviews are per barber; optionally tie to `Appointment` / `User`.
+- [ ] **Appointment** (`model/appointment/Appointment.js`)
+  - Add (or confirm) `barberId`. Every booking is for a specific barber.
+- [ ] **User**
+  - Keep for customers. No structural change unless you add new fields (e.g. preferred barber).
 
-- [ ] Support **multiple barber accounts** (e.g. multiple BarberProfile docs). Login returns which barber is authenticated.
-- [ ] Keep existing **user** auth (e.g. User model) for customers. No change to user login flow except possibly token payload.
-- [ ] Ensure JWT (or session) encodes barber vs user and barber/id where needed.
+Add indexes where useful (e.g. `barberId` on availability, services, gallery, reviews, appointments).
 
-### 5. Appointments & booking
+---
 
-- [ ] **`POST /api/appointments`** (or booking-specific route) — include `barberId` (and optionally `serviceId`, `date`, `time`, contact info). Validate against barber’s availability and services.
-- [ ] **`GET /api/appointments/user`** — user’s appointments; include barber info.
-- [ ] **`GET /api/appointments/barber`** (or `/admin` scoped to barber) — only that barber’s appointments.
-- [ ] Reschedule, cancel, confirm, reject, etc. scoped to the correct barber’s schedule.
+### 3. Routes
 
-### 6. Admin “Add barber”
+**New routes**
 
-- [ ] **`POST /api/admin/barbers`** (or similar) — create new barber (username, password, placeholders for profile). Only for superadmin or existing “add barber” role.
-- [ ] New barber logs in and fills profile, services, availability, gallery via existing dashboard UI (once wired to per-barber APIs).
+- [ ] **Barbers (public)**
+  - `GET /api/barbers` — list all barbers (id, name, username, bio snippet, specialty, profile image). For Our Barbers + booking.
+  - `GET /api/barbers/:id` — barber by id. For `/barber/:id` and booking flow.
+- [ ] **Per-barber content (public)**
+  - `GET /api/barbers/:id/services` (or `GET /api/services?barberId=...`) — services for that barber.
+  - `GET /api/barbers/:id/gallery` (or `GET /api/gallery?barberId=...`) — gallery for that barber.
+  - `GET /api/barbers/:id/reviews` (or `GET /api/reviews?barberId=...`) — reviews for that barber (support limit, pagination if needed).
+- [ ] **Availability (public, for booking)**
+  - `GET /api/availability?barberId=...` (or `GET /api/barbers/:id/availability`) — working days, slots, booked slots for that barber.
 
-### 7. Misc
+**Existing admin routes** (`routes/admin/*`) — update to be **per-barber**:
 
-- [ ] Remove or repoint any **single-barber** assumptions (e.g. global “the” barber, single availability doc).
-- [ ] Ensure CORS, env vars, and security (rate limiting, validation, etc.) remain correct for multi-barber.
-- [ ] Add or update **API docs** (e.g. OpenAPI/Swagger) for new/changed endpoints.
+- [ ] **Profile** (`profile.js`) — CRUD for the **logged-in barber’s** profile only. Use `barberId` from JWT.
+- [ ] **Services** (`services.js`) — CRUD scoped to logged-in barber. List/create/update/delete only that barber’s services.
+- [ ] **Gallery** (`gallery.js`) — CRUD scoped to logged-in barber. Same idea.
+- [ ] **Availability** (`availability.js`) — read/write availability for logged-in barber only.
+
+**Appointment routes** (`routes/appointment/*`):
+
+- [ ] **`POST /api/appointments`** (or booking route) — body includes `barberId`, `serviceId`, `date`, `time`, user contact info. Validate against that barber’s availability and services. Create `Appointment` with `barberId`.
+- [ ] **`GET /api/appointments`** (user) — “my appointments”; include barber info. Filter by user from JWT.
+- [ ] **`GET /api/appointments/barber`** (or admin) — only the **logged-in barber’s** appointments. Filter by `barberId` from JWT.
+- [ ] Reschedule, cancel, confirm, reject — all scoped to the correct barber’s schedule and permissions.
+
+**Auth** (`routes/auth/auth.js`):
+
+- [ ] **User login** — keep existing flow. JWT payload can include `userId`, `role: 'user'`.
+- [ ] **Barber login** — support multiple barbers (BarberProfile with username/password or linked User). JWT payload includes `barberId` (or equivalent), `role: 'barber'` (or `admin`). Frontend uses this to know who is logged in and to scope admin API calls.
+
+**User routes** (`routes/user/*`):
+
+- [ ] **Reviews** — create/update/delete review tied to user and **barber** (and optionally appointment). List reviews by `barberId` for public barber profile.
+
+**Add barber (admin)**
+
+- [ ] **`POST /api/admin/barbers`** (or similar) — create new barber (username, password, minimal profile placeholders). Protected (e.g. superadmin or “add barber” role). New barber then logs in and completes profile, services, availability, gallery via dashboard.
+
+---
+
+### 4. Auth & middleware
+
+- [ ] **Middleware**
+  - `auth.js` — distinguish user vs barber (e.g. via JWT `role`). Protect user routes (booking, profile) and barber routes (dashboard) accordingly.
+  - `isAdmin.js` (or equivalent) — ensure requester is a barber; optionally restrict “add barber” to a superadmin role.
+- [ ] **JWT**
+  - Encode `userId` or `barberId`, plus `role`, so backend can scope all barber-specific queries to the logged-in barber.
+
+---
+
+### 5. Misc
+
+- [ ] **Cloudinary**
+  - Keep per-barber separation (e.g. folders like `chop-shop/barber-{id}/...` for gallery/profile images). `cloudinaryUtils.js` already uses `chop-shop/`; extend as needed for barber-specific paths.
+- [ ] **Single-barber cleanup**
+  - Remove any “global” or “the” barber logic (single profile, single availability doc, etc.). All relevant data is keyed by `barberId`.
+- [ ] **CORS, env, security**
+  - CORS, rate limiting, input validation, etc. tuned for multi-barber and your deployment.
+- [ ] **API docs**
+  - Update or add OpenAPI/Swagger (or similar) for new/changed endpoints.
 
 ---
 
