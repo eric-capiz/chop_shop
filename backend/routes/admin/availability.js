@@ -4,9 +4,16 @@ const mongoose = require("mongoose");
 const { format, parse, setMinutes } = require("date-fns");
 
 const BarberAvailability = require("../../model/admin/BarberAvailability");
+const Appointment = require("../../model/appointment/Appointment");
+
+// Slots are "booked" if any active appointment's timeSlot overlaps (single source: Appointment).
+// Cancelled/rescheduled slots are automatically available again.
+function slotOverlapsAppointment(slotStart, slotEnd, apptStart, apptEnd) {
+  return slotStart < apptEnd && slotEnd > apptStart;
+}
 
 // @route   GET /api/admin/availability
-// @desc    Get barber's current month availability
+// @desc    Get barber's current month availability (booked state from Appointment so cancel/reschedule frees slots)
 // @access  Private/Admin
 router.get("/", async (req, res) => {
   try {
@@ -18,11 +25,38 @@ router.get("/", async (req, res) => {
       return res.status(404).json({ message: "No availability found" });
     }
 
-    // Filter out booked slots before sending
-    const processedSchedule = availability.schedule.map((day) => ({
-      ...day.toObject(),
-      timeSlots: day.timeSlots.filter((slot) => !slot.isBooked),
-    }));
+    const activeAppointments = await Appointment.find({
+      adminId: req.user.id,
+      status: {
+        $in: [
+          "pending",
+          "confirmed",
+          "reschedule-pending",
+          "reschedule-confirmed",
+        ],
+      },
+    })
+      .select("timeSlot")
+      .lean();
+
+    const processedSchedule = availability.schedule.map((day) => {
+      const dayDate = new Date(day.date);
+      const dayStr = format(dayDate, "yyyy-MM-dd");
+      const slotsFiltered = day.timeSlots.filter((slot) => {
+        const slotStart = new Date(slot.startTime);
+        const slotEnd = new Date(slot.endTime);
+        const isBookedByAppointment = activeAppointments.some((apt) => {
+          const aptStart = new Date(apt.timeSlot.start);
+          const aptEnd = new Date(apt.timeSlot.end);
+          return slotOverlapsAppointment(slotStart, slotEnd, aptStart, aptEnd);
+        });
+        return !isBookedByAppointment;
+      });
+      return {
+        ...day.toObject(),
+        timeSlots: slotsFiltered,
+      };
+    });
 
     res.json({
       ...availability.toObject(),
@@ -60,16 +94,8 @@ router.post("/month", async (req, res) => {
         schedule,
       });
     } else {
-      // Clear existing month data
-      await BarberAvailability.updateOne(
-        { adminId: req.user.id },
-        {
-          $set: {
-            currentMonth: { month, year, isSet: true },
-            schedule,
-          },
-        }
-      );
+      availability.currentMonth = { month, year, isSet: true };
+      availability.schedule = schedule;
     }
 
     await availability.save();
@@ -143,7 +169,7 @@ router.put("/day/:date", async (req, res) => {
       const dayIndex = availability.schedule.findIndex(
         (day) =>
           format(new Date(day.date), "yyyy-MM-dd") ===
-          format(date, "yyyy-MM-dd")
+          format(date, "yyyy-MM-dd"),
       );
 
       if (dayIndex === -1) {
@@ -168,7 +194,7 @@ router.put("/day/:date", async (req, res) => {
           };
           availability.schedule[dayIndex].timeSlots = generateTimeSlots(
             startTime,
-            endTime
+            endTime,
           );
         }
       }

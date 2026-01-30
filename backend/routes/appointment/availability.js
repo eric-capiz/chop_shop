@@ -1,73 +1,54 @@
 const express = require("express");
 const router = express.Router();
+const mongoose = require("mongoose");
 const BarberAvailability = require("../../model/admin/BarberAvailability");
 const Appointment = require("../../model/appointment/Appointment");
 
-// @route   GET /api/availability
-// @desc    Get barber's availability (public)
+// @route   GET /api/availability?adminId=...
+// @desc    Get barber's availability (public, for booking)
 // @access  Public
 router.get("/", async (req, res) => {
-  try {
-    const availability = await BarberAvailability.findOne();
-
-    if (!availability) {
-      return res.status(404).json({ message: "No availability found" });
-    }
-
-    res.json(availability);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json({ message: "Server error" });
+  const adminId = req.query.adminId;
+  if (!adminId || !mongoose.Types.ObjectId.isValid(adminId)) {
+    return res.status(400).json({ message: "Valid adminId query is required" });
   }
+  const availability = await BarberAvailability.findOne({ adminId });
+  if (!availability) {
+    return res
+      .status(404)
+      .json({ message: "No availability found for this barber" });
+  }
+  res.json(availability);
 });
 
-// New route for booked time slots
-// @route   GET /api/availability/booked-slots
-// @desc    Get all booked time slots (no customer info)
+// @route   GET /api/availability/booked-slots?adminId=...
+// @desc    Get booked time slots for a barber (no customer info)
 // @access  Public
 router.get("/booked-slots", async (req, res) => {
-  try {
-    const activeAppointments = await Appointment.find({
-      status: {
-        $in: [
-          "pending",
-          "confirmed",
-          "reschedule-pending",
-          "reschedule-confirmed",
-        ],
-      },
-    });
-
-    const bookedSlots = activeAppointments.flatMap((appointment) => {
-      const slots = [];
-
-      // Add the original time slot if it's not a confirmed reschedule
-      if (!["reschedule-confirmed"].includes(appointment.status)) {
-        slots.push({
-          date: appointment.timeSlot.start,
-        });
-      }
-
-      // Add the proposed time slot if it's a reschedule request
-      if (
-        ["reschedule-pending", "reschedule-confirmed"].includes(
-          appointment.status
-        ) &&
-        appointment.rescheduleRequest
-      ) {
-        slots.push({
-          date: appointment.rescheduleRequest.proposedTimeSlot.start,
-        });
-      }
-
-      return slots;
-    });
-
-    res.json({ bookedSlots });
-  } catch (err) {
-    console.error("Error in booked-slots route:", err);
-    res.status(500).json({ message: "Server error" });
+  const adminId = req.query.adminId;
+  if (!adminId || !mongoose.Types.ObjectId.isValid(adminId)) {
+    return res.status(400).json({ message: "Valid adminId query is required" });
   }
+  const activeAppointments = await Appointment.find({
+    adminId,
+    status: {
+      $in: [
+        "pending",
+        "confirmed",
+        "reschedule-pending",
+        "reschedule-confirmed",
+      ],
+    },
+  });
+
+  const bookedSlots = activeAppointments
+    .filter((a) => a.timeSlot && a.timeSlot.start && a.timeSlot.end)
+    .map((appointment) => ({
+      start: appointment.timeSlot.start,
+      end: appointment.timeSlot.end,
+    }));
+
+  res.json({ bookedSlots });
 });
 
 module.exports = router;

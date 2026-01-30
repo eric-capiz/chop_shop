@@ -48,9 +48,10 @@ export const useAppointment = () => {
     }) => appointmentService.updateAppointmentStatus(params),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["appointments"] });
+      queryClient.invalidateQueries({ queryKey: ["appointments", "user"] });
       queryClient.invalidateQueries({ queryKey: ["booking-availability"] });
       if (isAdmin) {
-        queryClient.invalidateQueries({ queryKey: ["adminAppointments"] });
+        queryClient.invalidateQueries({ queryKey: ["appointments", "admin"] });
       }
     },
   });

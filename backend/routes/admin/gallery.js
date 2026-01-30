@@ -10,25 +10,20 @@ const {
 
 const GalleryItem = require("../../model/admin/GalleryItem");
 
-// @route   GET /api/admin/gallery
-// @desc    Get all gallery items
-// @access  Public
-router.get("/", async (req, res) => {
-  try {
-    const gallery = await GalleryItem.find({ isActive: true }).populate(
-      "serviceType",
-      "name"
-    ); // Populate service name
-    res.json(gallery);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
-// Apply auth middleware for protected routes
+// All routes require barber auth (scoped to logged-in barber)
 router.use(auth);
 router.use(isAdmin);
+
+// @route   GET /api/admin/gallery
+// @desc    Get logged-in barber's gallery items
+// @access  Private/Admin
+router.get("/", async (req, res) => {
+  const gallery = await GalleryItem.find({ adminId: req.user.id }).populate(
+    "serviceType",
+    "name"
+  );
+  res.json(gallery);
+});
 
 // @route   POST /api/admin/gallery
 // @desc    Add gallery items (up to 5 images)
@@ -97,6 +92,13 @@ router.put("/:id", upload.single("images"), async (req, res) => {
       };
     }
 
+    const item = await GalleryItem.findById(req.params.id);
+    if (!item) {
+      return res.status(404).json({ message: "Gallery item not found" });
+    }
+    if (item.adminId.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
     const updatedItem = await GalleryItem.findByIdAndUpdate(
       req.params.id,
       updateData,

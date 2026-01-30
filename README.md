@@ -166,6 +166,20 @@ Add indexes where useful (e.g. `barberId` on availability, services, gallery, re
 
 ---
 
+## Future features
+
+Planned enhancements (to be designed and implemented when ready):
+
+### Booking notifications
+
+1. **When a user books an appointment**
+   - **a)** Barber receives an email and/or text notifying them of the new booking and prompting them to log in to confirm. (Exact flow and channels to be decided when ready.)
+   - **b)** When the barber confirms the appointment, the user receives a confirmation email (and optionally SMS) listing:
+     - Barber name
+     - Appointment date and time
+
+---
+
 ## Getting started
 
 ### Prerequisites

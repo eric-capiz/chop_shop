@@ -69,11 +69,11 @@ export const appointmentService = {
     }
   },
 
-  // Get admin's appointments
+  // Get barber's appointments (logged-in barber)
   getAdminAppointments: async (): Promise<Appointment[]> => {
     try {
       const { data } = await axios.get<Appointment[]>(
-        `${APPOINTMENT_BASE}/admin`,
+        `${APPOINTMENT_BASE}/barber`,
         {
           headers: {
             ...getAuthHeader(),

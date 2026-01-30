@@ -11,29 +11,6 @@ const mongoose = require("mongoose");
 const Review = require("../../model/review/Review");
 const Appointment = require("../../model/appointment/Appointment");
 
-// @route   GET /api/user/reviews/public
-// @desc    Get all active reviews (public view)
-// @access  Public
-router.get("/public", async (req, res) => {
-  try {
-    const reviews = await Review.find({ isActive: true })
-      .populate("userId", "name")
-      .populate({
-        path: "appointmentId",
-        populate: {
-          path: "serviceId",
-          select: "name",
-        },
-      })
-      .sort({ createdAt: -1 });
-
-    res.json(reviews);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
 // @route   GET /api/user/reviews/my-reviews
 // @desc    Get logged-in user's reviews
 // @access  Private
@@ -120,6 +97,7 @@ router.post("/", upload.single("image"), async (req, res) => {
 
       const newReview = new Review({
         userId: req.user.id,
+        adminId: appointment.adminId,
         appointmentId,
         rating: Number(rating),
         feedback,
@@ -210,10 +188,9 @@ router.patch("/:id", upload.single("image"), async (req, res) => {
 });
 
 // @route   DELETE /api/user/reviews/:id
-// @desc    Delete a review and update appointment
+// @desc    Delete a review (user: own review; barber: review on their profile)
 // @access  Private
 router.delete("/:id", async (req, res) => {
-  // Start a session for transaction
   const session = await mongoose.startSession();
   session.startTransaction();
 
@@ -225,9 +202,13 @@ router.delete("/:id", async (req, res) => {
       return res.status(404).json({ message: "Review not found" });
     }
 
-    if (review.userId.toString() !== req.user.id) {
+    const isOwnerUser = review.userId && review.userId.toString() === req.user.id;
+    const isOwnerBarber =
+      (req.user.role === "admin" || req.user.role === "superadmin") &&
+      review.adminId.toString() === req.user.id;
+    if (!isOwnerUser && !isOwnerBarber) {
       await session.abortTransaction();
-      return res.status(401).json({ message: "Not authorized" });
+      return res.status(403).json({ message: "Not authorized" });
     }
 
     // Delete image from Cloudinary if exists

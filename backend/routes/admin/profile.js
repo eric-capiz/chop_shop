@@ -11,28 +11,20 @@ const bcrypt = require("bcryptjs");
 
 const BarberProfile = require("../../model/admin/BarberProfile");
 
-// @route   GET /api/admin/profile
-// @desc    Get barber profile (public)
-// @access  Public
-router.get("/", async (req, res) => {
-  try {
-    const profile = await BarberProfile.findOne().select(
-      "name email username bio specialties yearsOfExperience profileImage socialMedia role"
-    );
-
-    if (!profile) {
-      return res.status(404).json({ message: "Profile not found" });
-    }
-    res.json(profile);
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
-// Apply auth middleware for protected routes
+// All routes require barber auth (dashboard "my profile")
 router.use(auth);
 router.use(isAdmin);
+
+// @route   GET /api/admin/profile
+// @desc    Get logged-in barber's profile (dashboard)
+// @access  Private/Admin
+router.get("/", async (req, res) => {
+  const profile = await BarberProfile.findById(req.user.id).select("-password");
+  if (!profile) {
+    return res.status(404).json({ message: "Profile not found" });
+  }
+  res.json(profile);
+});
 
 // @route   PUT /api/admin/profile
 // @desc    Update barber profile

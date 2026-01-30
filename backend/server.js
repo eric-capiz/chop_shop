@@ -3,10 +3,12 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const helmet = require("helmet");
+const mongoose = require("mongoose");
 const mongoSanitize = require("express-mongo-sanitize");
 const rateLimit = require("express-rate-limit");
 
 const authRoutes = require("./routes/auth/auth");
+const barbersRoutes = require("./routes/barbers");
 const adminRoutes = require("./routes/admin");
 const userRoutes = require("./routes/user");
 const appointmentRoutes = require("./routes/appointment/appointment");
@@ -32,7 +34,7 @@ app.use(
       }
     },
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
@@ -68,6 +70,7 @@ app.get("/", (req, res) => {
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/barbers", barbersRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/appointments", appointmentRoutes);
@@ -110,7 +113,15 @@ app.use("*", (req, res) => {
   });
 });
 
-// MongoDB: add a new database and re-enable connection when ready (see README).
+// MongoDB: connect when MONGODB_URI is set (use a new DB for 2.0; see README)
+if (process.env.MONGODB_URI) {
+  mongoose
+    .connect(process.env.MONGODB_URI)
+    .then(() => console.log("MongoDB connected"))
+    .catch((err) => console.error("MongoDB connection error:", err.message));
+} else {
+  console.log("MONGODB_URI not set; database connection skipped");
+}
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

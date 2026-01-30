@@ -5,22 +5,17 @@ const isAdmin = require("../../middleware/isAdmin");
 
 const Service = require("../../model/admin/Service");
 
-// @route   GET /api/admin/services
-// @desc    Get all services
-// @access  Public
-router.get("/", async (req, res) => {
-  try {
-    const services = await Service.find({ isActive: true });
-    res.json(services);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
-// Apply auth middleware for protected routes
+// All routes require barber auth (scoped to logged-in barber)
 router.use(auth);
 router.use(isAdmin);
+
+// @route   GET /api/admin/services
+// @desc    Get logged-in barber's services
+// @access  Private/Admin
+router.get("/", async (req, res) => {
+  const services = await Service.find({ adminId: req.user.id });
+  res.json(services);
+});
 
 // @route   POST /api/admin/services
 // @desc    Create a service
