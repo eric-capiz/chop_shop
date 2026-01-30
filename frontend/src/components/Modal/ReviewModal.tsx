@@ -1,7 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaStar } from "react-icons/fa";
 import Modal from "./Modal";
 import "./_reviewModal.scss";
+
+interface ReviewModalInitialData {
+  rating: number;
+  feedback: string;
+  image?: string;
+}
 
 interface ReviewModalProps {
   isOpen: boolean;
@@ -12,6 +18,8 @@ interface ReviewModalProps {
     image?: File;
   }) => void;
   isSubmitting: boolean;
+  initialData?: ReviewModalInitialData;
+  isEditing?: boolean;
 }
 
 const ReviewModal = ({
@@ -19,12 +27,25 @@ const ReviewModal = ({
   onClose,
   onSubmit,
   isSubmitting,
+  initialData,
+  isEditing,
 }: ReviewModalProps) => {
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(initialData?.rating ?? 0);
   const [hover, setHover] = useState(0);
-  const [feedback, setFeedback] = useState("");
+  const [feedback, setFeedback] = useState(initialData?.feedback ?? "");
   const [image, setImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(
+    initialData?.image ?? null,
+  );
+
+  useEffect(() => {
+    if (isOpen) {
+      setRating(initialData?.rating ?? 0);
+      setFeedback(initialData?.feedback ?? "");
+      setImagePreview(initialData?.image ?? null);
+      setImage(null);
+    }
+  }, [isOpen, initialData]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -45,7 +66,11 @@ const ReviewModal = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Write a Review">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={isEditing ? "Edit Review" : "Write a Review"}
+    >
       <form onSubmit={handleSubmit} className="review-form">
         <div className="rating-container">
           {[...Array(5)].map((_, index) => {

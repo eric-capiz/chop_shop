@@ -1,5 +1,5 @@
 import { useDeleteService } from "@hooks/admin/useService";
-import { Service } from "@/types/services.types";
+import { Service } from "@/types/admin/services.types";
 import { FaTimes, FaExclamationTriangle } from "react-icons/fa";
 import "./_serviceModals.scss";
 

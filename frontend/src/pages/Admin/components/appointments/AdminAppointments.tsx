@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { format } from "date-fns";
 import { useAppointment } from "@/hooks/appointment/useAppointment";
+import type { Appointment } from "@/types/appointment/appointment.types";
 import "./_adminAppointments.scss";
 import RejectionModal from "@/components/Modal/RejectionModal";
 
@@ -21,11 +22,11 @@ const AdminAppointments = () => {
   const filteredAppointments = {
     pending:
       adminAppointments?.filter((apt) =>
-        ["pending", "reschedule-pending"].includes(apt.status)
+        ["pending", "reschedule-pending"].includes(apt.status),
       ) || [],
     upcoming:
       adminAppointments?.filter((apt) =>
-        ["confirmed", "reschedule-confirmed"].includes(apt.status)
+        ["confirmed", "reschedule-confirmed"].includes(apt.status),
       ) || [],
     past:
       adminAppointments?.filter((apt) =>
@@ -35,7 +36,7 @@ const AdminAppointments = () => {
           "no-show",
           "rejected",
           "reschedule-rejected",
-        ].includes(apt.status)
+        ].includes(apt.status),
       ) || [],
   };
 
@@ -45,7 +46,7 @@ const AdminAppointments = () => {
       appointment.rescheduleRequest
     ) {
       return new Date(
-        appointment.rescheduleRequest.proposedDate
+        appointment.rescheduleRequest.proposedDate,
       ).toLocaleDateString("en-US", { timeZone: "UTC" });
     }
     return new Date(appointment.appointmentDate).toLocaleDateString("en-US", {
@@ -60,7 +61,7 @@ const AdminAppointments = () => {
     ) {
       return format(
         new Date(appointment.rescheduleRequest.proposedTimeSlot.start),
-        "h:mm a"
+        "h:mm a",
       );
     }
     return format(new Date(appointment.timeSlot.start), "h:mm a");
@@ -163,7 +164,7 @@ const AdminAppointments = () => {
                 {activeTab === "past" && (
                   <td data-label="Rejection Note" className="rejection-note">
                     {["rejected", "reschedule-rejected"].includes(
-                      appointment.status
+                      appointment.status,
                     ) &&
                     appointment.rejectionDetails?.note &&
                     typeof appointment.rejectionDetails.note === "string" &&
@@ -224,21 +225,6 @@ const AdminAppointments = () => {
         </button>
       </td>
     );
-  };
-
-  const renderRejectionNote = (appointment: any) => {
-    if (
-      activeTab === "past" &&
-      ["rejected", "reschedule-rejected"].includes(appointment.status) &&
-      appointment.rejectionDetails?.note
-    ) {
-      return (
-        <td data-label="Rejection Reason" className="rejection-note">
-          {appointment.rejectionDetails.note}
-        </td>
-      );
-    }
-    return null;
   };
 
   if (isLoadingAdminAppointments) {

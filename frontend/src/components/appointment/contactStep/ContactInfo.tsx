@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useUserStore } from "@/store/user/userStore";
 import { useUser } from "@/hooks/user/useUser";
+import { dummyUser } from "@/data/dummyData";
 import "./_contactInfo.scss";
 
 interface ContactInfoProps {
@@ -12,7 +13,9 @@ interface ContactInfoProps {
 }
 
 const ContactInfo = ({ onSubmit }: ContactInfoProps) => {
-  const { data: userData, isLoading } = useUser();
+  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  const isMockUser = token?.startsWith("mock-user-");
+  const { data: userData, isLoading: userLoading } = useUser();
   const user = useUserStore((state) => state.user);
 
   const [contactInfo, setContactInfo] = useState({
@@ -25,15 +28,26 @@ const ContactInfo = ({ onSubmit }: ContactInfoProps) => {
     phone: "",
   });
 
+  // Mock user: prefill from dummyData so we don't depend on API
   useEffect(() => {
-    if (user || userData) {
+    if (isMockUser) {
       setContactInfo((prev) => ({
         ...prev,
-        name: user?.name || userData?.name || "",
-        email: user?.email || userData?.email || "",
+        name: dummyUser.name,
+        email: dummyUser.email,
       }));
     }
-  }, [user, userData]);
+  }, [isMockUser]);
+
+  useEffect(() => {
+    if (!isMockUser && (user || userData)) {
+      setContactInfo((prev) => ({
+        ...prev,
+        name: user?.name ?? userData?.name ?? "",
+        email: user?.email ?? userData?.email ?? "",
+      }));
+    }
+  }, [isMockUser, user, userData]);
 
   const validatePhone = (phone: string) => {
     const cleanPhone = phone.replace(/\D/g, "");
@@ -68,6 +82,7 @@ const ContactInfo = ({ onSubmit }: ContactInfoProps) => {
     onSubmit(contactInfo);
   };
 
+  const isLoading = !isMockUser && userLoading;
   if (isLoading) {
     return (
       <div className="contact-info">

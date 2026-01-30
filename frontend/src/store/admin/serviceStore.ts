@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Service } from "@/types/services.types";
+import { Service } from "@/types/admin/services.types";
 
 interface ServicesStore {
   services: Service[];

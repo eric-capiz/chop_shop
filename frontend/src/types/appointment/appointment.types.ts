@@ -1,3 +1,8 @@
+import type { BarberProfile } from "@/types/auth.types";
+import type { User } from "@/types/user/user.types";
+import type { Service } from "@/types/admin/services.types";
+import type { Review } from "@/types/review.types";
+
 export interface AppointmentContactInfo {
   email: string;
   phone: string;
@@ -37,7 +42,7 @@ export interface RejectionDetails {
 
 export interface Appointment {
   _id: string;
-  adminId: AdminProfile;
+  adminId: BarberProfile;
   userId: User;
   serviceId: Service;
   appointmentDate: Date;

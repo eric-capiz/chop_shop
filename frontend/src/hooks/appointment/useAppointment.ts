@@ -4,6 +4,7 @@ import { reviewService } from "@/services/review.service";
 import {
   CreateAppointmentDTO,
   RescheduleRequest,
+  type AppointmentStatus,
 } from "@/types/appointment/appointment.types";
 import { useUserStore } from "@/store/user/userStore";
 import axios from "axios";

@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import "./_modal.scss";
 
 interface ModalProps {

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Service } from "@/types/services.types";
+import { Service } from "@/types/admin/services.types";
 
 export const servicesService = {
   getServices: async (): Promise<Service[]> => {

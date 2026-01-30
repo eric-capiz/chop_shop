@@ -191,6 +191,43 @@ Use `breezy` / `breezy` to test booking flow, and `admin1` … `admin5` (same fo
 
 ---
 
+## Context prompt for AI
+
+Copy the block below and paste it when starting a new session (e.g. with Cursor or another AI) to quickly bring the assistant up to speed on the project.
+
+```
+**Precursor instruction:** Evaluate the whole frontend and make sure it is as DRY as possible. There should be no duplication unless it is needed. If anything needs to be cleaned up, do it.
+
+---
+
+**Chop Shop (2.0)** — Multi-barber barbershop booking app. Repo: [chop_shop](https://github.com/eric-capiz/chop_shop). MERN stack (MongoDB, Express, React, Node). The original single-barber app is [barbershop-booking](https://github.com/eric-capiz/barbershop-booking); 2.0 is a separate product.
+
+**What the project is:**
+- Multi-barber shop: multiple barbers, each with their own profile, gallery, services, availability, and appointments.
+- Customers (users) browse barbers, view profiles, book appointments with a specific barber, and leave reviews.
+- Barbers (admins) log in to a dashboard to manage their profile, services, gallery, availability, and appointments. Future: "Add barber" so a superadmin can create new barber accounts.
+
+**What we’ve done (frontend — complete):**
+- **Pages:** Home, Our Barbers (list) → `/barber/:id` (profile), Our Work (gallery + reviews per barber), Booking flow (barber → date/time → service → contact → confirm), User profile, Admin dashboard (profile, services, gallery, availability, appointments).
+- **Auth:** Mock only. Barbers `admin1`–`admin5` (user/pass same), user `breezy`/`breezy`. No real API auth yet.
+- **Data:** All from `frontend/src/data/dummyData.ts`. No backend calls for 2.0 flows. Axios points at `localhost:5000`; MongoDB is disabled.
+- **Branding:** Chop Shop. Gold/black theme. Footer: address, phone, Chop Shop socials (FB, IG, TikTok, Twitter), "Developed by Eric Capiz."
+
+**What’s next (backend — TODO):**
+1. **MongoDB:** New 2.0 database (not 1.0). Re-enable Mongoose in `server.js`, set `MONGODB_URI` in `.env`.
+2. **Schemas:** Add `barberId` to BarberAvailability, Service, GalleryItem, Review, Appointment. BarberProfile = one doc per barber. User unchanged for customers.
+3. **Routes:** New `GET /api/barbers`, `GET /api/barbers/:id`; per-barber services, gallery, reviews, availability (public). Update admin routes (profile, services, gallery, availability) to be scoped to logged-in barber. Appointments: `POST` (book with `barberId`), `GET` for user vs barber. Auth: user vs barber login, JWT with `userId`/`barberId` and `role`. `POST /api/admin/barbers` to add new barbers (protected).
+4. **Middleware:** Auth distinguishes user vs barber; barber routes use `barberId` from JWT.
+5. **Misc:** Cloudinary folders per barber, remove single-barber assumptions, CORS/env/security.
+
+See this README’s **Backend (TODO)** section for the full checklist. Frontend is ready to be wired to real APIs once backend is implemented.
+```
+
+```
+
+---
+
 ## License
 
 MIT — see [LICENSE](LICENSE).
+```

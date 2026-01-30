@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useServices } from "@hooks/admin/useService";
-import { Service } from "@types/service.types";
+import { Service } from "@/types/admin/services.types";
 import { FaEdit, FaTrash, FaPlus, FaClock, FaTag } from "react-icons/fa";
 import AddServiceModal from "./AddServiceModal";
 import EditServiceModal from "./EditServiceModal";

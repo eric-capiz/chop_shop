@@ -4,10 +4,15 @@ export interface Review {
     _id: string;
     name: string;
   };
-  appointmentId: string;
+  /** When populated from API, includes serviceId */
+  appointmentId:
+    | string
+    | {
+        serviceId?: { name: string };
+      };
   rating: number;
   feedback: string;
-  image: {
+  image?: {
     url: string;
     publicId: string;
   };

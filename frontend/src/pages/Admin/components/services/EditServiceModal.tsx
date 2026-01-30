@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useUpdateService } from "@hooks/admin/useService";
-import { Service } from "@/types/services.types";
+import { Service } from "@/types/admin/services.types";
 import { FaTimes } from "react-icons/fa";
 import "./_serviceModals.scss";
 

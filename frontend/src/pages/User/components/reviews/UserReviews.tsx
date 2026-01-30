@@ -2,6 +2,7 @@ import { useState } from "react";
 import { format } from "date-fns";
 import { FaEdit, FaTrash, FaStar } from "react-icons/fa";
 import { useUserReviews } from "@/hooks/useReviews";
+import type { Review } from "@/types/review.types";
 import Toast from "@/components/common/Toast";
 import ReviewModal from "@/components/Modal/ReviewModal";
 import "./_userReviews.scss";
@@ -17,7 +18,7 @@ const UserReviews = () => {
     message: string;
     type: "success" | "error";
   } | null>(null);
-  const [selectedReview, setSelectedReview] = useState(null);
+  const [selectedReview, setSelectedReview] = useState<Review | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const handleDelete = async (reviewId: string) => {
@@ -37,7 +38,7 @@ const UserReviews = () => {
     }
   };
 
-  const handleEdit = (review) => {
+  const handleEdit = (review: Review) => {
     setSelectedReview(review);
     setIsEditModalOpen(true);
   };
@@ -95,7 +96,12 @@ const UserReviews = () => {
           <div key={review._id} className="review-card">
             <div className="review-header">
               <div className="service-info">
-                <h3>{review.appointmentId.serviceId.name}</h3>
+                <h3>
+                  {typeof review.appointmentId === "object" &&
+                  review.appointmentId?.serviceId?.name
+                    ? review.appointmentId.serviceId.name
+                    : "Service"}
+                </h3>
                 <span className="date">
                   {format(new Date(review.createdAt), "MMMM d, yyyy")}
                 </span>

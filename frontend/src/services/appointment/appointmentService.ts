@@ -1,16 +1,15 @@
 import axios from "axios";
 import {
-  Appointment,
-  CreateAppointmentDTO,
-  AppointmentResponse,
-  RescheduleRequest,
+  type Appointment,
+  type CreateAppointmentDTO,
+  type AppointmentResponse,
+  type RescheduleRequest,
+  type AppointmentStatus,
 } from "@/types/appointment/appointment.types";
 
-const BASE_URL = "https://barbershop-new.fly.dev";
-// const BASE_URL = "http://localhost:5000";
-const APPOINTMENT_URL = `${BASE_URL}/api/appointments`;
+// Uses axios default baseURL (e.g. from config/axios or Vite proxy)
+const APPOINTMENT_BASE = "/api/appointments";
 
-// Helper function to get auth token
 const getAuthHeader = () => {
   const token = localStorage.getItem("token");
   return token ? { Authorization: `Bearer ${token}` } : {};
@@ -32,7 +31,7 @@ export const appointmentService = {
   ): Promise<AppointmentResponse> => {
     try {
       const { data } = await axios.post<AppointmentResponse>(
-        `${APPOINTMENT_URL}/book`,
+        `${APPOINTMENT_BASE}/book`,
         appointmentData,
         {
           headers: {
@@ -56,7 +55,7 @@ export const appointmentService = {
   getUserAppointments: async (): Promise<Appointment[]> => {
     try {
       const { data } = await axios.get<Appointment[]>(
-        `${APPOINTMENT_URL}/user`,
+        `${APPOINTMENT_BASE}/user`,
         {
           headers: {
             ...getAuthHeader(),
@@ -74,7 +73,7 @@ export const appointmentService = {
   getAdminAppointments: async (): Promise<Appointment[]> => {
     try {
       const { data } = await axios.get<Appointment[]>(
-        `${APPOINTMENT_URL}/admin`,
+        `${APPOINTMENT_BASE}/admin`,
         {
           headers: {
             ...getAuthHeader(),
@@ -106,7 +105,7 @@ export const appointmentService = {
       };
 
       const { data } = await axios.put<Appointment>(
-        `${APPOINTMENT_URL}/${appointmentId}/status`,
+        `${APPOINTMENT_BASE}/${appointmentId}/status`,
         requestBody,
         {
           headers: {
@@ -132,7 +131,7 @@ export const appointmentService = {
   ): Promise<Appointment> => {
     try {
       const { data } = await axios.put<Appointment>(
-        `${APPOINTMENT_URL}/${appointmentId}/reschedule`,
+        `${APPOINTMENT_BASE}/${appointmentId}/reschedule`,
         rescheduleData,
         {
           headers: {
@@ -157,7 +156,7 @@ export const appointmentService = {
   ): Promise<Appointment> => {
     try {
       const { data } = await axios.put<Appointment>(
-        `${APPOINTMENT_URL}/${appointmentId}/reschedule-response`,
+        `${APPOINTMENT_BASE}/${appointmentId}/reschedule-response`,
         {
           status,
           rejectionDetails,
