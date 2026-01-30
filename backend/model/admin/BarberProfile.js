@@ -25,10 +25,6 @@ const BarberProfileSchema = new mongoose.Schema(
       default: "admin",
       enum: ["admin", "superadmin"],
     },
-    isActive: {
-      type: Boolean,
-      default: true,
-    },
     lastLogin: {
       type: Date,
       default: Date.now,
@@ -69,7 +65,7 @@ const BarberProfileSchema = new mongoose.Schema(
       },
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("BarberProfile", BarberProfileSchema);

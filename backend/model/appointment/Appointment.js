@@ -25,7 +25,7 @@ const rescheduleRequestSchema = new mongoose.Schema(
       default: "pending",
     },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const AppointmentSchema = new mongoose.Schema(
@@ -109,7 +109,9 @@ const AppointmentSchema = new mongoose.Schema(
       default: false,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
+AppointmentSchema.index({ adminId: 1 });
+AppointmentSchema.index({ userId: 1 });
 module.exports = mongoose.model("Appointment", AppointmentSchema);

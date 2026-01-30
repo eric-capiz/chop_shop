@@ -126,6 +126,19 @@ Add indexes where useful (e.g. `barberId` on availability, services, gallery, re
 **Add barber (admin)**
 
 - [ ] **`POST /api/admin/barbers`** (or similar) — create new barber (username, password, minimal profile placeholders). Protected (e.g. superadmin or “add barber” role). New barber then logs in and completes profile, services, availability, gallery via dashboard.
+- [ ] **First super admin / bootstrap** — When the backend is done, create a **seed script** that creates the first super admin (e.g. run once: `npm run seed`). No “active” flag in schema: barbers are active by default; deletion = removed from DB (cascade delete).
+
+**Super admin (dashboard & actions)**
+
+- [ ] **Backend (super-admin only)**
+  - **List barbers** — `GET /api/admin/barbers` (or similar) — list all barbers. Protected: super admin only. Used by the “All barbers” section.
+  - **Transfer super admin role** — e.g. `PUT /api/admin/barbers/:id/super-admin` — give super admin role to barber `:id`. Current super admin is downgraded to admin. Response (or contract) should allow frontend to log out the current user immediately after success.
+  - **Delete barber profile** — e.g. `DELETE /api/admin/barbers/:id` — delete a barber. Protected: super admin only. Super admin is the **only** way a barber profile is deleted (no self-delete in app). **A super admin cannot delete their own profile** (backend must reject when `:id` is the logged-in barber). **Cascade delete:** when a barber is deleted, remove everything tied to that barber from the DB (profile, availability, services, gallery items, appointments, reviews) and delete their images from Cloudinary. Every barber-related resource must have the barber `_id` (or `barberId` / `adminId`) so the backend can find and delete all of it.
+- [ ] **Frontend (when super admin is logged in)**
+  - **One extra tab/section** in the dashboard: **“All barbers”** (or “Barbers” / “Manage barbers”). Shows list of all barbers.
+  - **Per barber row:** two CTAs — **(1) Make super admin**, **(2) Delete profile**. **Do not show “Make super admin” or “Delete profile” for the logged-in super admin’s own row** (backend must also reject transfer-to-self and delete-self).
+  - **Transfer super admin:** clicking “Make super admin” opens a **confirmation modal**: _“Are you sure you want to give [name] super admin role? You will be downgraded to admin and be logged out.”_ On confirm: call transfer API, then **log out the current user immediately** so they cannot perform any other actions after handing off the role.
+  - **Delete profile:** only super admin can delete a barber profile (backend enforces; frontend shows delete CTA only for super admin in this section).
 
 ---
 
@@ -149,6 +162,7 @@ Add indexes where useful (e.g. `barberId` on availability, services, gallery, re
   - CORS, rate limiting, input validation, etc. tuned for multi-barber and your deployment.
 - [ ] **API docs**
   - Update or add OpenAPI/Swagger (or similar) for new/changed endpoints.
+- [ ] **Forgot password** (later) — TODO: add flow for users and/or barbers to reset forgotten password (e.g. email reset or dev-assisted reset).
 
 ---
 

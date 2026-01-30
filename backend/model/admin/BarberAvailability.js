@@ -53,7 +53,8 @@ const BarberAvailabilitySchema = new mongoose.Schema(
       },
     ],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
+BarberAvailabilitySchema.index({ adminId: 1 });
 module.exports = mongoose.model("BarberAvailability", BarberAvailabilitySchema);

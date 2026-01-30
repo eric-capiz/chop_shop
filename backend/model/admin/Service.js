@@ -32,7 +32,8 @@ const ServiceSchema = new mongoose.Schema(
       default: "haircut",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
+ServiceSchema.index({ adminId: 1 });
 module.exports = mongoose.model("Service", ServiceSchema);

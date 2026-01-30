@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 
 const ReviewSchema = new mongoose.Schema(
   {
+    adminId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "BarberProfile",
+      required: true,
+    },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -31,7 +36,8 @@ const ReviewSchema = new mongoose.Schema(
       default: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
+ReviewSchema.index({ adminId: 1 });
 module.exports = mongoose.model("Review", ReviewSchema);

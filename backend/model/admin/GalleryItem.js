@@ -34,7 +34,8 @@ const GalleryItemSchema = new mongoose.Schema(
       default: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
+GalleryItemSchema.index({ adminId: 1 });
 module.exports = mongoose.model("GalleryItem", GalleryItemSchema);
