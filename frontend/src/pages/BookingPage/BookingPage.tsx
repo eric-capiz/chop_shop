@@ -5,23 +5,24 @@ import DateTimeSelection from "@/components/appointment/dateStep/DateTimeSelecti
 import ServiceSelection from "@/components/appointment/serviceStep/ServiceSelection";
 import ContactInfo from "@/components/appointment/contactStep/ContactInfo";
 import ConfirmBooking from "@/components/appointment/confirmStep/ConfirmBooking";
-import { Barber, getBarberById } from "@/data/dummyData";
+import { useBarberById } from "@/hooks/useBarbers";
+import type { PublicBarber } from "@/types/barber.types";
 import "./_bookingPage.scss";
 
 interface Service {
   _id: string;
   name: string;
-  duration: number;
+  duration?: number;
   price: number;
 }
 
 interface BookingData {
-  barber: Barber | null;
+  barber: PublicBarber | null;
   appointmentDateTime: Date | null;
   service: {
     _id: string;
     name: string;
-    duration: number;
+    duration?: number;
     price: number;
   } | null;
   contactInfo: {
@@ -63,19 +64,20 @@ const BookingPage = () => {
   const [bookingData, setBookingData] = useState<BookingData>(initialBookingState);
   const [maxVisitedStep, setMaxVisitedStep] = useState(1);
 
-  // Handle pre-selected barber from URL
-  useEffect(() => {
-    if (preSelectedBarberId) {
-      const barber = getBarberById(preSelectedBarberId);
-      if (barber) {
-        setBookingData((prev) => ({ ...prev, barber }));
-        setCurrentStep(2);
-        setMaxVisitedStep(2);
-      }
-    }
-  }, [preSelectedBarberId]);
+  const { data: preSelectedBarber } = useBarberById(
+    preSelectedBarberId || undefined,
+    !!preSelectedBarberId
+  );
 
-  const handleBarberSelect = (barber: Barber) => {
+  useEffect(() => {
+    if (preSelectedBarberId && preSelectedBarber) {
+      setBookingData((prev) => ({ ...prev, barber: preSelectedBarber }));
+      setCurrentStep(2);
+      setMaxVisitedStep(2);
+    }
+  }, [preSelectedBarberId, preSelectedBarber]);
+
+  const handleBarberSelect = (barber: PublicBarber) => {
     setBookingData((prev) => ({
       ...prev,
       barber,
@@ -120,18 +122,23 @@ const BookingPage = () => {
         return (
           <BarberSelection
             onSelect={handleBarberSelect}
-            selectedBarberId={bookingData.barber?.id}
+            selectedBarberId={bookingData.barber?._id}
           />
         );
       case 2:
         return (
           <DateTimeSelection
             onSelect={handleDateTimeSelect}
-            barberId={bookingData.barber?.id}
+            barberId={bookingData.barber?._id}
           />
         );
       case 3:
-        return <ServiceSelection onSelect={handleServiceSelect} />;
+        return (
+          <ServiceSelection
+            onSelect={handleServiceSelect}
+            barberId={bookingData.barber?._id}
+          />
+        );
       case 4:
         return <ContactInfo onSubmit={handleContactInfoSubmit} />;
       case 5:

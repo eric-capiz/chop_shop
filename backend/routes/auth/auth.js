@@ -86,6 +86,7 @@ router.post("/login", async (req, res) => {
         },
       };
 
+      const isSuperAdmin = admin.role === "superadmin";
       jwt.sign(
         payload,
         process.env.JWT_SECRET,
@@ -95,7 +96,8 @@ router.post("/login", async (req, res) => {
           res.json({
             token,
             isAdmin: true,
-            isSuperAdmin: admin.role === "superadmin",
+            isSuperAdmin,
+            role: admin.role || "admin",
           });
         },
       );

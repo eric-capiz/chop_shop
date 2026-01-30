@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaPlus, FaTimes, FaExclamationTriangle } from "react-icons/fa";
+import { FaPlus, FaTimes, FaExclamationTriangle, FaEye, FaEyeSlash } from "react-icons/fa";
 import {
   useBarbers,
   useCreateBarber,
@@ -23,6 +23,7 @@ const AddBarberModal = ({
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
   const createBarber = useCreateBarber();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -69,14 +70,24 @@ const AddBarberModal = ({
             </div>
             <div className="form-group">
               <label htmlFor="barber-password">Password (min 6 characters)</label>
-              <input
-                id="barber-password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                minLength={6}
-              />
+              <div className="password-input-wrap">
+                <input
+                  id="barber-password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  minLength={6}
+                />
+                <button
+                  type="button"
+                  className="toggle-password"
+                  onClick={() => setShowPassword((s) => !s)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
             </div>
             <div className="form-group">
               <label htmlFor="barber-name">Name</label>
@@ -188,6 +199,56 @@ const DeleteBarberModal = ({
   );
 };
 
+const TransferConfirmModal = ({
+  barber,
+  onClose,
+  onConfirm,
+  isPending,
+}: {
+  barber: AdminBarber;
+  onClose: () => void;
+  onConfirm: () => void;
+  isPending: boolean;
+}) => (
+  <div className="modal-overlay" onClick={onClose}>
+    <div
+      className="modal-content delete-barber-modal admin-barbers-modal"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div className="modal-header">
+        <h3>Transfer super admin role</h3>
+        <button type="button" className="close-button" onClick={onClose}>
+          <FaTimes />
+        </button>
+      </div>
+      <div className="modal-body">
+        <p>
+          Transfer the super admin role to <strong>{barber.name}</strong> (
+          {barber.username})?
+        </p>
+        <p className="warning-text">
+          You will be logged out and <strong>{barber.name}</strong> will become
+          the only super admin. You can only regain super admin if they transfer
+          it back to you.
+        </p>
+      </div>
+      <div className="modal-actions">
+        <button type="button" className="btn-cancel" onClick={onClose}>
+          Cancel
+        </button>
+        <button
+          type="button"
+          className="btn-save"
+          onClick={onConfirm}
+          disabled={isPending}
+        >
+          {isPending ? "Transferring..." : "Yes, transfer and log me out"}
+        </button>
+      </div>
+    </div>
+  </div>
+);
+
 const AdminBarbers = () => {
   const navigate = useNavigate();
   const { user } = useAuthStore();
@@ -196,6 +257,7 @@ const AdminBarbers = () => {
   const transferSuperAdmin = useTransferSuperAdmin();
   const [showAddModal, setShowAddModal] = useState(false);
   const [barberToDelete, setBarberToDelete] = useState<AdminBarber | null>(null);
+  const [barberToTransfer, setBarberToTransfer] = useState<AdminBarber | null>(null);
   const [transferError, setTransferError] = useState<string | null>(null);
 
   const handleTransfer = async (barberId: string) => {
@@ -213,7 +275,15 @@ const AdminBarbers = () => {
       setTransferError(
         err.response?.data?.message || err.message || "Transfer failed"
       );
+      setBarberToTransfer(null);
     }
+  };
+
+  const handleConfirmTransfer = () => {
+    if (!barberToTransfer) return;
+    const id = barberToTransfer._id;
+    setBarberToTransfer(null);
+    handleTransfer(id);
   };
 
   if (isLoading) return <div className="admin-barbers">Loading...</div>;
@@ -256,7 +326,7 @@ const AdminBarbers = () => {
                       type="button"
                       className="btn-transfer"
                       disabled={transferSuperAdmin.isPending}
-                      onClick={() => handleTransfer(barber._id)}
+                      onClick={() => setBarberToTransfer(barber)}
                     >
                       {transferSuperAdmin.isPending ? "Transferring..." : "Make super admin"}
                     </button>
@@ -292,6 +362,14 @@ const AdminBarbers = () => {
           barber={barberToDelete}
           onClose={() => setBarberToDelete(null)}
           onSuccess={() => setBarberToDelete(null)}
+        />
+      )}
+      {barberToTransfer && (
+        <TransferConfirmModal
+          barber={barberToTransfer}
+          onClose={() => setBarberToTransfer(null)}
+          onConfirm={handleConfirmTransfer}
+          isPending={transferSuperAdmin.isPending}
         />
       )}
     </div>

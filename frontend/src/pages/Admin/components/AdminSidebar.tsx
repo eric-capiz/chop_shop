@@ -9,6 +9,7 @@ import {
   FaUsersCog,
 } from "react-icons/fa";
 import { useUserStore } from "@/store/user/userStore";
+import { useAuthStore } from "@/store/authStore";
 
 interface AdminSidebarProps {
   activeSection: string;
@@ -20,8 +21,17 @@ const AdminSidebar = ({
   setActiveSection,
 }: AdminSidebarProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const userRole = useUserStore((state) => state.user?.role);
-  const isSuperAdmin = userRole === "superadmin";
+  const isAdmin = useAuthStore((state) => state.isAdmin);
+  const userStoreRole = useUserStore((state) => state.user?.role);
+  const authStoreRole = useAuthStore(
+    (state) => (state.user as { role?: string })?.role,
+  );
+  const storedSuperAdmin =
+    typeof window !== "undefined" &&
+    localStorage.getItem("isSuperAdmin") === "true";
+  const userRole = userStoreRole ?? authStoreRole;
+  const isSuperAdmin =
+    isAdmin && (userRole === "superadmin" || storedSuperAdmin === true);
 
   const baseMenuItems = [
     { id: "profile", label: "Profile", icon: <FaUserAlt /> },

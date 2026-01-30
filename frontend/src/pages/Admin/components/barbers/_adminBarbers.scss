@@ -217,6 +217,34 @@
         border-color: $gold-primary;
       }
     }
+
+    .password-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+
+      input {
+        flex: 1;
+        padding-right: 2.5rem;
+      }
+
+      .toggle-password {
+        position: absolute;
+        right: 0.5rem;
+        background: none;
+        border: none;
+        color: $silver-dark;
+        cursor: pointer;
+        padding: 0.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+          color: $gold-primary;
+        }
+      }
+    }
   }
 
   .modal-body {

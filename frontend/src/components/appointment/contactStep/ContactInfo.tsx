@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useUserStore } from "@/store/user/userStore";
 import { useUser } from "@/hooks/user/useUser";
-import { dummyUser } from "@/data/dummyData";
 import "./_contactInfo.scss";
 
 interface ContactInfoProps {
@@ -13,10 +12,8 @@ interface ContactInfoProps {
 }
 
 const ContactInfo = ({ onSubmit }: ContactInfoProps) => {
-  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-  const isMockUser = token?.startsWith("mock-user-");
   const { data: userData, isLoading: userLoading } = useUser();
-  const user = useUserStore((state) => state.user);
+  const user = useUserStore((state) => state.user) as { name?: string; email?: string } | null;
 
   const [contactInfo, setContactInfo] = useState({
     name: "",
@@ -28,26 +25,17 @@ const ContactInfo = ({ onSubmit }: ContactInfoProps) => {
     phone: "",
   });
 
-  // Mock user: prefill from dummyData so we don't depend on API
   useEffect(() => {
-    if (isMockUser) {
+    const name = user?.name ?? userData?.name ?? "";
+    const email = user?.email ?? (userData as { email?: string })?.email ?? "";
+    if (name || email) {
       setContactInfo((prev) => ({
         ...prev,
-        name: dummyUser.name,
-        email: dummyUser.email,
+        name: name || prev.name,
+        email: email || prev.email,
       }));
     }
-  }, [isMockUser]);
-
-  useEffect(() => {
-    if (!isMockUser && (user || userData)) {
-      setContactInfo((prev) => ({
-        ...prev,
-        name: user?.name ?? userData?.name ?? "",
-        email: user?.email ?? userData?.email ?? "",
-      }));
-    }
-  }, [isMockUser, user, userData]);
+  }, [user, userData]);
 
   const validatePhone = (phone: string) => {
     const cleanPhone = phone.replace(/\D/g, "");
@@ -82,8 +70,7 @@ const ContactInfo = ({ onSubmit }: ContactInfoProps) => {
     onSubmit(contactInfo);
   };
 
-  const isLoading = !isMockUser && userLoading;
-  if (isLoading) {
+  if (userLoading) {
     return (
       <div className="contact-info">
         <div className="loading">Loading your information...</div>

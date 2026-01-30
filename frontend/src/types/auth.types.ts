@@ -44,4 +44,6 @@ export interface RegisterData {
 export interface AuthResponse {
   token: string;
   isAdmin: boolean;
+  isSuperAdmin?: boolean;
+  role?: "admin" | "superadmin";
 }

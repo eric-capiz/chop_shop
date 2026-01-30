@@ -2,13 +2,12 @@ import { create } from "zustand";
 import { User, BarberProfile } from "@/types/auth.types";
 import { authService } from "@/services/auth.service";
 import { useUserStore } from "@/store/user/userStore";
-import { getBarberById, dummyUser } from "@/data/dummyData";
 
 interface AuthState {
   isAuthenticated: boolean;
   isAdmin: boolean;
   user: User | BarberProfile | null;
-  currentBarberId: string | null; // For tracking which dummy barber is logged in
+  currentBarberId: string | null;
   setIsAuthenticated: (value: boolean) => void;
   setIsAdmin: (value: boolean) => void;
   setUser: (user: User | BarberProfile | null) => void;
@@ -47,6 +46,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
   clearAuth: () => {
     localStorage.removeItem("currentBarberId");
+    localStorage.removeItem("isSuperAdmin");
     set({
       isAuthenticated: false,
       isAdmin: false,
@@ -57,15 +57,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   setAuthToken: (token) => {
     localStorage.setItem("token", token);
     localStorage.setItem("tokenExpiry", String(Date.now() + TOKEN_EXPIRY));
-
-    if (token.startsWith("mock-token-")) {
-      const barberId = token.replace("mock-token-", "");
-      set({ currentBarberId: barberId });
-      localStorage.setItem("currentBarberId", barberId);
-    } else if (token.startsWith("mock-user-")) {
-      localStorage.removeItem("currentBarberId");
-      set({ currentBarberId: null });
-    }
   },
   initializeAuth: async () => {
     const token = localStorage.getItem("token");
@@ -73,19 +64,23 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     const adminExpiry = localStorage.getItem("adminExpiry");
     const storedBarberId = localStorage.getItem("currentBarberId");
 
-    // Check if token has expired
     if (token && tokenExpiry && Number(tokenExpiry) < Date.now()) {
       localStorage.removeItem("token");
       localStorage.removeItem("tokenExpiry");
       localStorage.removeItem("isAdmin");
       localStorage.removeItem("adminExpiry");
+      localStorage.removeItem("isSuperAdmin");
       localStorage.removeItem("currentBarberId");
-      set({ isAuthenticated: false, isAdmin: false, user: null, currentBarberId: null });
+      set({
+        isAuthenticated: false,
+        isAdmin: false,
+        user: null,
+        currentBarberId: null,
+      });
       useUserStore.getState().clearUser();
       return;
     }
 
-    // Check if admin status has expired
     if (adminExpiry && Number(adminExpiry) < Date.now()) {
       localStorage.removeItem("isAdmin");
       localStorage.removeItem("adminExpiry");
@@ -93,56 +88,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
 
     if (token) {
-      // Mock barber token
-      if (token.startsWith("mock-token-")) {
-        const barberId = token.replace("mock-token-", "");
-        const barber = getBarberById(barberId);
-
-        if (barber) {
-          set({
-            user: {
-              _id: barber.id,
-              username: barber.username,
-              name: barber.name,
-              role: "admin",
-            } as any,
-            isAuthenticated: true,
-            isAdmin: true,
-            currentBarberId: barberId,
-          });
-          useUserStore.getState().setUser({
-            id: barber.id,
-            role: "admin",
-            username: barber.username,
-          });
-          return;
-        }
-      }
-
-      // Mock user token (breezy)
-      if (token.startsWith("mock-user-")) {
-        set({
-          user: {
-            _id: dummyUser.id,
-            username: dummyUser.username,
-            name: dummyUser.name,
-            role: "user",
-          } as any,
-          isAuthenticated: true,
-          isAdmin: false,
-          currentBarberId: null,
-        });
-        useUserStore.getState().setUser({
-          id: dummyUser.id,
-          role: "user",
-          username: dummyUser.username,
-        });
-        return;
-      }
-
-      // Real API token
       try {
         const user = await authService.getCurrentUser();
+        const isSuperAdmin = user.role === "superadmin";
+        if (user.role) {
+          localStorage.setItem("isSuperAdmin", String(isSuperAdmin));
+        }
         set({
           user,
           isAuthenticated: true,
@@ -159,6 +110,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         localStorage.removeItem("tokenExpiry");
         localStorage.removeItem("isAdmin");
         localStorage.removeItem("adminExpiry");
+        localStorage.removeItem("isSuperAdmin");
         localStorage.removeItem("currentBarberId");
         set({
           isAuthenticated: false,

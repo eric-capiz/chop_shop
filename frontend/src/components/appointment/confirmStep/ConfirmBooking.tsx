@@ -1,18 +1,19 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
-import { Barber } from "@/data/dummyData";
+import type { PublicBarber } from "@/types/barber.types";
 import Toast from "@/components/common/Toast";
+import { useAppointment } from "@/hooks/appointment/useAppointment";
 import "./_confirmBooking.scss";
 
 interface ConfirmBookingProps {
   bookingData: {
-    barber: Barber;
+    barber: PublicBarber;
     appointmentDateTime: Date;
     service: {
       _id: string;
       name: string;
-      duration: number;
+      duration?: number;
       price: number;
     };
     contactInfo: {
@@ -21,36 +22,55 @@ interface ConfirmBookingProps {
       phone: string;
     };
   };
-
   onStepChange: (step: number) => void;
 }
 
 const ConfirmBooking = ({ bookingData, onStepChange }: ConfirmBookingProps) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const [toast, setToast] = useState<{
     message: string;
     type: "success" | "error";
   } | null>(null);
 
-  const handleConfirm = async () => {
-    setIsSubmitting(true);
-    
-    // Simulate API call delay for demo purposes
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+  const { createAppointment } = useAppointment();
 
-    setToast({
-      message: `Appointment request sent to ${bookingData.barber.name}! (Demo mode)`,
-      type: "success",
-    });
-    setIsSubmitted(true);
-    setIsSubmitting(false);
-    
-    setTimeout(() => {
-      navigate("/about");
-    }, 3000);
+  const handleConfirm = async () => {
+    const start = new Date(bookingData.appointmentDateTime);
+    const end = new Date(start.getTime() + 60 * 60 * 1000);
+    const appointmentDate = new Date(start);
+    appointmentDate.setUTCHours(0, 0, 0, 0);
+    try {
+      await createAppointment.mutateAsync({
+        adminId: bookingData.barber._id,
+        serviceId: bookingData.service._id,
+        appointmentDate,
+        timeSlot: { start, end },
+        contactInfo: {
+          email: bookingData.contactInfo.email,
+          phone: bookingData.contactInfo.phone,
+        },
+      });
+      setToast({
+        message: `Appointment request sent to ${bookingData.barber.name}!`,
+        type: "success",
+      });
+      setIsSubmitted(true);
+      setTimeout(() => {
+        navigate("/about");
+      }, 3000);
+    } catch (err: any) {
+      setToast({
+        message: err.response?.data?.message ?? "Booking failed. Please try again.",
+        type: "error",
+      });
+    }
   };
+
+  const profileImageUrl =
+    typeof bookingData.barber.profileImage === "string"
+      ? bookingData.barber.profileImage
+      : bookingData.barber.profileImage?.url ?? "";
 
   return (
     <div className="confirm-booking">
@@ -66,14 +86,16 @@ const ConfirmBooking = ({ bookingData, onStepChange }: ConfirmBookingProps) => {
         <section className="detail-section" onClick={() => onStepChange(1)}>
           <h3>Barber</h3>
           <div className="detail-content barber-detail">
-            <img 
-              src={bookingData.barber.profileImage} 
+            <img
+              src={profileImageUrl}
               alt={bookingData.barber.name}
               className="barber-thumbnail"
             />
             <div>
               <p className="barber-name">{bookingData.barber.name}</p>
-              <p className="barber-specialty">{bookingData.barber.specialties[0]}</p>
+              <p className="barber-specialty">
+                {bookingData.barber.specialties?.[0] ?? "Barber"}
+              </p>
             </div>
           </div>
         </section>
@@ -98,9 +120,11 @@ const ConfirmBooking = ({ bookingData, onStepChange }: ConfirmBookingProps) => {
           <div className="detail-content">
             <p className="service-name">{bookingData.service.name}</p>
             <div className="service-meta">
-              <span className="duration">
-                {bookingData.service.duration} min
-              </span>
+              {bookingData.service.duration != null && (
+                <span className="duration">
+                  {bookingData.service.duration} min
+                </span>
+              )}
               <span className="price">
                 ${bookingData.service.price.toFixed(2)}
               </span>
@@ -130,13 +154,13 @@ const ConfirmBooking = ({ bookingData, onStepChange }: ConfirmBookingProps) => {
         <button
           className="confirm-button"
           onClick={handleConfirm}
-          disabled={isSubmitting || isSubmitted}
+          disabled={createAppointment.isPending || isSubmitted}
         >
-          {isSubmitting
+          {createAppointment.isPending
             ? "Sending request..."
             : isSubmitted
-            ? "Request Sent!"
-            : "Confirm Booking"}
+              ? "Request Sent!"
+              : "Confirm Booking"}
         </button>
       </div>
 

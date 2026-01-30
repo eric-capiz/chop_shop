@@ -54,17 +54,7 @@ export const useUserReviews = () => {
 export const usePublicReviews = () => {
   return useQuery({
     queryKey: ["publicReviews"],
-    queryFn: async () => {
-      // In demo mode, return empty reviews (or could add dummy reviews later)
-      const token = localStorage.getItem("token");
-      const useDummyData = !token || token.startsWith("mock-token-") || token.startsWith("mock-user-");
-      
-      if (useDummyData) {
-        return [];
-      }
-      
-      return reviewService.getPublicReviews();
-    },
+    queryFn: () => reviewService.getPublicReviews(),
   });
 };
 
