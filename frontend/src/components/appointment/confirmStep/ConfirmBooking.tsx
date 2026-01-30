@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
-import { useAppointment } from "@/hooks/appointment/useAppointment";
-import { useBookingAvailability } from "@/hooks/appointment/useBookingAvailability";
+import { Barber } from "@/data/dummyData";
 import Toast from "@/components/common/Toast";
 import "./_confirmBooking.scss";
 
 interface ConfirmBookingProps {
   bookingData: {
+    barber: Barber;
     appointmentDateTime: Date;
     service: {
       _id: string;
@@ -27,58 +27,29 @@ interface ConfirmBookingProps {
 
 const ConfirmBooking = ({ bookingData, onStepChange }: ConfirmBookingProps) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const [toast, setToast] = useState<{
     message: string;
     type: "success" | "error";
   } | null>(null);
-  const { createAppointment, isCreating } = useAppointment();
-  const { data: availability } = useBookingAvailability();
 
   const handleConfirm = async () => {
-    try {
-      if (!availability) {
-        setToast({
-          message: "Could not get barber information. Please try again.",
-          type: "error",
-        });
-        return;
-      }
+    setIsSubmitting(true);
+    
+    // Simulate API call delay for demo purposes
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const appointmentDate = new Date(bookingData.appointmentDateTime);
-      appointmentDate.setHours(0, 0, 0, 0);
-
-      const appointmentData = {
-        adminId: availability.adminId,
-        serviceId: bookingData.service._id,
-        appointmentDate: appointmentDate,
-        timeSlot: {
-          start: bookingData.appointmentDateTime,
-          end: new Date(
-            bookingData.appointmentDateTime.getTime() +
-              bookingData.service.duration * 60000
-          ),
-        },
-        contactInfo: bookingData.contactInfo,
-      };
-
-      await createAppointment.mutateAsync(appointmentData);
-
-      setToast({
-        message:
-          "Appointment request sent! Please check your profile for status updates.",
-        type: "success",
-      });
-      setIsSubmitted(true);
-      setTimeout(() => {
-        navigate("/profile");
-      }, 3000);
-    } catch (error: any) {
-      setToast({
-        message: error.response?.data?.message || "Failed to book appointment",
-        type: "error",
-      });
-    }
+    setToast({
+      message: `Appointment request sent to ${bookingData.barber.name}! (Demo mode)`,
+      type: "success",
+    });
+    setIsSubmitted(true);
+    setIsSubmitting(false);
+    
+    setTimeout(() => {
+      navigate("/about");
+    }, 3000);
   };
 
   return (
@@ -93,6 +64,21 @@ const ConfirmBooking = ({ bookingData, onStepChange }: ConfirmBookingProps) => {
 
       <div className="confirmation-details">
         <section className="detail-section" onClick={() => onStepChange(1)}>
+          <h3>Barber</h3>
+          <div className="detail-content barber-detail">
+            <img 
+              src={bookingData.barber.profileImage} 
+              alt={bookingData.barber.name}
+              className="barber-thumbnail"
+            />
+            <div>
+              <p className="barber-name">{bookingData.barber.name}</p>
+              <p className="barber-specialty">{bookingData.barber.specialties[0]}</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="detail-section" onClick={() => onStepChange(2)}>
           <h3>Date & Time</h3>
           <div className="detail-content">
             <p className="date">
@@ -107,7 +93,7 @@ const ConfirmBooking = ({ bookingData, onStepChange }: ConfirmBookingProps) => {
           </div>
         </section>
 
-        <section className="detail-section" onClick={() => onStepChange(2)}>
+        <section className="detail-section" onClick={() => onStepChange(3)}>
           <h3>Service Details</h3>
           <div className="detail-content">
             <p className="service-name">{bookingData.service.name}</p>
@@ -122,7 +108,7 @@ const ConfirmBooking = ({ bookingData, onStepChange }: ConfirmBookingProps) => {
           </div>
         </section>
 
-        <section className="detail-section" onClick={() => onStepChange(3)}>
+        <section className="detail-section" onClick={() => onStepChange(4)}>
           <h3>Contact Information</h3>
           <div className="detail-content">
             <p className="contact-name">{bookingData.contactInfo.name}</p>
@@ -144,9 +130,9 @@ const ConfirmBooking = ({ bookingData, onStepChange }: ConfirmBookingProps) => {
         <button
           className="confirm-button"
           onClick={handleConfirm}
-          disabled={isCreating || isSubmitted}
+          disabled={isSubmitting || isSubmitted}
         >
-          {isCreating
+          {isSubmitting
             ? "Sending request..."
             : isSubmitted
             ? "Request Sent!"

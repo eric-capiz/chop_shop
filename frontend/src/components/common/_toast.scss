@@ -4,10 +4,16 @@
   position: fixed;
   bottom: 20px;
   right: 20px;
+  left: 20px;
   padding: 1rem 1.5rem;
   border-radius: 4px;
   animation: slideIn 0.3s ease-out;
   z-index: 2000;
+
+  @media (min-width: 480px) {
+    left: auto;
+    max-width: 400px;
+  }
 
   &.success {
     background: rgba($black-primary, 0.9);

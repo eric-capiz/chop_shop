@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import BarberSelection from "@/components/appointment/barberStep/BarberSelection";
 import DateTimeSelection from "@/components/appointment/dateStep/DateTimeSelection";
 import ServiceSelection from "@/components/appointment/serviceStep/ServiceSelection";
 import ContactInfo from "@/components/appointment/contactStep/ContactInfo";
 import ConfirmBooking from "@/components/appointment/confirmStep/ConfirmBooking";
+import { Barber, getBarberById } from "@/data/dummyData";
 import "./_bookingPage.scss";
 
 interface Service {
@@ -13,6 +16,7 @@ interface Service {
 }
 
 interface BookingData {
+  barber: Barber | null;
   appointmentDateTime: Date | null;
   service: {
     _id: string;
@@ -28,6 +32,7 @@ interface BookingData {
 }
 
 const initialBookingState: BookingData = {
+  barber: null,
   appointmentDateTime: null,
   service: null,
   contactInfo: null,
@@ -36,12 +41,14 @@ const initialBookingState: BookingData = {
 const getStepTitle = (step: number) => {
   switch (step) {
     case 1:
-      return "Select Date & Time";
+      return "Choose Barber";
     case 2:
-      return "Choose Service";
+      return "Select Date & Time";
     case 3:
-      return "Contact Info";
+      return "Choose Service";
     case 4:
+      return "Contact Info";
+    case 5:
       return "Confirm";
     default:
       return "";
@@ -49,10 +56,33 @@ const getStepTitle = (step: number) => {
 };
 
 const BookingPage = () => {
+  const [searchParams] = useSearchParams();
+  const preSelectedBarberId = searchParams.get("barber");
+
   const [currentStep, setCurrentStep] = useState(1);
-  const [bookingData, setBookingData] =
-    useState<BookingData>(initialBookingState);
+  const [bookingData, setBookingData] = useState<BookingData>(initialBookingState);
   const [maxVisitedStep, setMaxVisitedStep] = useState(1);
+
+  // Handle pre-selected barber from URL
+  useEffect(() => {
+    if (preSelectedBarberId) {
+      const barber = getBarberById(preSelectedBarberId);
+      if (barber) {
+        setBookingData((prev) => ({ ...prev, barber }));
+        setCurrentStep(2);
+        setMaxVisitedStep(2);
+      }
+    }
+  }, [preSelectedBarberId]);
+
+  const handleBarberSelect = (barber: Barber) => {
+    setBookingData((prev) => ({
+      ...prev,
+      barber,
+    }));
+    setCurrentStep(2);
+    setMaxVisitedStep(Math.max(maxVisitedStep, 2));
+  };
 
   const handleDateTimeSelect = (
     date: Date,
@@ -62,8 +92,8 @@ const BookingPage = () => {
       ...prev,
       appointmentDateTime: timeSlot.start,
     }));
-    setCurrentStep(2);
-    setMaxVisitedStep(Math.max(maxVisitedStep, 2));
+    setCurrentStep(3);
+    setMaxVisitedStep(Math.max(maxVisitedStep, 3));
   };
 
   const handleServiceSelect = (selectedService: Service) => {
@@ -71,8 +101,8 @@ const BookingPage = () => {
       ...prev,
       service: selectedService,
     }));
-    setCurrentStep(3);
-    setMaxVisitedStep(Math.max(maxVisitedStep, 3));
+    setCurrentStep(4);
+    setMaxVisitedStep(Math.max(maxVisitedStep, 4));
   };
 
   const handleContactInfoSubmit = (contactInfo: BookingData["contactInfo"]) => {
@@ -80,24 +110,38 @@ const BookingPage = () => {
       ...prev,
       contactInfo,
     }));
-    setCurrentStep(4);
-    setMaxVisitedStep(Math.max(maxVisitedStep, 4));
+    setCurrentStep(5);
+    setMaxVisitedStep(Math.max(maxVisitedStep, 5));
   };
 
   const renderCurrentStep = () => {
     switch (currentStep) {
       case 1:
-        return <DateTimeSelection onSelect={handleDateTimeSelect} />;
+        return (
+          <BarberSelection
+            onSelect={handleBarberSelect}
+            selectedBarberId={bookingData.barber?.id}
+          />
+        );
       case 2:
-        return <ServiceSelection onSelect={handleServiceSelect} />;
+        return (
+          <DateTimeSelection
+            onSelect={handleDateTimeSelect}
+            barberId={bookingData.barber?.id}
+          />
+        );
       case 3:
-        return <ContactInfo onSubmit={handleContactInfoSubmit} />;
+        return <ServiceSelection onSelect={handleServiceSelect} />;
       case 4:
-        return bookingData.appointmentDateTime &&
+        return <ContactInfo onSubmit={handleContactInfoSubmit} />;
+      case 5:
+        return bookingData.barber &&
+          bookingData.appointmentDateTime &&
           bookingData.service &&
           bookingData.contactInfo ? (
           <ConfirmBooking
             bookingData={{
+              barber: bookingData.barber,
               appointmentDateTime: bookingData.appointmentDateTime,
               service: bookingData.service,
               contactInfo: bookingData.contactInfo,
@@ -115,21 +159,24 @@ const BookingPage = () => {
       <div className="booking-container">
         <div className="booking-header">
           <h1>Book Your Appointment</h1>
+          {bookingData.barber && (
+            <p className="selected-barber">with {bookingData.barber.name}</p>
+          )}
         </div>
 
         <div className="booking-steps">
-          {[1, 2, 3, 4].map((step) => (
+          {[1, 2, 3, 4, 5].map((step) => (
             <button
               key={step}
               onClick={() => {
-                if (step < 4 && step <= maxVisitedStep) {
+                if (step < 5 && step <= maxVisitedStep) {
                   setCurrentStep(step);
                 }
               }}
               className={`step ${currentStep === step ? "active" : ""} ${
-                step < 4 && step <= maxVisitedStep ? "clickable" : ""
+                step < 5 && step <= maxVisitedStep ? "clickable" : ""
               }`}
-              disabled={step === 4 || step > maxVisitedStep}
+              disabled={step === 5 || step > maxVisitedStep}
             >
               {step}. {getStepTitle(step)}
             </button>

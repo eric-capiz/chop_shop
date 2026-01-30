@@ -40,7 +40,7 @@ const Header = () => {
       <header className="header">
         <div className="header-content">
           <Link to="/" onClick={() => setIsMenuOpen(false)} className="logo">
-            SANCHEZ BARBER
+            CHOP SHOP
           </Link>
 
           <button
@@ -53,25 +53,18 @@ const Header = () => {
 
           <nav className={`nav-menu ${isMenuOpen ? "active" : ""}`}>
             <Link
-              to="/"
-              onClick={() => setIsMenuOpen(false)}
-              className="nav-link"
-            >
-              Home
-            </Link>
-            <Link
               to="/about"
               onClick={() => setIsMenuOpen(false)}
               className="nav-link"
             >
-              About
+              Our Barbers
             </Link>
             <Link
               to="/my-work"
               onClick={() => setIsMenuOpen(false)}
               className="nav-link"
             >
-              My Work
+              Our Work
             </Link>
             <div className="auth-links">
               {isAuthenticated ? (

@@ -6,6 +6,9 @@
   left: 0;
   right: 0;
   z-index: 100;
+  height: $header-height;
+  display: flex;
+  align-items: center;
   background: rgba($black-primary, 0.95);
   border-bottom: 1px solid rgba($gold-primary, 0.1);
 }
@@ -14,7 +17,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
+  padding: 0.5rem 1rem;
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
 }

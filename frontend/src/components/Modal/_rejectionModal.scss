@@ -30,9 +30,18 @@
 
   .rejection-actions {
     display: flex;
-    gap: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
     justify-content: flex-end;
     margin-top: 2rem;
+
+    @media (max-width: 400px) {
+      flex-direction: column;
+
+      button {
+        width: 100%;
+      }
+    }
 
     button {
       min-width: 120px;
@@ -41,6 +50,10 @@
       font-family: $font-secondary;
       cursor: pointer;
       transition: all 0.3s ease;
+
+      @media (max-width: 400px) {
+        min-width: 0;
+      }
 
       &.btn-cancel {
         background: transparent;

@@ -46,7 +46,7 @@ app.use(morgan("dev"));
 
 // Test route
 app.get("/", (req, res) => {
-  res.json({ message: "Sanchez Barbershop API is up and running!" });
+  res.json({ message: "Chop Shop API is up and running!" });
 });
 
 // Routes
@@ -91,11 +91,13 @@ app.use("*", (req, res) => {
   });
 });
 
-// Database connection
-mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => console.log("Connected to MongoDB"))
-  .catch((err) => console.error("MongoDB connection error:", err));
+// Database connection - DISABLED for 2.0 frontend development
+// TODO: Re-enable when backend is ready for multi-barber support
+// mongoose
+//   .connect(process.env.MONGODB_URI)
+//   .then(() => console.log("Connected to MongoDB"))
+//   .catch((err) => console.error("MongoDB connection error:", err));
+console.log("MongoDB connection disabled - using dummy data for 2.0 development");
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

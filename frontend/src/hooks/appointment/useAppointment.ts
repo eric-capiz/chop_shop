@@ -54,10 +54,25 @@ export const useAppointment = () => {
     },
   });
 
+  // Check if in demo mode
+  const isDemoMode = () => {
+    const token = localStorage.getItem("token");
+    return (
+      !token ||
+      token.startsWith("mock-token-") ||
+      token.startsWith("mock-user-")
+    );
+  };
+
   // Get User Appointments Query
   const getUserAppointments = useQuery({
     queryKey: ["appointments", "user"],
-    queryFn: appointmentService.getUserAppointments,
+    queryFn: async () => {
+      if (isDemoMode()) {
+        return []; // Return empty array in demo mode
+      }
+      return appointmentService.getUserAppointments();
+    },
     enabled: !!user,
     staleTime: 30000,
     retry: 2,
@@ -69,7 +84,12 @@ export const useAppointment = () => {
   const getAdminAppointments = isAdmin
     ? useQuery({
         queryKey: ["appointments", "admin"],
-        queryFn: appointmentService.getAdminAppointments,
+        queryFn: async () => {
+          if (isDemoMode()) {
+            return []; // Return empty array in demo mode
+          }
+          return appointmentService.getAdminAppointments();
+        },
         enabled: isAdmin,
         staleTime: 30000,
         retry: (failureCount, error: any) => {
@@ -117,7 +137,7 @@ export const useAppointment = () => {
       appointmentService.respondToReschedule(
         appointmentId,
         status,
-        rejectionDetails
+        rejectionDetails,
       ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["appointments"] });

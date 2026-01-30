@@ -1,189 +1,143 @@
-# Chop Shop - Multi-Barber Management System (2.0)
+# Chop Shop — Multi-Barber Booking (2.0)
 
-## Overview
+Multi-barber barbershop app. Frontend UI is implemented with dummy data; backend remains 1.0 (single-barber) and is **not** wired up. This repo is [chop_shop](https://github.com/eric-capiz/chop_shop). The original single-barber app is [barbershop-booking](https://github.com/eric-capiz/barbershop-booking).
 
-A full-stack web application for managing a multi-barber shop's appointments, services, and customer interactions. This is the 2.0 version featuring support for multiple barbers, each with their own profile, gallery, services, and availability.
+---
 
-> **Note:** This is the multi-barber version. The original single-barber version (1.0) is maintained separately at [barbershop-booking](https://github.com/eric-capiz/barbershop-booking).
+## Frontend (Done)
 
-## What's New in 2.0
+### Pages & Routes
 
-### Multi-Barber Support
-- **Barber Listing Page**: Main About page displays all barbers as cards (name, short bio, main specialty)
-- **Individual Barber Profiles**: Each barber has their own profile page (`/barber/:id`) featuring:
-  - Full bio and experience
-  - Specialties and skills
-  - Personal work gallery
-  - Individual pricing/services
-  - "Book with [Name]" call-to-action
-- **Per-Barber Data**: Availability, services, and gallery are unique to each barber
+| Route          | Description                                                                                                                                                                             |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/`            | Home (Hero, rotating gallery). "Book Now" only when logged in as a **user** (not barber).                                                                                               |
+| `/about`       | **Our Barbers** — List of barber cards (photo, name, specialty, bio preview). Each links to `/barber/:id`.                                                                              |
+| `/barber/:id`  | Barber profile: bio, experience, specialties, "My Work" gallery, services & pricing, social links. "Book Me" + bottom CTA only when logged in as a **user**.                            |
+| `/my-work`     | **Our Work** — Per-barber sections. Each: barber name (→ profile), top 3 haircut images, top 3 reviews.                                                                                 |
+| `/book`        | Booking flow (protected, user only): 1) Choose barber → 2) Date & time → 3) Service → 4) Contact → 5) Confirm. Barber can be pre-selected via `?barber=barberId` (e.g. from "Book Me"). |
+| `/profile`     | User profile (appointments, reviews) — protected, user only.                                                                                                                            |
+| `/dashboard/*` | Admin dashboard — protected, barber only. Profile, Services, Gallery, Availability, Appointments.                                                                                       |
 
-### Updated Booking Flow
-1. Select a barber (or arrive from barber profile with barber pre-selected)
-2. Choose date/time from that barber's availability
-3. Select service from that barber's service list
-4. Enter contact information
-5. Confirm booking
+### Auth & Demo Users
 
-### Admin Enhancements
-- **Add New Barber**: Create new barber accounts (username + password)
-- New barbers log in and complete their own profile, services, availability, and gallery
-- Each barber manages their own dashboard
+- **Mock auth only** — no backend auth calls. Token/user live in `localStorage` and Zustand.
+- **Barbers (admin):** `admin1` … `admin5` — username and password both `admin1` … `admin5`. Each has a distinct profile (name, bio, etc.) and sees their own dashboard data.
+- **User:** `breezy` / `breezy` — can book, see "Book Me", access `/book` and `/profile`.
 
-## Key Features
+### Dummy Data
 
-### User Features
+- **`src/data/dummyData.ts`**: 5 barbers, shared services, shared gallery items, per-barber availability (30 days), per-barber reviews (3 each). Helpers: `getBarberById`, `getTopGalleryForBarber`, `getReviewsForBarber`, `getServicesForBarber`, `getAvailabilityForBarber`, etc.
+- All listing, profile, Our Work, booking, and admin UI use this module. No API calls for 2.0 flows.
 
-- **Authentication**: Secure user registration and login system
-- **Browse Barbers**: View all available barbers and their specialties
-- **Appointment Management**:
-  - Book appointments with a specific barber
-  - View upcoming and past appointments
-  - Reschedule or cancel existing appointments
-  - Receive status updates on appointments
-- **Reviews & Feedback**:
-  - Submit reviews for completed services
-  - View other customers' reviews
-  - Edit or remove own reviews
+### Tech Stack (Frontend)
 
-### Barber Features
+- React 18, TypeScript, Vite
+- React Router, Zustand, TanStack Query
+- SCSS (gold/black theme), React Icons, FullCalendar, React Select, date-fns
+- Axios base URL: `http://localhost:5000` (dev). Vite proxy `/api` → same. No deployed API or MongoDB in use.
 
-- **Profile Management**:
-  - Edit personal bio and experience
-  - Showcase specialties
-- **Appointment Control**:
-  - View and manage personal appointments
-  - Accept or reject appointment requests
-  - Handle reschedule requests
-  - Mark appointments as completed
-- **Schedule Management**:
-  - Set daily availability
-  - Block off dates/times
-  - Manage working hours
-- **Service Management**:
-  - Add/edit available services
-  - Set pricing and duration
-  - Enable/disable services
-- **Gallery Management**:
-  - Upload work samples
-  - Manage portfolio images
-  - Showcase haircut styles
+### Notes
 
-### Additional Features
+- **Book Me** / **Book Now** only show for logged-in **users** (e.g. `breezy`). Barbers do not see them.
+- Confirm step shows barber, date/time, service, contact. Submit is mocked (toast + redirect); no backend booking.
+- Admin dashboard (profile, services, gallery, availability, appointments) uses dummy data when logged in as `admin1`–`admin5`.
 
-- Real-time availability updates
-- Responsive design for mobile and desktop
-- Intuitive booking interface
-- User-friendly dashboard interfaces
+---
 
-## Technology Stack
+## Backend (TODO)
 
-### Frontend
+Backend is still the 1.0 single-barber setup. MongoDB connection is **disabled**. The following updates are needed for 2.0.
 
-- React 18 with TypeScript
-- Vite for build tooling
-- State Management:
-  - Zustand for global state
-  - TanStack Query (React Query) for server state
-- Routing: React Router DOM
-- UI Components:
-  - FullCalendar for scheduling
-  - React Select for enhanced dropdowns
-  - React Icons
-- Styling: SASS/SCSS
-- HTTP Client: Axios
-- Date Management:
-  - Date-fns
-  - Day.js
+### 1. Database & config
 
-### Backend
+- [ ] Re-enable MongoDB connection in `server.js` and use `MONGODB_URI` from `.env`.
+- [ ] Confirm BarberProfile (or equivalent) supports **multiple** barbers (e.g. distinct `adminId` or barber identifier per doc).
 
-- Node.js with Express
-- MongoDB with Mongoose ODM
-- Authentication:
-  - JWT (jsonwebtoken)
-  - bcryptjs for password hashing
-- Image Upload:
-  - Cloudinary
-  - Multer
-- Validation: Express Validator
-- Development Tools:
-  - Morgan for logging
-  - CORS for cross-origin requests
-  - dotenv for environment variables
+### 2. Barbers
 
-## Development Roadmap
+- [ ] **`GET /api/barbers`** (or similar) — list all barbers (id, name, slug/username, bio snippet, main specialty, profile image). Public.
+- [ ] **`GET /api/barbers/:id`** — barber by id. Public. Used for `/barber/:id` and booking.
 
-### Phase 1: Frontend UI (Current)
-- [ ] Barber listing page with dummy data
-- [ ] Individual barber profile page with dummy data
-- [ ] Updated routing structure
+### 3. Per-barber content
 
-### Phase 2: Backend API
-- [ ] List all barbers endpoint
-- [ ] Get barber by ID endpoint
-- [ ] Per-barber availability, services, and gallery endpoints
-- [ ] Admin: Add new barber endpoint
+- [ ] **Availability:**
+  - `GET /api/availability?barberId=...` (or `/:barberId/availability`) — working days, slots, booked slots.
+  - Ensure availability is stored and queried **per barber** (e.g. `barberId` / `adminId`).
+- [ ] **Services:**
+  - `GET /api/barbers/:id/services` (or scoped `GET /api/services?barberId=...`) — services for that barber.
+  - Admin CRUD for services scoped to logged-in barber.
+- [ ] **Gallery:**
+  - `GET /api/barbers/:id/gallery` (or scoped gallery) — gallery items for that barber.
+  - Admin CRUD for gallery scoped to logged-in barber.
+- [ ] **Reviews:**
+  - `GET /api/barbers/:id/reviews` (or scoped) — reviews for that barber (e.g. top N, pagination).
+  - Create/update/delete review tied to appointment (and thus barber).
 
-### Phase 3: Integration
-- [ ] Connect frontend to new backend endpoints
-- [ ] Per-barber booking flow
-- [ ] Barber-specific dashboards
+### 4. Auth
 
-## Getting Started
+- [ ] Support **multiple barber accounts** (e.g. multiple BarberProfile docs). Login returns which barber is authenticated.
+- [ ] Keep existing **user** auth (e.g. User model) for customers. No change to user login flow except possibly token payload.
+- [ ] Ensure JWT (or session) encodes barber vs user and barber/id where needed.
+
+### 5. Appointments & booking
+
+- [ ] **`POST /api/appointments`** (or booking-specific route) — include `barberId` (and optionally `serviceId`, `date`, `time`, contact info). Validate against barber’s availability and services.
+- [ ] **`GET /api/appointments/user`** — user’s appointments; include barber info.
+- [ ] **`GET /api/appointments/barber`** (or `/admin` scoped to barber) — only that barber’s appointments.
+- [ ] Reschedule, cancel, confirm, reject, etc. scoped to the correct barber’s schedule.
+
+### 6. Admin “Add barber”
+
+- [ ] **`POST /api/admin/barbers`** (or similar) — create new barber (username, password, placeholders for profile). Only for superadmin or existing “add barber” role.
+- [ ] New barber logs in and fills profile, services, availability, gallery via existing dashboard UI (once wired to per-barber APIs).
+
+### 7. Misc
+
+- [ ] Remove or repoint any **single-barber** assumptions (e.g. global “the” barber, single availability doc).
+- [ ] Ensure CORS, env vars, and security (rate limiting, validation, etc.) remain correct for multi-barber.
+- [ ] Add or update **API docs** (e.g. OpenAPI/Swagger) for new/changed endpoints.
+
+---
+
+## Getting started
 
 ### Prerequisites
 
-- Node.js (v18 or higher)
-- MongoDB
+- Node.js v18+
+- MongoDB (when backend is re-enabled)
 - Git
 
-### Installation
-
-1. Clone the repository:
+### Install and run
 
 ```bash
 git clone https://github.com/eric-capiz/chop_shop.git
 cd chop_shop
 ```
 
-2. Install dependencies for both frontend and backend:
+**Backend (optional until backend TODO is done):**
 
 ```bash
-# Install backend dependencies
 cd backend
 npm install
-
-# Install frontend dependencies
-cd ../frontend
-npm install
+# Add .env with MONGODB_URI, etc.
+npm run dev
 ```
 
-3. Set up environment variables:
-
-   - Create a `.env` file in the backend directory
-   - Create a `.env` file in the frontend directory
-   - Add necessary environment variables (see `.env.example` files for reference)
-
-4. Start the development servers:
+**Frontend:**
 
 ```bash
-# Start backend server (from backend directory)
-npm run dev
-
-# Start frontend server (from frontend directory)
+cd frontend
+npm install
 npm run dev
 ```
 
-The application should now be running at:
+- App: **http://localhost:5173**
+- API (when running): **http://localhost:5000**
 
-- Frontend: http://localhost:5173
-- Backend: http://localhost:3000
+Use `breezy` / `breezy` to test booking flow, and `admin1` … `admin5` (same for user/pass) to test barber dashboard.
 
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
+---
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT — see [LICENSE](LICENSE).

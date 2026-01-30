@@ -10,6 +10,7 @@ import "./_dateTimeSelection.scss";
 interface DateTimeSelectionProps {
   onSelect: (date: Date, timeSlot: { start: Date; end: Date }) => void;
   isReschedule?: boolean;
+  barberId?: string;
 }
 
 interface BookedSlot {
@@ -19,13 +20,14 @@ interface BookedSlot {
 const DateTimeSelection = ({
   onSelect,
   isReschedule = false,
+  barberId,
 }: DateTimeSelectionProps) => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedSlot, setSelectedSlot] = useState<{
     start: Date;
     end: Date;
   } | null>(null);
-  const { data: availability, isLoading } = useBookingAvailability();
+  const { data: availability, isLoading } = useBookingAvailability(barberId);
 
   const handleDateSelect = (selectInfo: DateSelectArg) => {
     setSelectedDate(selectInfo.start);

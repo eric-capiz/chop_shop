@@ -1,70 +1,170 @@
 @use "@styles/variables" as *;
 
 .footer {
-  background-color: $black-secondary;
+  background: linear-gradient(180deg, $black-secondary 0%, #151515 100%);
   color: $silver-primary;
-  padding: 0.75rem 0;
   width: 100%;
-  border-top: 1px solid rgba($gold-primary, 0.1);
-  font-size: 0.8rem;
+  border-top: 1px solid rgba($gold-primary, 0.15);
+  padding: 2rem 0 1rem;
 
-  .footer-content {
+  .footer-inner {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    padding: 0 1.5rem;
   }
 
-  .location,
-  .contact {
-    color: $gold-primary;
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
 
-    a {
-      color: $silver-primary;
-      text-decoration: none;
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      text-align: center;
 
-      &:hover {
-        color: $gold-primary;
+      .footer-address,
+      .footer-phone {
+        justify-self: center;
       }
     }
   }
 
-  .social-links {
+  .footer-address {
+    justify-self: start;
+  }
+
+  .footer-credit-block {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 3rem;
+    justify-self: center;
+
+    @media (max-width: 768px) {
+      order: 3;
+      padding-top: 0.5rem;
+      border-top: 1px solid rgba($gold-primary, 0.1);
+    }
+  }
+
+  .footer-phone {
+    justify-self: end;
+  }
+
+  .footer-block:not(.footer-credit-block) {
+    display: flex;
+    align-items: flex-start;
     gap: 1rem;
 
-    a {
-      color: $silver-primary;
-      font-size: 1.2rem;
-      transition: color 0.3s ease;
-
-      &:hover {
-        color: $gold-primary;
-      }
-    }
-  }
-  .copyright {
-    font-size: 0.8rem;
-    a {
-      color: $silver-primary;
-      transition: color 0.3s ease;
-      &:hover {
-        color: $gold-primary;
-      }
-    }
-  }
-
-  @media (max-width: 768px) {
-    .footer-content {
+    @media (max-width: 768px) {
       flex-direction: column;
-      gap: 0.5rem;
+      align-items: center;
       text-align: center;
-    }
 
-    .social-links {
-      margin: 0.5rem 0;
+      & > div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  }
+
+  .footer-icon {
+    color: $gold-primary;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+  }
+
+  .footer-label {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba($gold-primary, 0.9);
+    margin-bottom: 0.35rem;
+  }
+
+  .footer-value {
+    font-style: normal;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    color: $silver-primary;
+  }
+
+  .footer-link {
+    text-decoration: none;
+    color: $silver-primary;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: $gold-primary;
+    }
+  }
+
+  .footer-credit {
+    font-size: 0.85rem;
+    color: rgba($silver-primary, 0.7);
+
+    a {
+      color: $gold-primary;
+      text-decoration: none;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: $gold-light;
+      }
+    }
+  }
+
+  .footer-social {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem 1.5rem;
+    padding-top: 1.5rem;
+    margin-top: 1.5rem;
+    border-top: 1px solid rgba($gold-primary, 0.1);
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 1rem;
+      padding-top: 1.25rem;
+      margin-top: 1.25rem;
+    }
+  }
+
+  .footer-social-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba($gold-primary, 0.9);
+  }
+
+  .footer-social-links {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .footer-social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: 1.25rem;
+    color: rgba($silver-primary, 0.8);
+    transition:
+      color 0.2s ease,
+      transform 0.2s ease;
+
+    &:hover {
+      color: $gold-primary;
+      transform: scale(1.1);
     }
   }
 }
