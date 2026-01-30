@@ -48,7 +48,7 @@ const UserAppointments = () => {
 
   const handleDateTimeSelect = (
     date: Date,
-    timeSlot: { start: Date; end: Date }
+    timeSlot: { start: Date; end: Date },
   ) => {
     setSelectedDateTime({ date, timeSlot });
   };
@@ -78,7 +78,7 @@ const UserAppointments = () => {
           setSelectedAppointmentId(null);
           setSelectedDateTime(null);
         },
-      }
+      },
     );
   };
 
@@ -112,11 +112,11 @@ const UserAppointments = () => {
   const filteredAppointments = {
     pending:
       userAppointments?.filter((apt) =>
-        ["pending", "reschedule-pending"].includes(apt.status)
+        ["pending", "reschedule-pending"].includes(apt.status),
       ) || [],
     upcoming:
       userAppointments?.filter((apt) =>
-        ["confirmed", "reschedule-confirmed"].includes(apt.status)
+        ["confirmed", "reschedule-confirmed"].includes(apt.status),
       ) || [],
     past:
       userAppointments?.filter((apt) =>
@@ -126,7 +126,7 @@ const UserAppointments = () => {
           "no-show",
           "rejected",
           "reschedule-rejected",
-        ].includes(apt.status)
+        ].includes(apt.status),
       ) || [],
   };
 
@@ -137,7 +137,7 @@ const UserAppointments = () => {
       appointment.rescheduleRequest.proposedDate
     ) {
       return new Date(
-        appointment.rescheduleRequest.proposedDate
+        appointment.rescheduleRequest.proposedDate,
       ).toLocaleDateString("en-US", { timeZone: "UTC" });
     }
     return new Date(appointment.appointmentDate).toLocaleDateString("en-US", {
@@ -153,7 +153,7 @@ const UserAppointments = () => {
     ) {
       return format(
         new Date(appointment.rescheduleRequest.proposedTimeSlot.start),
-        "h:mm a"
+        "h:mm a",
       );
     }
     return format(new Date(appointment.timeSlot.start), "h:mm a");
@@ -170,6 +170,7 @@ const UserAppointments = () => {
           <thead>
             <tr>
               <th>Service</th>
+              <th>Barber</th>
               <th>Date</th>
               <th>Time</th>
               <th>Status</th>
@@ -177,7 +178,7 @@ const UserAppointments = () => {
                 activeTab === "upcoming" ||
                 (activeTab === "past" &&
                   appointments.some(
-                    (apt) => apt.status === "completed" && !apt.hasReview
+                    (apt) => apt.status === "completed" && !apt.hasReview,
                   ))) && <th>Actions</th>}
               {activeTab === "past" && <th>Notes</th>}
             </tr>
@@ -186,6 +187,12 @@ const UserAppointments = () => {
             {appointments.map((appointment) => (
               <tr key={appointment._id}>
                 <td data-label="Service">{appointment.serviceId.name}</td>
+                <td data-label="Barber">
+                  {typeof appointment.adminId === "object" &&
+                  appointment.adminId?.name
+                    ? appointment.adminId.name
+                    : "-"}
+                </td>
                 <td data-label="Date">{getDisplayDate(appointment)}</td>
                 <td data-label="Time">{getDisplayTime(appointment)}</td>
                 <td data-label="Status">
@@ -235,7 +242,18 @@ const UserAppointments = () => {
                 {activeTab === "past" && appointment.status !== "completed" && (
                   <td data-label="Actions">-</td>
                 )}
-                {activeTab === "past" && <td data-label="Notes">-</td>}
+                {activeTab === "past" && (
+                  <td data-label="Notes" className="notes-cell">
+                    {["rejected", "reschedule-rejected"].includes(
+                      appointment.status,
+                    ) &&
+                    appointment.rejectionDetails?.note &&
+                    typeof appointment.rejectionDetails.note === "string" &&
+                    appointment.rejectionDetails.note.length > 0
+                      ? appointment.rejectionDetails.note
+                      : "-"}
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>

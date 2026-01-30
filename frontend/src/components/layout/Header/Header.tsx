@@ -60,7 +60,7 @@ const Header = () => {
               Our Barbers
             </Link>
             <Link
-              to="/my-work"
+              to="/our-work"
               onClick={() => setIsMenuOpen(false)}
               className="nav-link"
             >

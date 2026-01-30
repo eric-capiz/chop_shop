@@ -89,13 +89,33 @@ export const useLogin = () => {
 
 export const useRegister = () => {
   const queryClient = useQueryClient();
-  const { setIsAuthenticated, setAuthToken } = useAuthStore();
+  const { setIsAuthenticated, setIsAdmin, setAuthToken, setUser } =
+    useAuthStore();
+  const { setUser: setUserStoreUser } = useUserStore();
 
   return useMutation({
     mutationFn: (userData: RegisterData) => authService.register(userData),
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       setAuthToken(data.token);
       setIsAuthenticated(true);
+      setIsAdmin(false);
+      try {
+        const userData = await authService.getCurrentUser();
+        setUser({
+          _id: userData._id,
+          username: userData.username,
+          name: userData.name,
+          email: userData.email,
+          role: "user",
+        } as any);
+        setUserStoreUser({
+          id: userData._id,
+          role: "user",
+          username: userData.username,
+        });
+      } catch (error) {
+        console.error("Failed to fetch user after register:", error);
+      }
       queryClient.invalidateQueries({ queryKey: ["user"] });
     },
   });
@@ -113,6 +133,7 @@ export const useLogout = () => {
     localStorage.removeItem("adminExpiry");
     localStorage.removeItem("isSuperAdmin");
     clearAuth();
+    useUserStore.getState().clearUser();
     queryClient.removeQueries();
     navigate("/");
   };
