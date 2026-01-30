@@ -13,10 +13,7 @@ interface DateTimeSelectionProps {
   barberId?: string;
 }
 
-interface BookedSlot {
-  date: string;
-}
-
+// Booked slots from API: { start, end }; dummy may use { date }
 const DateTimeSelection = ({
   onSelect,
   isReschedule = false,
@@ -34,13 +31,16 @@ const DateTimeSelection = ({
   };
 
   const isTimeSlotBooked = (
-    selectedSlot: { start: Date },
-    bookedSlots: BookedSlot[]
+    slot: { start: Date; end: Date },
+    bookedSlots: { start?: string; end?: string; date?: string }[]
   ) => {
-    const selectedTimeUTC = selectedSlot.start.toISOString();
-    return bookedSlots.some(
-      (bookedSlot) => bookedSlot.date === selectedTimeUTC
-    );
+    const slotStart = slot.start.getTime();
+    const slotEnd = slot.end.getTime();
+    return bookedSlots.some((b) => {
+      const bStart = b.start ? new Date(b.start).getTime() : (b.date ? new Date(b.date).getTime() : 0);
+      const bEnd = b.end ? new Date(b.end).getTime() : bStart + 60 * 60000;
+      return slotStart < bEnd && slotEnd > bStart;
+    });
   };
 
   const getAvailableTimeSlots = (date: Date) => {
@@ -71,30 +71,28 @@ const DateTimeSelection = ({
     const workStart = new Date(date);
     const workEnd = new Date(date);
 
-    workStart.setHours(
-      parseInt(workStartParts[0]),
-      parseInt(workStartParts[1]),
-      0
-    );
-    workEnd.setHours(parseInt(workEndParts[0]), parseInt(workEndParts[1]), 0);
+    // Snap to the hour (slots only on the hour)
+    workStart.setHours(parseInt(workStartParts[0], 10), 0, 0, 0);
+    workEnd.setHours(parseInt(workEndParts[0], 10), 0, 0, 0);
 
     const slots = [];
+    const SLOT_MS = 60 * 60 * 1000;
     let currentTime = new Date(workStart);
 
-    while (currentTime <= workEnd) {
-      const slotEnd = new Date(currentTime.getTime() + 30 * 60000);
+    while (currentTime.getTime() + SLOT_MS <= workEnd.getTime()) {
+      const slotEnd = new Date(currentTime.getTime() + SLOT_MS);
       const slot = {
         start: new Date(currentTime),
         end: slotEnd,
       };
 
-      const isSlotBooked = isTimeSlotBooked(slot, availability.bookedSlots);
+      const isSlotBooked = isTimeSlotBooked(slot, availability.bookedSlots ?? []);
 
       if ((!isToday || isAfter(slot.start, now)) && !isSlotBooked) {
         slots.push(slot);
       }
 
-      currentTime = new Date(currentTime.getTime() + 30 * 60000);
+      currentTime = slotEnd;
     }
 
     return slots;

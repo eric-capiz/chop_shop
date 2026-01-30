@@ -123,23 +123,9 @@ router.put("/day/:date", async (req, res) => {
       startTime = new Date(`${dateStr}T${startTimeStr}Z`);
       endTime = new Date(`${dateStr}T${endTimeStr}Z`);
 
-      // Round minutes to nearest 30 (keeping the rest of the rounding logic)
-      const startMinutes = startTime.getMinutes();
-      const endMinutes = endTime.getMinutes();
-
-      if (startMinutes > 0 && startMinutes < 30) {
-        startTime.setMinutes(30);
-      } else if (startMinutes > 30) {
-        startTime.setMinutes(0);
-        startTime.setHours(startTime.getHours() + 1);
-      }
-
-      if (endMinutes > 0 && endMinutes < 30) {
-        endTime.setMinutes(30);
-      } else if (endMinutes > 30) {
-        endTime.setMinutes(0);
-        endTime.setHours(endTime.getHours() + 1);
-      }
+      // Snap to the hour: slots are only on the hour (no :15, :30, :45)
+      startTime.setMinutes(0, 0, 0);
+      endTime.setMinutes(0, 0, 0);
     }
 
     let availability = await BarberAvailability.findOne({
@@ -208,18 +194,20 @@ router.put("/day/:date", async (req, res) => {
   }
 });
 
-// Helper function to generate 30-minute slots
+// Helper: generate 1-hour slots on the hour only (no :15, :30, :45)
+const SLOT_MINUTES = 60;
 const generateTimeSlots = (start, end) => {
   const slots = [];
   let current = new Date(start);
+  const endMs = end.getTime();
 
-  while (current < end) {
+  while (current.getTime() + SLOT_MINUTES * 60000 <= endMs) {
     slots.push({
       startTime: new Date(current),
-      endTime: new Date(current.getTime() + 30 * 60000), // 30 minutes in milliseconds
+      endTime: new Date(current.getTime() + SLOT_MINUTES * 60000),
       isBooked: false,
     });
-    current = new Date(current.getTime() + 30 * 60000);
+    current = new Date(current.getTime() + SLOT_MINUTES * 60000);
   }
 
   return slots;

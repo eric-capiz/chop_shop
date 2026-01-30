@@ -14,6 +14,7 @@ interface EditDayModalProps {
   }) => Promise<void>;
 }
 
+// Only on-the-hour options (no :15, :30, :45)
 const generateTimeOptions = () => {
   const times = [];
   for (let hour = 0; hour < 24; hour++) {
@@ -23,10 +24,6 @@ const generateTimeOptions = () => {
     const displayTime = `${displayHour}:00 ${period}`;
     const value = `${hourStr}:00`;
     times.push({ label: displayTime, value });
-
-    const displayTimeHalf = `${displayHour}:30 ${period}`;
-    const valueHalf = `${hourStr}:30`;
-    times.push({ label: displayTimeHalf, value: valueHalf });
   }
   return times;
 };

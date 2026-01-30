@@ -28,9 +28,17 @@ router.post("/book", async (req, res) => {
   const { adminId, serviceId, appointmentDate, timeSlot, contactInfo, notes } =
     req.body;
 
-  if (!adminId || !serviceId || !appointmentDate || !timeSlot || !timeSlot.start || !timeSlot.end) {
+  if (
+    !adminId ||
+    !serviceId ||
+    !appointmentDate ||
+    !timeSlot ||
+    !timeSlot.start ||
+    !timeSlot.end
+  ) {
     return res.status(400).json({
-      message: "adminId, serviceId, appointmentDate, and timeSlot (start, end) are required",
+      message:
+        "adminId, serviceId, appointmentDate, and timeSlot (start, end) are required",
     });
   }
 
@@ -73,7 +81,11 @@ router.post("/book", async (req, res) => {
       },
     });
   }
-  if (!scheduleDay.workHours || !scheduleDay.workHours.start || !scheduleDay.workHours.end) {
+  if (
+    !scheduleDay.workHours ||
+    !scheduleDay.workHours.start ||
+    !scheduleDay.workHours.end
+  ) {
     return res.status(400).json({
       message: "Barber has no working hours set for this day",
     });
@@ -81,12 +93,34 @@ router.post("/book", async (req, res) => {
 
   const requestedStart = new Date(timeSlot.start);
   const requestedEnd = new Date(timeSlot.end);
+
+  // Slots are on the hour only; each booking is exactly 1 hour
+  const ONE_HOUR_MS = 60 * 60 * 1000;
+  const startOnHour =
+    requestedStart.getMinutes() === 0 && requestedStart.getSeconds() === 0;
+  const endOnHour =
+    requestedEnd.getMinutes() === 0 && requestedEnd.getSeconds() === 0;
+  const durationMs = requestedEnd.getTime() - requestedStart.getTime();
+  if (!startOnHour || !endOnHour || Math.abs(durationMs - ONE_HOUR_MS) > 1000) {
+    return res.status(400).json({
+      message:
+        "Time slot must be on the hour and exactly 1 hour (e.g. 10:00–11:00)",
+    });
+  }
+
   const workStart = new Date(scheduleDay.workHours.start);
   const workEnd = new Date(scheduleDay.workHours.end);
 
   const overlapping = await Appointment.findOne({
     adminId,
-    status: { $in: ["pending", "confirmed", "reschedule-pending", "reschedule-confirmed"] },
+    status: {
+      $in: [
+        "pending",
+        "confirmed",
+        "reschedule-pending",
+        "reschedule-confirmed",
+      ],
+    },
     $or: [
       {
         "timeSlot.start": { $lt: requestedEnd },
@@ -100,7 +134,8 @@ router.post("/book", async (req, res) => {
   }).lean();
   if (overlapping) {
     return res.status(400).json({
-      message: "This time slot is already booked or overlaps with an existing appointment",
+      message:
+        "This time slot is already booked or overlaps with an existing appointment",
     });
   }
 
@@ -115,7 +150,11 @@ router.post("/book", async (req, res) => {
     requestedStart.getDate(),
   );
 
-  if (requestedStart < workStart || requestedStart > workEnd) {
+  if (
+    requestedStart < workStart ||
+    requestedStart >= workEnd ||
+    requestedEnd > workEnd
+  ) {
     return res.status(400).json({
       message: "Time slot outside working hours",
       debug: {
