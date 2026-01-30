@@ -54,7 +54,7 @@ router.post("/register", async (req, res) => {
       (err, token) => {
         if (err) throw err;
         res.json({ token });
-      }
+      },
     );
   } catch (err) {
     console.error(err.message);
@@ -82,7 +82,7 @@ router.post("/login", async (req, res) => {
       const payload = {
         user: {
           id: admin.id,
-          role: "admin",
+          role: admin.role || "admin",
         },
       };
 
@@ -92,8 +92,12 @@ router.post("/login", async (req, res) => {
         { expiresIn: "24h" },
         (err, token) => {
           if (err) throw err;
-          res.json({ token, isAdmin: true });
-        }
+          res.json({
+            token,
+            isAdmin: true,
+            isSuperAdmin: admin.role === "superadmin",
+          });
+        },
       );
     } else {
       // Check for user
@@ -123,7 +127,7 @@ router.post("/login", async (req, res) => {
         (err, token) => {
           if (err) throw err;
           res.json({ token, isAdmin: false });
-        }
+        },
       );
     }
   } catch (err) {
