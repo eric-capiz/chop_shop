@@ -1,5 +1,4 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const cors = require("cors");
 const morgan = require("morgan");
 const authRoutes = require("./routes/auth/auth");
@@ -18,12 +17,8 @@ app.use((req, res, next) => {
   next();
 });
 
-// CORS configuration
-const allowedOrigins = [
-  "https://barbershop-pi-three.vercel.app", // Your current Vercel deployment
-  "http://localhost:5173", // Local development
-  "http://localhost:3000", // Local development
-];
+// CORS configuration - local development only
+const allowedOrigins = ["http://localhost:5173", "http://localhost:3000"];
 
 // Middleware
 app.use(
@@ -39,7 +34,7 @@ app.use(
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
-  })
+  }),
 );
 app.use(express.json());
 app.use(morgan("dev"));
@@ -91,13 +86,7 @@ app.use("*", (req, res) => {
   });
 });
 
-// Database connection - DISABLED for 2.0 frontend development
-// TODO: Re-enable when backend is ready for multi-barber support
-// mongoose
-//   .connect(process.env.MONGODB_URI)
-//   .then(() => console.log("Connected to MongoDB"))
-//   .catch((err) => console.error("MongoDB connection error:", err));
-console.log("MongoDB connection disabled - using dummy data for 2.0 development");
+// MongoDB: add a new database and re-enable connection when ready (see README).
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

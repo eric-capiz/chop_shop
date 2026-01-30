@@ -27,7 +27,6 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        // target: "https://barbershop-new.fly.dev", // Original 1.0 API - DO NOT USE
         target: "http://localhost:5000",
         changeOrigin: true,
         secure: false,
