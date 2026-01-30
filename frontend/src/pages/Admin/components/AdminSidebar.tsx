@@ -6,7 +6,9 @@ import {
   FaClock,
   FaCalendarAlt,
   FaChevronDown,
+  FaUsersCog,
 } from "react-icons/fa";
+import { useUserStore } from "@/store/user/userStore";
 
 interface AdminSidebarProps {
   activeSection: string;
@@ -18,14 +20,24 @@ const AdminSidebar = ({
   setActiveSection,
 }: AdminSidebarProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const userRole = useUserStore((state) => state.user?.role);
+  const isSuperAdmin = userRole === "superadmin";
 
-  const menuItems = [
+  const baseMenuItems = [
     { id: "profile", label: "Profile", icon: <FaUserAlt /> },
     { id: "services", label: "Services", icon: <FaCut /> },
     { id: "gallery", label: "Gallery", icon: <FaImage /> },
     { id: "availability", label: "Availability", icon: <FaClock /> },
     { id: "appointments", label: "Appointments", icon: <FaCalendarAlt /> },
   ];
+  const superAdminItem = {
+    id: "barbers",
+    label: "Manage Barbers",
+    icon: <FaUsersCog />,
+  };
+  const menuItems = isSuperAdmin
+    ? [...baseMenuItems, superAdminItem]
+    : baseMenuItems;
 
   const handleSectionChange = (sectionId: string) => {
     setActiveSection(sectionId);

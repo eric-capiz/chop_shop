@@ -46,22 +46,30 @@ export const useBookingAvailability = (barberId?: string) => {
         }
       }
 
-      // Fall back to real API
+      // Real API: require barberId for availability and booked slots
+      if (!barberId) {
+        return {
+          adminId: "",
+          currentMonth: { month: 0, year: 0, isSet: false },
+          schedule: [],
+          bookedSlots: [],
+        };
+      }
       try {
         const [availability, bookedSlots] = await Promise.all([
-          publicAvailabilityService.getBarberAvailability(),
-          publicAvailabilityService.getBookedSlots(),
+          publicAvailabilityService.getBarberAvailability(barberId),
+          publicAvailabilityService.getBookedSlots(barberId),
         ]);
 
         return {
           ...availability,
-          bookedSlots: bookedSlots.bookedSlots,
+          bookedSlots: bookedSlots.bookedSlots ?? [],
         };
       } catch (error) {
         console.error("Error fetching availability:", error);
         throw error;
       }
     },
-    enabled: true, // Always enabled, but will use dummy data when barberId is set
+    enabled: !!barberId, // Only fetch when we have a barber (booking flow or dummy)
   });
 };
