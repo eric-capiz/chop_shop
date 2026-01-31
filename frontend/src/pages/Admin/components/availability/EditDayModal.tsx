@@ -37,24 +37,17 @@ const EditDayModal = ({
   const [isWorking, setIsWorking] = useState(
     availability?.isWorkingDay ?? false
   );
-  const [startTime, setStartTime] = useState(
-    availability?.workHours?.start
-      ? availability.workHours.start
-          .split("T")[1]
-          .split(":")
-          .slice(0, 2)
-          .join(":")
-      : "09:00"
-  );
-  const [endTime, setEndTime] = useState(
-    availability?.workHours?.end
-      ? availability.workHours.end
-          .split("T")[1]
-          .split(":")
-          .slice(0, 2)
-          .join(":")
-      : "18:00"
-  );
+  // Parse work hours as Date to get local time (handles UTC-stored ISO strings)
+  const [startTime, setStartTime] = useState(() => {
+    if (!availability?.workHours?.start) return "09:00";
+    const d = new Date(availability.workHours.start);
+    return `${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}`;
+  });
+  const [endTime, setEndTime] = useState(() => {
+    if (!availability?.workHours?.end) return "18:00";
+    const d = new Date(availability.workHours.end);
+    return `${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}`;
+  });
   const [isSaving, setIsSaving] = useState(false);
   const [timeError, setTimeError] = useState<string | null>(null);
 
@@ -139,13 +132,30 @@ const EditDayModal = ({
       if (!isWorking) {
         await onSave({ startTime: null, endTime: null });
       } else {
-        const dateStr = format(date, "yyyy-MM-dd");
-        const fullStartTime = `${dateStr}T${startTime}:00`;
-        const fullEndTime = `${dateStr}T${endTime}:00`;
+        // Build Date in barber's local time, then send as ISO (UTC).
+        // This ensures work hours stay correct regardless of server timezone.
+        const [startH, startM] = startTime.split(":").map(Number);
+        const [endH, endM] = endTime.split(":").map(Number);
+        const startDate = new Date(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate(),
+          startH,
+          startM,
+          0
+        );
+        const endDate = new Date(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate(),
+          endH,
+          endM,
+          0
+        );
 
         await onSave({
-          startTime: fullStartTime,
-          endTime: fullEndTime,
+          startTime: startDate.toISOString(),
+          endTime: endDate.toISOString(),
         });
       }
     } catch (error) {

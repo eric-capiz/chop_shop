@@ -40,7 +40,15 @@
         h3 {
           color: $gold-primary;
           font-family: $font-primary;
-          margin-bottom: 0.5rem;
+          margin-bottom: 0.25rem;
+        }
+
+        .barber-name {
+          display: block;
+          color: $silver-primary;
+          font-size: 0.9rem;
+          font-family: $font-secondary;
+          margin-bottom: 0.25rem;
         }
 
         .date {

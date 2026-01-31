@@ -24,6 +24,10 @@
   width: 100%;
   max-width: 800px;
   max-height: 90vh;
+
+  &--wide {
+    max-width: 960px;
+  }
   display: flex;
   flex-direction: column;
   border: 1px solid $gold-dark;

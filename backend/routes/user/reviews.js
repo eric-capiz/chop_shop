@@ -21,6 +21,7 @@ router.get("/my-reviews", auth, async (req, res) => {
       userId: req.user.id,
     })
       .populate("userId", "name")
+      .populate("adminId", "name")
       .populate({
         path: "appointmentId",
         populate: {

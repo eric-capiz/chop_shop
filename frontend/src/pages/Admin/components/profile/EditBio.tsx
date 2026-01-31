@@ -10,8 +10,9 @@ interface EditBioProps {
 
 const EditBio = ({ profile, onClose }: EditBioProps) => {
   const updateProfile = useUpdateProfile();
-  const [bio, setBio] = useState(profile.bio);
-  const [charCount, setCharCount] = useState(profile.bio.length);
+  const initialBio = profile.bio ?? "";
+  const [bio, setBio] = useState(initialBio);
+  const [charCount, setCharCount] = useState(initialBio.length);
   const MAX_CHARS = 500;
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {

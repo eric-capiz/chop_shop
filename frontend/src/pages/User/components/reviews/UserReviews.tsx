@@ -102,6 +102,11 @@ const UserReviews = () => {
                     ? review.appointmentId.serviceId.name
                     : "Service"}
                 </h3>
+                {typeof review.adminId === "object" && review.adminId?.name ? (
+                  <span className="barber-name">
+                    Barber: {review.adminId.name}
+                  </span>
+                ) : null}
                 <span className="date">
                   {format(new Date(review.createdAt), "MMMM d, yyyy")}
                 </span>

@@ -4,6 +4,13 @@ export interface Review {
     _id: string;
     name: string;
   };
+  /** Barber (admin) - when populated from API */
+  adminId?:
+    | string
+    | {
+        _id: string;
+        name: string;
+      };
   /** When populated from API, includes serviceId */
   appointmentId:
     | string

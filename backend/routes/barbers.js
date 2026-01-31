@@ -58,6 +58,7 @@ router.get("/:id/reviews", async (req, res) => {
     isActive: true,
   })
     .populate("userId", "name")
+    .populate("adminId", "name")
     .populate({
       path: "appointmentId",
       select: "appointmentDate",

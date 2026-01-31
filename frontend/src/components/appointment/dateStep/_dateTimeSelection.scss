@@ -70,6 +70,10 @@
         opacity: 0.5;
         pointer-events: none;
       }
+
+      .fc-bg-event.fc-day-has-availability {
+        opacity: 1;
+      }
     }
   }
 

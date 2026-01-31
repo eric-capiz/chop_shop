@@ -7,6 +7,7 @@ import {
   FaCalendarAlt,
   FaChevronDown,
   FaUsersCog,
+  FaStar,
 } from "react-icons/fa";
 import { useUserStore } from "@/store/user/userStore";
 import { useAuthStore } from "@/store/authStore";
@@ -39,6 +40,7 @@ const AdminSidebar = ({
     { id: "gallery", label: "Gallery", icon: <FaImage /> },
     { id: "availability", label: "Availability", icon: <FaClock /> },
     { id: "appointments", label: "Appointments", icon: <FaCalendarAlt /> },
+    { id: "reviews", label: "Reviews", icon: <FaStar /> },
   ];
   const superAdminItem = {
     id: "barbers",

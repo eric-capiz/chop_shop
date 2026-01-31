@@ -6,6 +6,7 @@ import AdminGallery from "./components/gallery/AdminGallery";
 import AdminAvailability from "./components/availability/AdminAvailability";
 import AdminAppointments from "./components/appointments/AdminAppointments";
 import AdminBarbers from "./components/barbers/AdminBarbers";
+import AdminReviews from "./components/reviews/AdminReviews";
 import "./_adminDashboard.scss";
 
 const AdminDashboard = () => {
@@ -25,6 +26,8 @@ const AdminDashboard = () => {
         return <AdminAppointments />;
       case "barbers":
         return <AdminBarbers />;
+      case "reviews":
+        return <AdminReviews />;
       default:
         return <AdminProfile />;
     }

@@ -17,6 +17,8 @@ const UserAppointments = () => {
   const [selectedAppointmentId, setSelectedAppointmentId] = useState<
     string | null
   >(null);
+  const [selectedAppointmentForReschedule, setSelectedAppointmentForReschedule] =
+    useState<Appointment | null>(null);
   const [selectedDateTime, setSelectedDateTime] = useState<{
     date: Date;
     timeSlot: { start: Date; end: Date };
@@ -58,6 +60,7 @@ const UserAppointments = () => {
       return;
     }
     setSelectedAppointmentId(appointment._id);
+    setSelectedAppointmentForReschedule(appointment);
     setIsRescheduleModalOpen(true);
   };
 
@@ -76,6 +79,7 @@ const UserAppointments = () => {
         onSuccess: () => {
           setIsRescheduleModalOpen(false);
           setSelectedAppointmentId(null);
+          setSelectedAppointmentForReschedule(null);
           setSelectedDateTime(null);
         },
       },
@@ -132,9 +136,10 @@ const UserAppointments = () => {
 
   const getDisplayDate = (appointment) => {
     if (
-      appointment.rescheduleRequest &&
-      appointment.status === "reschedule-confirmed" &&
-      appointment.rescheduleRequest.proposedDate
+      appointment.rescheduleRequest?.proposedDate &&
+      ["reschedule-pending", "reschedule-confirmed"].includes(
+        appointment.status,
+      )
     ) {
       return new Date(
         appointment.rescheduleRequest.proposedDate,
@@ -147,9 +152,10 @@ const UserAppointments = () => {
 
   const getDisplayTime = (appointment) => {
     if (
-      appointment.rescheduleRequest &&
-      appointment.status === "reschedule-confirmed" &&
-      appointment.rescheduleRequest.proposedTimeSlot
+      appointment.rescheduleRequest?.proposedTimeSlot &&
+      ["reschedule-pending", "reschedule-confirmed"].includes(
+        appointment.status,
+      )
     ) {
       return format(
         new Date(appointment.rescheduleRequest.proposedTimeSlot.start),
@@ -297,9 +303,11 @@ const UserAppointments = () => {
 
       <Modal
         isOpen={isRescheduleModalOpen}
+        contentClassName="modal-content--wide"
         onClose={() => {
           setIsRescheduleModalOpen(false);
           setSelectedAppointmentId(null);
+          setSelectedAppointmentForReschedule(null);
           setSelectedDateTime(null);
         }}
         title="Reschedule Appointment"
@@ -325,6 +333,13 @@ const UserAppointments = () => {
           <DateTimeSelection
             onSelect={handleDateTimeSelect}
             isReschedule={true}
+            barberId={
+              selectedAppointmentForReschedule?.adminId
+                ? typeof selectedAppointmentForReschedule.adminId === "object"
+                  ? selectedAppointmentForReschedule.adminId._id
+                  : selectedAppointmentForReschedule.adminId
+                : undefined
+            }
           />
 
           <div className="reschedule-actions">

@@ -65,15 +65,15 @@ const DateTimeSelection = ({
       return [];
     }
 
-    const workStartParts = scheduleDay.workHours.start.split("T")[1].split(":");
-    const workEndParts = scheduleDay.workHours.end.split("T")[1].split(":");
-
+    // Parse as Date to get local time (handles UTC-stored ISO strings)
+    const workStartDate = new Date(scheduleDay.workHours.start);
+    const workEndDate = new Date(scheduleDay.workHours.end);
     const workStart = new Date(date);
     const workEnd = new Date(date);
 
     // Snap to the hour (slots only on the hour)
-    workStart.setHours(parseInt(workStartParts[0], 10), 0, 0, 0);
-    workEnd.setHours(parseInt(workEndParts[0], 10), 0, 0, 0);
+    workStart.setHours(workStartDate.getHours(), 0, 0, 0);
+    workEnd.setHours(workEndDate.getHours(), 0, 0, 0);
 
     const slots = [];
     const SLOT_MS = 60 * 60 * 1000;
@@ -97,6 +97,34 @@ const DateTimeSelection = ({
 
     return slots;
   };
+
+  const dayHasAvailability = (date: Date) =>
+    getAvailableTimeSlots(date).length > 0;
+
+  // Build events for days with availability (background-style so they show as subtle indicators)
+  const availabilityEvents =
+    availability?.schedule
+      ?.filter((day) => {
+        const dayDate =
+          typeof day.date === "string"
+            ? day.date.split("T")[0]
+            : format(new Date(day.date), "yyyy-MM-dd");
+        const date = new Date(dayDate + "T12:00:00");
+        return day.isWorkingDay && dayHasAvailability(date);
+      })
+      .map((day) => {
+        const dayDate =
+          typeof day.date === "string"
+            ? day.date.split("T")[0]
+            : format(new Date(day.date), "yyyy-MM-dd");
+        return {
+          start: dayDate,
+          end: dayDate,
+          display: "background" as const,
+          backgroundColor: "rgba(212, 188, 141, 0.65)",
+          classNames: ["fc-day-has-availability"],
+        };
+      }) ?? [];
 
   if (isLoading) return <div>Loading availability...</div>;
 
@@ -126,6 +154,7 @@ const DateTimeSelection = ({
                 .map((day) => new Date(day.date).getDay()) || [],
           }}
           dateClick={({ date }) => setSelectedDate(date)}
+          events={availabilityEvents}
           longPressDelay={0}
           eventLongPressDelay={0}
           selectLongPressDelay={0}

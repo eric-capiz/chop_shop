@@ -79,9 +79,18 @@ const BarberProfile = () => {
         <div className="gallery-grid">
           {gallery.map((item) => (
             <div key={item._id} className="gallery-item">
-              <img src={item.image?.url || ""} alt={item.description || ""} />
-              <div className="gallery-overlay">
+              <div className="gallery-item-image">
+                <img src={item.image?.url || ""} alt={item.description || ""} />
+              </div>
+              <div className="gallery-item-info">
                 <p>{item.description || ""}</p>
+                {item.tags?.length ? (
+                  <div className="gallery-item-tags">
+                    {item.tags.map((tag, i) => (
+                      <span key={i} className="tag">#{tag}</span>
+                    ))}
+                  </div>
+                ) : null}
               </div>
             </div>
           ))}

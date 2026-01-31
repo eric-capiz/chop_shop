@@ -116,12 +116,10 @@ router.put("/day/:date", async (req, res) => {
     const date = new Date(req.params.date);
 
     if (startTime && endTime) {
-      const [dateStr] = startTime.split("T");
-      const [startTimeStr] = startTime.split("T")[1].split(".");
-      const [endTimeStr] = endTime.split("T")[1].split(".");
-
-      startTime = new Date(`${dateStr}T${startTimeStr}Z`);
-      endTime = new Date(`${dateStr}T${endTimeStr}Z`);
+      // Parse as-is: frontend sends local time (e.g. "2025-01-31T09:00:00").
+      // Do NOT append Z - that would force UTC and break timezone alignment.
+      startTime = new Date(startTime);
+      endTime = new Date(endTime);
 
       // Snap to the hour: slots are only on the hour (no :15, :30, :45)
       startTime.setMinutes(0, 0, 0);

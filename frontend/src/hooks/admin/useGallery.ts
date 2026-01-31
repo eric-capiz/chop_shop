@@ -19,6 +19,7 @@ export const useAddGalleryItem = () => {
     mutationFn: (formData: FormData) => galleryService.addGalleryItem(formData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["gallery"] });
+      queryClient.invalidateQueries({ queryKey: ["barberGallery"] });
     },
   });
 };
@@ -35,6 +36,7 @@ export const useUpdateGalleryItem = () => {
     }) => galleryService.updateGalleryItem(id, formData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["gallery"] });
+      queryClient.invalidateQueries({ queryKey: ["barberGallery"] });
     },
   });
 };
@@ -45,6 +47,7 @@ export const useDeleteGalleryItem = () => {
     mutationFn: (id: string) => galleryService.deleteGalleryItem(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["gallery"] });
+      queryClient.invalidateQueries({ queryKey: ["barberGallery"] });
     },
   });
 };

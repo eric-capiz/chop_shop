@@ -17,16 +17,8 @@ const AdminAvailability = () => {
     availability?.schedule
       ?.filter((day) => day.isWorkingDay)
       .map((day) => {
-        // Parse the times but preserve the hours by explicitly setting them
-        const startParts = day.workHours.start.split("T")[1].split(":");
-        const endParts = day.workHours.end.split("T")[1].split(":");
-
         const startDate = new Date(day.workHours.start);
         const endDate = new Date(day.workHours.end);
-
-        // Set the hours directly to preserve the original input times
-        startDate.setHours(parseInt(startParts[0]));
-        endDate.setHours(parseInt(endParts[0]));
 
         return {
           title: `${format(startDate, "h:mm a")} - ${format(

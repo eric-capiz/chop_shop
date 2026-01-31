@@ -33,6 +33,7 @@ export interface PublicGalleryItem {
   _id: string;
   image: { url: string; publicId: string };
   description?: string;
+  tags?: string[];
 }
 
 /** Public review from GET /api/barbers/:id/reviews */
