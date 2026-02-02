@@ -19,8 +19,13 @@ require("dotenv").config();
 
 const app = express();
 
-// CORS configuration - local development only
-const allowedOrigins = ["http://localhost:5173", "http://localhost:3000"];
+// CORS configuration - add FRONTEND_URL in Render env for additional frontend URLs
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "https://chop-shop-ec.vercel.app",
+  ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : []),
+];
 
 // Security and body parsing (order matters: parse body before sanitize)
 app.use(
