@@ -4,7 +4,10 @@ const auth = require("../../middleware/auth");
 const isAdmin = require("../../middleware/isAdmin");
 const Appointment = require("../../model/appointment/Appointment");
 const BarberAvailability = require("../../model/admin/BarberAvailability");
+const BarberProfile = require("../../model/admin/BarberProfile");
 const Service = require("../../model/admin/Service");
+const User = require("../../model/user/User");
+const { sendAppointmentEmail } = require("../../services/emailService");
 
 // Protected routes - both user and admin need auth
 router.use(auth);
@@ -142,12 +145,12 @@ router.post("/book", async (req, res) => {
   workStart.setFullYear(
     requestedStart.getFullYear(),
     requestedStart.getMonth(),
-    requestedStart.getDate(),
+    requestedStart.getDate()
   );
   workEnd.setFullYear(
     requestedStart.getFullYear(),
     requestedStart.getMonth(),
-    requestedStart.getDate(),
+    requestedStart.getDate()
   );
 
   if (
@@ -178,6 +181,40 @@ router.post("/book", async (req, res) => {
   });
 
   const saved = await newAppointment.save();
+
+  // Send booking emails to user and barber (do not fail the request on email errors)
+  try {
+    const [barber, user] = await Promise.all([
+      BarberProfile.findById(adminId).select("name email").lean(),
+      User.findById(req.user.id).select("name email").lean(),
+    ]);
+    const appointmentData = {
+      barberName: barber?.name,
+      barberEmail: barber?.email,
+      userName: user?.name,
+      userEmail: user?.email,
+      serviceName: service.name,
+      date: saved.appointmentDate,
+      timeSlot: saved.timeSlot,
+      status: "pending",
+      notes: null,
+    };
+    const [userResult, barberResult] = await Promise.all([
+      user?.email
+        ? sendAppointmentEmail(user.email, "user", appointmentData)
+        : Promise.resolve({ success: false }),
+      barber?.email
+        ? sendAppointmentEmail(barber.email, "barber", appointmentData)
+        : Promise.resolve({ success: false }),
+    ]);
+    if (!userResult.success)
+      console.error("[book] user email failed:", userResult.error);
+    if (!barberResult.success && barber?.email)
+      console.error("[book] barber email failed:", barberResult.error);
+  } catch (err) {
+    console.error("[book] email send error:", err);
+  }
+
   const appointment = await Appointment.findById(saved._id)
     .populate("adminId", "name")
     .populate("serviceId", "name duration price");
@@ -214,10 +251,35 @@ router.put("/:id/reschedule", async (req, res) => {
 
   await appointment.save();
   const updated = await Appointment.findById(appointment._id)
-    .populate("adminId", "name")
+    .populate("adminId", "name email")
     .populate("userId", "name email")
     .populate("serviceId", "name duration price")
     .populate("review");
+
+  // Emails: reschedule → both (new date/time; barber gets "log in to confirm")
+  try {
+    const barber = updated.adminId;
+    const user = updated.userId;
+    const rr = updated.rescheduleRequest;
+    const appointmentData = {
+      barberName: barber?.name,
+      barberEmail: barber?.email,
+      userName: user?.name,
+      userEmail: user?.email,
+      serviceName: updated.serviceId?.name,
+      date: rr?.proposedDate,
+      timeSlot: rr?.proposedTimeSlot,
+      status: "reschedule-pending",
+      notes: null,
+    };
+    if (user?.email)
+      await sendAppointmentEmail(user.email, "user", appointmentData);
+    if (barber?.email)
+      await sendAppointmentEmail(barber.email, "barber", appointmentData);
+  } catch (err) {
+    console.error("[PUT /:id/reschedule] email error:", err);
+  }
+
   res.json(updated);
 });
 
@@ -275,10 +337,54 @@ router.put("/:id/status", async (req, res) => {
 
   await appointment.save();
   const updated = await Appointment.findById(appointment._id)
-    .populate("adminId", "name")
+    .populate("adminId", "name email")
     .populate("userId", "name email")
     .populate("serviceId", "name duration price")
     .populate("review");
+
+  // Emails: confirm → user; reject → user + note; cancel → both
+  try {
+    const requestedStatus = req.body.status;
+    const barber = updated.adminId;
+    const user = updated.userId;
+    const baseData = {
+      barberName: barber?.name,
+      barberEmail: barber?.email,
+      userName: user?.name,
+      userEmail: user?.email,
+      serviceName: updated.serviceId?.name,
+      date: updated.appointmentDate,
+      timeSlot: updated.timeSlot,
+      notes: updated.rejectionDetails?.note ?? null,
+    };
+    if (requestedStatus === "cancelled") {
+      const data = { ...baseData, status: "cancelled" };
+      await Promise.all(
+        [
+          user?.email ? sendAppointmentEmail(user.email, "user", data) : null,
+          barber?.email
+            ? sendAppointmentEmail(barber.email, "barber", data)
+            : null,
+        ].filter(Boolean)
+      );
+    } else if (
+      requestedStatus === "confirmed" ||
+      requestedStatus === "reschedule-rejected"
+    ) {
+      const emailStatus =
+        requestedStatus === "reschedule-rejected"
+          ? "reschedule-rejected"
+          : updated.status;
+      const data = { ...baseData, status: emailStatus };
+      if (user?.email) await sendAppointmentEmail(user.email, "user", data);
+    } else if (requestedStatus === "rejected") {
+      const data = { ...baseData, status: "rejected" };
+      if (user?.email) await sendAppointmentEmail(user.email, "user", data);
+    }
+  } catch (err) {
+    console.error("[PUT /:id/status] email error:", err);
+  }
+
   res.json(updated);
 });
 
@@ -325,10 +431,36 @@ router.put("/:id/reschedule-response", async (req, res) => {
   await appointment.save();
 
   const updated = await Appointment.findById(appointment._id)
-    .populate("adminId", "name")
+    .populate("adminId", "name email")
     .populate("userId", "name email")
     .populate("serviceId", "name duration price")
     .populate("review");
+
+  // Emails: barber confirmed reschedule → user (Reschedule Confirmed); barber rejected → user (Reschedule Rejected + note)
+  try {
+    const barber = updated.adminId;
+    const user = updated.userId;
+    const baseData = {
+      barberName: barber?.name,
+      barberEmail: barber?.email,
+      userName: user?.name,
+      userEmail: user?.email,
+      serviceName: updated.serviceId?.name,
+      date: updated.appointmentDate,
+      timeSlot: updated.timeSlot,
+      notes: updated.rejectionDetails?.note ?? null,
+    };
+    if (status === "confirm") {
+      const data = { ...baseData, status: "reschedule-confirmed" };
+      if (user?.email) await sendAppointmentEmail(user.email, "user", data);
+    } else {
+      const data = { ...baseData, status: "reschedule-rejected" };
+      if (user?.email) await sendAppointmentEmail(user.email, "user", data);
+    }
+  } catch (err) {
+    console.error("[PUT /:id/reschedule-response] email error:", err);
+  }
+
   res.json(updated);
 });
 
