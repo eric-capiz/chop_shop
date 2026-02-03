@@ -61,7 +61,8 @@ const ConfirmBooking = ({ bookingData, onStepChange }: ConfirmBookingProps) => {
       }, 3000);
     } catch (err: any) {
       setToast({
-        message: err.response?.data?.message ?? "Booking failed. Please try again.",
+        message:
+          err.response?.data?.message ?? "Booking failed. Please try again.",
         type: "error",
       });
     }
@@ -159,8 +160,8 @@ const ConfirmBooking = ({ bookingData, onStepChange }: ConfirmBookingProps) => {
           {createAppointment.isPending
             ? "Sending request..."
             : isSubmitted
-              ? "Request Sent!"
-              : "Confirm Booking"}
+            ? "Request Sent!"
+            : "Confirm Booking"}
         </button>
       </div>
 

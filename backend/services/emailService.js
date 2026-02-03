@@ -1,10 +1,7 @@
-const { Resend } = require("resend");
+const nodemailer = require("nodemailer");
 const { format } = require("date-fns");
+const BarberProfile = require("../model/admin/BarberProfile");
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-// Sender: display name + address. Change the address below if your domain is different; it must be verified in Resend.
-const FROM_EMAIL = "Chop Shop <bookings@chopshop.com>";
 const CHOP_SHOP_PHONE = "915-257-1446";
 
 function formatStatus(status) {
@@ -22,16 +19,11 @@ function formatStatus(status) {
   return map[status] || status;
 }
 
-/**
- * Build subject and HTML body for the single dynamic appointment email.
- * @param {Object} data - { barberName, barberEmail, userName, userEmail, serviceName, date, timeSlot, status, notes, recipientRole }
- */
 function buildAppointmentEmail(data) {
   const {
     barberName,
     barberEmail,
     userName,
-    userEmail,
     serviceName,
     date,
     timeSlot,
@@ -92,13 +84,6 @@ function buildAppointmentEmail(data) {
   return { subject, html };
 }
 
-/**
- * Send one appointment email. Does not throw; logs errors.
- * @param {string} to - Recipient email
- * @param {'user'|'barber'} recipientRole - For general note and behavior
- * @param {Object} appointmentData - Same shape as buildAppointmentEmail data
- * @returns {Promise<{ success: boolean, error?: string }>}
- */
 async function sendAppointmentEmail(to, recipientRole, appointmentData) {
   if (!to || !recipientRole || !appointmentData) {
     console.error(
@@ -106,26 +91,48 @@ async function sendAppointmentEmail(to, recipientRole, appointmentData) {
     );
     return { success: false, error: "Missing required params" };
   }
-  if (!process.env.RESEND_API_KEY) {
-    console.error("[emailService] RESEND_API_KEY is not set");
-    return { success: false, error: "RESEND_API_KEY not set" };
+
+  const appPassword = process.env.EMAIL_APP_PASSWORD;
+  if (!appPassword) {
+    console.error("[emailService] EMAIL_APP_PASSWORD is not set");
+    return { success: false, error: "EMAIL_APP_PASSWORD not set" };
   }
+
+  const superAdmin = await BarberProfile.findOne({ role: "superadmin" })
+    .select("email")
+    .lean();
+  if (!superAdmin?.email) {
+    console.error("[emailService] No superadmin email found in database");
+    return { success: false, error: "No superadmin email" };
+  }
+
+  const fromEmail = superAdmin.email;
+  const fromDisplay = `Chop Shop <${fromEmail}>`;
+
   try {
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: fromEmail,
+        pass: appPassword,
+      },
+    });
+
     const { subject, html } = buildAppointmentEmail({
       ...appointmentData,
       recipientRole,
     });
-    const { data, error } = await resend.emails.send({
-      from: FROM_EMAIL,
-      to: [to],
+
+    await transporter.sendMail({
+      from: fromDisplay,
+      to,
       subject,
       html,
     });
-    if (error) {
-      console.error("[emailService] Resend error:", error);
-      return { success: false, error: error.message };
-    }
-    return { success: true, id: data?.id };
+
+    return { success: true };
   } catch (err) {
     console.error("[emailService] sendAppointmentEmail error:", err);
     return { success: false, error: err.message };

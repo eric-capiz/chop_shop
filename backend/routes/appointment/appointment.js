@@ -182,7 +182,6 @@ router.post("/book", async (req, res) => {
 
   const saved = await newAppointment.save();
 
-  // Send booking emails to user and barber (do not fail the request on email errors)
   try {
     const [barber, user] = await Promise.all([
       BarberProfile.findById(adminId).select("name email").lean(),
@@ -199,20 +198,12 @@ router.post("/book", async (req, res) => {
       status: "pending",
       notes: null,
     };
-    const [userResult, barberResult] = await Promise.all([
-      user?.email
-        ? sendAppointmentEmail(user.email, "user", appointmentData)
-        : Promise.resolve({ success: false }),
-      barber?.email
-        ? sendAppointmentEmail(barber.email, "barber", appointmentData)
-        : Promise.resolve({ success: false }),
-    ]);
-    if (!userResult.success)
-      console.error("[book] user email failed:", userResult.error);
-    if (!barberResult.success && barber?.email)
-      console.error("[book] barber email failed:", barberResult.error);
+    if (user?.email)
+      await sendAppointmentEmail(user.email, "user", appointmentData);
+    if (barber?.email)
+      await sendAppointmentEmail(barber.email, "barber", appointmentData);
   } catch (err) {
-    console.error("[book] email send error:", err);
+    console.error("[book] email error:", err);
   }
 
   const appointment = await Appointment.findById(saved._id)
@@ -256,7 +247,6 @@ router.put("/:id/reschedule", async (req, res) => {
     .populate("serviceId", "name duration price")
     .populate("review");
 
-  // Emails: reschedule → both (new date/time; barber gets "log in to confirm")
   try {
     const barber = updated.adminId;
     const user = updated.userId;
@@ -277,7 +267,7 @@ router.put("/:id/reschedule", async (req, res) => {
     if (barber?.email)
       await sendAppointmentEmail(barber.email, "barber", appointmentData);
   } catch (err) {
-    console.error("[PUT /:id/reschedule] email error:", err);
+    console.error("[reschedule] email error:", err);
   }
 
   res.json(updated);
@@ -342,7 +332,6 @@ router.put("/:id/status", async (req, res) => {
     .populate("serviceId", "name duration price")
     .populate("review");
 
-  // Emails: confirm → user; reject → user + note; cancel → both
   try {
     const requestedStatus = req.body.status;
     const barber = updated.adminId;
@@ -359,14 +348,9 @@ router.put("/:id/status", async (req, res) => {
     };
     if (requestedStatus === "cancelled") {
       const data = { ...baseData, status: "cancelled" };
-      await Promise.all(
-        [
-          user?.email ? sendAppointmentEmail(user.email, "user", data) : null,
-          barber?.email
-            ? sendAppointmentEmail(barber.email, "barber", data)
-            : null,
-        ].filter(Boolean)
-      );
+      if (user?.email) await sendAppointmentEmail(user.email, "user", data);
+      if (barber?.email)
+        await sendAppointmentEmail(barber.email, "barber", data);
     } else if (
       requestedStatus === "confirmed" ||
       requestedStatus === "reschedule-rejected"
@@ -382,7 +366,7 @@ router.put("/:id/status", async (req, res) => {
       if (user?.email) await sendAppointmentEmail(user.email, "user", data);
     }
   } catch (err) {
-    console.error("[PUT /:id/status] email error:", err);
+    console.error("[status] email error:", err);
   }
 
   res.json(updated);
@@ -429,14 +413,12 @@ router.put("/:id/reschedule-response", async (req, res) => {
   }
 
   await appointment.save();
-
   const updated = await Appointment.findById(appointment._id)
     .populate("adminId", "name email")
     .populate("userId", "name email")
     .populate("serviceId", "name duration price")
     .populate("review");
 
-  // Emails: barber confirmed reschedule → user (Reschedule Confirmed); barber rejected → user (Reschedule Rejected + note)
   try {
     const barber = updated.adminId;
     const user = updated.userId;
@@ -458,7 +440,7 @@ router.put("/:id/reschedule-response", async (req, res) => {
       if (user?.email) await sendAppointmentEmail(user.email, "user", data);
     }
   } catch (err) {
-    console.error("[PUT /:id/reschedule-response] email error:", err);
+    console.error("[reschedule-response] email error:", err);
   }
 
   res.json(updated);

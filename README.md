@@ -35,6 +35,12 @@ Multi-barber barbershop booking app. MERN stack: MongoDB, Express, React, Node. 
 - **Admin (per barber):** profile, services, gallery, availability — all scoped to logged-in barber.
 - **Superadmin:** `GET/POST /api/admin/barbers`, `PUT /api/admin/barbers/:id/super-admin`, `DELETE /api/admin/barbers/:id`.
 
+### Email notifications
+
+- **Sender:** Super admin’s email (from `BarberProfile` with `role: "superadmin"`). All emails are sent from that address via Gmail SMTP (Nodemailer).
+- **When:** On book (user + barber); on barber confirm (user); on barber reject (user, with note); on user cancel (user + barber); on user reschedule (user + barber); on barber reschedule confirm/reject (user). One dynamic template: subject, appointment details, notes only when rejected, general note by recipient, Chop Shop signature.
+- **Setup:** In `backend/.env` set `EMAIL_APP_PASSWORD` to the Gmail app password for the super admin’s Gmail account (2-Step Verification must be on; create the app password at [Google App Passwords](https://myaccount.google.com/apppasswords)).
+
 ### Seed
 
 - **One command:** `npm run seed` (from `backend`).
@@ -74,6 +80,7 @@ Create `backend/.env` with:
 
 - `MONGODB_URI` — your MongoDB connection string
 - `JWT_SECRET` — secret for JWT
+- `EMAIL_APP_PASSWORD` — Gmail app password for the super admin’s Gmail (required for appointment email notifications)
 - Cloudinary vars if you use image uploads (profile/gallery)
 
 Then:
@@ -112,13 +119,12 @@ npm run dev
 ## Tech Stack
 
 - **Frontend:** React 18, TypeScript, Vite, React Router, Zustand, TanStack Query, Axios, SCSS (gold/black theme), date-fns.
-- **Backend:** Node, Express, Mongoose, JWT (jsonwebtoken), bcryptjs, Cloudinary (optional), express-rate-limit, helmet.
+- **Backend:** Node, Express, Mongoose, JWT (jsonwebtoken), bcryptjs, Nodemailer (Gmail SMTP for appointment emails), Cloudinary (optional), express-rate-limit, helmet.
 
 ---
 
 ## TODO
 
-- [ ] **Email booking notifications** — When a user books, send email to user and barber; when barber confirms, send confirmation to user.
 - [ ] **Forgot password** — Reset flow for users and/or barbers.
 
 ---
