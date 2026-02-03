@@ -86,15 +86,11 @@ function buildAppointmentEmail(data) {
 
 async function sendAppointmentEmail(to, recipientRole, appointmentData) {
   if (!to || !recipientRole || !appointmentData) {
-    console.error(
-      "[emailService] sendAppointmentEmail: missing to, recipientRole, or appointmentData"
-    );
     return { success: false, error: "Missing required params" };
   }
 
   const appPassword = process.env.EMAIL_APP_PASSWORD;
   if (!appPassword) {
-    console.error("[emailService] EMAIL_APP_PASSWORD is not set");
     return { success: false, error: "EMAIL_APP_PASSWORD not set" };
   }
 
@@ -102,7 +98,6 @@ async function sendAppointmentEmail(to, recipientRole, appointmentData) {
     .select("email")
     .lean();
   if (!superAdmin?.email) {
-    console.error("[emailService] No superadmin email found in database");
     return { success: false, error: "No superadmin email" };
   }
 
@@ -134,7 +129,6 @@ async function sendAppointmentEmail(to, recipientRole, appointmentData) {
 
     return { success: true };
   } catch (err) {
-    console.error("[emailService] sendAppointmentEmail error:", err);
     return { success: false, error: err.message };
   }
 }

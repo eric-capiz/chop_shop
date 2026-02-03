@@ -202,9 +202,7 @@ router.post("/book", async (req, res) => {
       await sendAppointmentEmail(user.email, "user", appointmentData);
     if (barber?.email)
       await sendAppointmentEmail(barber.email, "barber", appointmentData);
-  } catch (err) {
-    console.error("[book] email error:", err);
-  }
+  } catch (err) {}
 
   const appointment = await Appointment.findById(saved._id)
     .populate("adminId", "name")
@@ -266,9 +264,7 @@ router.put("/:id/reschedule", async (req, res) => {
       await sendAppointmentEmail(user.email, "user", appointmentData);
     if (barber?.email)
       await sendAppointmentEmail(barber.email, "barber", appointmentData);
-  } catch (err) {
-    console.error("[reschedule] email error:", err);
-  }
+  } catch (err) {}
 
   res.json(updated);
 });
@@ -365,9 +361,7 @@ router.put("/:id/status", async (req, res) => {
       const data = { ...baseData, status: "rejected" };
       if (user?.email) await sendAppointmentEmail(user.email, "user", data);
     }
-  } catch (err) {
-    console.error("[status] email error:", err);
-  }
+  } catch (err) {}
 
   res.json(updated);
 });
@@ -439,9 +433,7 @@ router.put("/:id/reschedule-response", async (req, res) => {
       const data = { ...baseData, status: "reschedule-rejected" };
       if (user?.email) await sendAppointmentEmail(user.email, "user", data);
     }
-  } catch (err) {
-    console.error("[reschedule-response] email error:", err);
-  }
+  } catch (err) {}
 
   res.json(updated);
 });
