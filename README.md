@@ -2,6 +2,8 @@
 
 Multi-barber barbershop booking app. MERN stack: MongoDB, Express, React, Node. Frontend and backend are wired; all data comes from the API (no dummy data). Repo: [chop_shop](https://github.com/eric-capiz/chop_shop). Original single-barber app: [barbershop-booking](https://github.com/eric-capiz/barbershop-booking).
 
+**Live:** [App](https://chop-shop-ec.vercel.app) · [API](https://chop-shop-guwk.onrender.com)
+
 ---
 
 ## What’s Implemented
@@ -88,7 +90,7 @@ cd frontend
 npm install
 ```
 
-Create `frontend/.env` (optional) with `VITE_API_URL=http://localhost:5000` if the API is not on that URL.
+Create `frontend/.env` (optional) with `VITE_API_URL=http://localhost:5000` for local dev, or `VITE_API_URL=https://chop-shop-guwk.onrender.com` to use the deployed API.
 
 ```bash
 npm run dev
@@ -96,6 +98,8 @@ npm run dev
 
 - App: **http://localhost:5173**
 - API: **http://localhost:5000**
+
+**Deployed:** App — [https://chop-shop-ec.vercel.app](https://chop-shop-ec.vercel.app) · API — [https://chop-shop-guwk.onrender.com](https://chop-shop-guwk.onrender.com)
 
 ### Test accounts (after seed)
 
@@ -114,19 +118,8 @@ npm run dev
 
 ## TODO
 
-- [ ] **Test booking edge cases** — Exercise cancelling and rescheduling; confirm freed slots are returned to availability and show as bookable again.
-- [ ] **Deploy backend and frontend** — Deploy API and app (e.g. Fly.io, Render, Vercel + backend host); set env vars and CORS.
-- [ ] **Code review / DRY** — Review codebase for cleanup, duplication, and opportunities to simplify (shared types, helpers, consistent patterns).
-- [ ] **Mobile responsive** — Check layouts and flows on small screens; fix breakpoints and touch targets so everything looks and works well on mobile.
-
----
-
-## Future Features
-
-- **Booking notifications**
-  - When a user books: barber gets email/text to confirm.
-  - When barber confirms: user gets confirmation email/text (barber name, date/time).
-- **Forgot password** — reset flow for users and/or barbers.
+- [ ] **Email booking notifications** — When a user books, send email to user and barber; when barber confirms, send confirmation to user.
+- [ ] **Forgot password** — Reset flow for users and/or barbers.
 
 ---
 
