@@ -7,7 +7,7 @@
   padding: 2rem;
 
   @media (max-width: 768px) {
-    padding: 1rem;
+    padding: 1rem 0.25rem;
   }
 
   &__header {
@@ -75,7 +75,7 @@
     position: relative;
 
     @media (max-width: 768px) {
-      padding: 1rem;
+      padding: 1rem 0.5rem;
 
       // Make actions always visible on mobile
       .service-actions {

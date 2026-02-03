@@ -22,11 +22,11 @@ const AdminAppointments = () => {
   const filteredAppointments = {
     pending:
       adminAppointments?.filter((apt) =>
-        ["pending", "reschedule-pending"].includes(apt.status),
+        ["pending", "reschedule-pending"].includes(apt.status)
       ) || [],
     upcoming:
       adminAppointments?.filter((apt) =>
-        ["confirmed", "reschedule-confirmed"].includes(apt.status),
+        ["confirmed", "reschedule-confirmed"].includes(apt.status)
       ) || [],
     past:
       adminAppointments?.filter((apt) =>
@@ -36,7 +36,7 @@ const AdminAppointments = () => {
           "no-show",
           "rejected",
           "reschedule-rejected",
-        ].includes(apt.status),
+        ].includes(apt.status)
       ) || [],
   };
 
@@ -46,7 +46,7 @@ const AdminAppointments = () => {
       appointment.rescheduleRequest
     ) {
       return new Date(
-        appointment.rescheduleRequest.proposedDate,
+        appointment.rescheduleRequest.proposedDate
       ).toLocaleDateString("en-US", { timeZone: "UTC" });
     }
     return new Date(appointment.appointmentDate).toLocaleDateString("en-US", {
@@ -61,7 +61,7 @@ const AdminAppointments = () => {
     ) {
       return format(
         new Date(appointment.rescheduleRequest.proposedTimeSlot.start),
-        "h:mm a",
+        "h:mm a"
       );
     }
     return format(new Date(appointment.timeSlot.start), "h:mm a");
@@ -130,7 +130,7 @@ const AdminAppointments = () => {
           <thead>
             <tr>
               <th>Client</th>
-              <th>Contact Info</th>
+              <th>Contact</th>
               <th>Service</th>
               <th>Date</th>
               <th>Time</th>
@@ -145,10 +145,10 @@ const AdminAppointments = () => {
             {appointments.map((appointment) => (
               <tr key={appointment._id}>
                 <td data-label="Client">{appointment.userId.name}</td>
-                <td data-label="Contact Info">
+                <td data-label="Contact">
                   <div>
-                    <div>📧 {appointment.contactInfo.email}</div>
-                    <div>📱 {appointment.contactInfo.phone}</div>
+                    <div>{appointment.contactInfo.email}</div>
+                    <div>{appointment.contactInfo.phone}</div>
                   </div>
                 </td>
                 <td data-label="Service">{appointment.serviceId.name}</td>
@@ -161,18 +161,17 @@ const AdminAppointments = () => {
                 </td>
                 {activeTab === "pending" && renderActions(appointment)}
                 {activeTab === "upcoming" && renderUpcomingActions(appointment)}
-                {activeTab === "past" && (
-                  <td data-label="Rejection Note" className="rejection-note">
-                    {["rejected", "reschedule-rejected"].includes(
-                      appointment.status,
-                    ) &&
-                    appointment.rejectionDetails?.note &&
-                    typeof appointment.rejectionDetails.note === "string" &&
-                    appointment.rejectionDetails.note.length > 0
-                      ? appointment.rejectionDetails.note
-                      : null}
-                  </td>
-                )}
+                {activeTab === "past" &&
+                  ["rejected", "reschedule-rejected"].includes(
+                    appointment.status
+                  ) &&
+                  appointment.rejectionDetails?.note &&
+                  typeof appointment.rejectionDetails.note === "string" &&
+                  appointment.rejectionDetails.note.length > 0 && (
+                    <td data-label="Rejection Note" className="rejection-note">
+                      {appointment.rejectionDetails.note}
+                    </td>
+                  )}
               </tr>
             ))}
           </tbody>

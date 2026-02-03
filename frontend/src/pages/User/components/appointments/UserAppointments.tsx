@@ -17,8 +17,10 @@ const UserAppointments = () => {
   const [selectedAppointmentId, setSelectedAppointmentId] = useState<
     string | null
   >(null);
-  const [selectedAppointmentForReschedule, setSelectedAppointmentForReschedule] =
-    useState<Appointment | null>(null);
+  const [
+    selectedAppointmentForReschedule,
+    setSelectedAppointmentForReschedule,
+  ] = useState<Appointment | null>(null);
   const [selectedDateTime, setSelectedDateTime] = useState<{
     date: Date;
     timeSlot: { start: Date; end: Date };
@@ -50,7 +52,7 @@ const UserAppointments = () => {
 
   const handleDateTimeSelect = (
     date: Date,
-    timeSlot: { start: Date; end: Date },
+    timeSlot: { start: Date; end: Date }
   ) => {
     setSelectedDateTime({ date, timeSlot });
   };
@@ -82,7 +84,7 @@ const UserAppointments = () => {
           setSelectedAppointmentForReschedule(null);
           setSelectedDateTime(null);
         },
-      },
+      }
     );
   };
 
@@ -116,11 +118,11 @@ const UserAppointments = () => {
   const filteredAppointments = {
     pending:
       userAppointments?.filter((apt) =>
-        ["pending", "reschedule-pending"].includes(apt.status),
+        ["pending", "reschedule-pending"].includes(apt.status)
       ) || [],
     upcoming:
       userAppointments?.filter((apt) =>
-        ["confirmed", "reschedule-confirmed"].includes(apt.status),
+        ["confirmed", "reschedule-confirmed"].includes(apt.status)
       ) || [],
     past:
       userAppointments?.filter((apt) =>
@@ -130,7 +132,7 @@ const UserAppointments = () => {
           "no-show",
           "rejected",
           "reschedule-rejected",
-        ].includes(apt.status),
+        ].includes(apt.status)
       ) || [],
   };
 
@@ -138,11 +140,11 @@ const UserAppointments = () => {
     if (
       appointment.rescheduleRequest?.proposedDate &&
       ["reschedule-pending", "reschedule-confirmed"].includes(
-        appointment.status,
+        appointment.status
       )
     ) {
       return new Date(
-        appointment.rescheduleRequest.proposedDate,
+        appointment.rescheduleRequest.proposedDate
       ).toLocaleDateString("en-US", { timeZone: "UTC" });
     }
     return new Date(appointment.appointmentDate).toLocaleDateString("en-US", {
@@ -154,12 +156,12 @@ const UserAppointments = () => {
     if (
       appointment.rescheduleRequest?.proposedTimeSlot &&
       ["reschedule-pending", "reschedule-confirmed"].includes(
-        appointment.status,
+        appointment.status
       )
     ) {
       return format(
         new Date(appointment.rescheduleRequest.proposedTimeSlot.start),
-        "h:mm a",
+        "h:mm a"
       );
     }
     return format(new Date(appointment.timeSlot.start), "h:mm a");
@@ -169,6 +171,16 @@ const UserAppointments = () => {
     if (!appointments?.length) {
       return <div className="no-appointments">No appointments found</div>;
     }
+
+    const showNotesColumn =
+      activeTab === "past" &&
+      appointments.some(
+        (apt) =>
+          ["rejected", "reschedule-rejected"].includes(apt.status) &&
+          apt.rejectionDetails?.note &&
+          typeof apt.rejectionDetails.note === "string" &&
+          apt.rejectionDetails.note.length > 0
+      );
 
     return (
       <div className="appointments-table">
@@ -184,9 +196,9 @@ const UserAppointments = () => {
                 activeTab === "upcoming" ||
                 (activeTab === "past" &&
                   appointments.some(
-                    (apt) => apt.status === "completed" && !apt.hasReview,
+                    (apt) => apt.status === "completed" && !apt.hasReview
                   ))) && <th>Actions</th>}
-              {activeTab === "past" && <th>Notes</th>}
+              {showNotesColumn && <th>Notes</th>}
             </tr>
           </thead>
           <tbody>
@@ -248,18 +260,30 @@ const UserAppointments = () => {
                 {activeTab === "past" && appointment.status !== "completed" && (
                   <td data-label="Actions">-</td>
                 )}
-                {activeTab === "past" && (
-                  <td data-label="Notes" className="notes-cell">
-                    {["rejected", "reschedule-rejected"].includes(
-                      appointment.status,
-                    ) &&
-                    appointment.rejectionDetails?.note &&
-                    typeof appointment.rejectionDetails.note === "string" &&
-                    appointment.rejectionDetails.note.length > 0
-                      ? appointment.rejectionDetails.note
-                      : "-"}
-                  </td>
-                )}
+                {showNotesColumn &&
+                  (() => {
+                    const hasNote =
+                      ["rejected", "reschedule-rejected"].includes(
+                        appointment.status
+                      ) &&
+                      !!appointment.rejectionDetails?.note &&
+                      typeof appointment.rejectionDetails.note === "string" &&
+                      appointment.rejectionDetails.note.length > 0;
+                    if (hasNote) {
+                      return (
+                        <td data-label="Notes" className="notes-cell">
+                          {appointment.rejectionDetails!.note!}
+                        </td>
+                      );
+                    }
+                    return (
+                      <td
+                        className="notes-cell--empty"
+                        aria-hidden
+                        style={{ display: "none" }}
+                      />
+                    );
+                  })()}
               </tr>
             ))}
           </tbody>

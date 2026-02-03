@@ -49,11 +49,12 @@
       font-family: $font-secondary;
       position: relative;
       transition: color 0.3s ease;
+      white-space: nowrap;
 
       @media (max-width: 768px) {
         flex: 1;
         font-size: 0.875rem;
-        padding: 0.5rem;
+        padding: 0.5rem 0.25rem;
         text-align: center;
         border-radius: 4px;
 
@@ -272,6 +273,12 @@
     max-width: 300px;
     color: #ff4d4d;
     font-style: italic;
+  }
+
+  .notes-cell--empty {
+    @media (max-width: 768px) {
+      display: none;
+    }
   }
 
   @media (max-width: 768px) {
