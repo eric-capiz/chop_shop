@@ -17,7 +17,7 @@ const Hero = () => {
     <section className="hero">
       <div className="hero-content">
         <div className="hero-text">
-          <h1>Chop Shop</h1>
+          <h1>Barber Shop</h1>
           <p>Multiple barbers. One great experience.</p>
           {showBookButton && (
             <button className="book-button" onClick={handleBookNow}>

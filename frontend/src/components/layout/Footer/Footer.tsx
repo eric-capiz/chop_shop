@@ -8,9 +8,9 @@ import {
 } from "react-icons/fa";
 import "./_footer.scss";
 
-const ADDRESS = "1610 N Zaragoza Rd, El Paso, TX 79936";
-const PHONE = "(915) 257-1446";
-const PHONE_RAW = "9152571446";
+const ADDRESS = "123 N Fake Rd, El Paso, TX 79936";
+const PHONE = "(915) 555-5555";
+const PHONE_RAW = "9155555555";
 
 const SOCIAL = [
   { label: "Facebook", href: "https://facebook.com", Icon: FaFacebookF },
@@ -47,7 +47,7 @@ const Footer = () => {
           <div className="footer-block footer-phone">
             <FaPhone className="footer-icon" aria-hidden />
             <div>
-              <span className="footer-label">Shop</span>
+              <span className="footer-label">Barber Shop</span>
               <a
                 href={`tel:+1${PHONE_RAW}`}
                 className="footer-value footer-link"
@@ -58,7 +58,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="footer-social">
-          <span className="footer-social-label">Chop Shop</span>
+          <span className="footer-social-label">Barber Shop</span>
           <div className="footer-social-links">
             {SOCIAL.map(({ label, href, Icon }) => (
               <a
