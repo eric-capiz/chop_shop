@@ -8,6 +8,7 @@ import ReviewModal from "@/components/Modal/ReviewModal";
 import Toast from "@/components/common/Toast";
 import "./_userAppointments.scss";
 import { useQueryClient } from "@tanstack/react-query";
+import { isMutationPendingForAppointment } from "@/utils/appointmentActions";
 
 type TabType = "pending" | "upcoming" | "past";
 
@@ -202,7 +203,14 @@ const UserAppointments = () => {
             </tr>
           </thead>
           <tbody>
-            {appointments.map((appointment) => (
+            {appointments.map((appointment) => {
+              const isCancelling = isMutationPendingForAppointment(
+                updateAppointmentStatus,
+                appointment._id,
+              );
+              const isAnyCancelPending = updateAppointmentStatus.isPending;
+
+              return (
               <tr key={appointment._id}>
                 <td data-label="Service">{appointment.serviceId.name}</td>
                 <td data-label="Barber">
@@ -223,11 +231,9 @@ const UserAppointments = () => {
                     <button
                       className="btn-cancel"
                       onClick={() => handleCancel(appointment._id)}
-                      disabled={updateAppointmentStatus.isPending}
+                      disabled={isAnyCancelPending}
                     >
-                      {updateAppointmentStatus.isPending
-                        ? "Cancelling..."
-                        : "Cancel"}
+                      {isCancelling ? "Cancelling..." : "Cancel"}
                     </button>
                     {!appointment.rescheduleRequest &&
                       ["pending", "confirmed"].includes(appointment.status) && (
@@ -285,7 +291,8 @@ const UserAppointments = () => {
                     );
                   })()}
               </tr>
-            ))}
+            );
+            })}
           </tbody>
         </table>
       </div>

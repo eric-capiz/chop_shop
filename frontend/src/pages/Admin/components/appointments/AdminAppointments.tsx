@@ -4,6 +4,10 @@ import { useAppointment } from "@/hooks/appointment/useAppointment";
 import type { Appointment } from "@/types/appointment/appointment.types";
 import "./_adminAppointments.scss";
 import RejectionModal from "@/components/Modal/RejectionModal";
+import {
+  isAnyMutationPendingForAppointment,
+  isMutationPendingForAppointment,
+} from "@/utils/appointmentActions";
 
 type TabType = "pending" | "upcoming" | "past";
 
@@ -180,27 +184,36 @@ const AdminAppointments = () => {
     );
   };
 
+  const appointmentMutations = [
+    updateAppointmentStatus,
+    respondToReschedule,
+  ];
+  const isAnyAppointmentActionPending =
+    updateAppointmentStatus.isPending || respondToReschedule.isPending;
+
+  const isRowActionPending = (appointmentId: string) =>
+    isAnyMutationPendingForAppointment(appointmentMutations, appointmentId);
+
   const renderActions = (appointment: Appointment) => {
     if (!["pending", "reschedule-pending"].includes(appointment.status)) {
       return null;
     }
 
-    const isProcessing =
-      updateAppointmentStatus.isPending || respondToReschedule.isPending;
+    const isProcessing = isRowActionPending(appointment._id);
 
     return (
       <td data-label="Actions" className="actions">
         <button
           className="btn-confirm"
           onClick={() => handleConfirm(appointment)}
-          disabled={isProcessing}
+          disabled={isAnyAppointmentActionPending}
         >
           {isProcessing ? "Processing..." : "Confirm"}
         </button>
         <button
           className="btn-reject"
           onClick={() => handleReject(appointment)}
-          disabled={isProcessing}
+          disabled={isAnyAppointmentActionPending}
         >
           <span className="reject-icon">✕</span> Reject
         </button>
@@ -213,6 +226,11 @@ const AdminAppointments = () => {
       return null;
     }
 
+    const isCompleting = isMutationPendingForAppointment(
+      updateAppointmentStatus,
+      appointment._id,
+    );
+
     return (
       <td data-label="Actions" className="actions">
         <button
@@ -220,7 +238,7 @@ const AdminAppointments = () => {
           onClick={() => handleComplete(appointment)}
           disabled={updateAppointmentStatus.isPending}
         >
-          {updateAppointmentStatus.isPending ? "Processing..." : "Complete"}
+          {isCompleting ? "Processing..." : "Complete"}
         </button>
       </td>
     );

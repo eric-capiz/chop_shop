@@ -9,6 +9,44 @@ const Service = require("../../model/admin/Service");
 const User = require("../../model/user/User");
 const { sendAppointmentEmail } = require("../../services/emailService");
 
+/** Align stored workHours to the booking day (UTC). If end <= start, end is next UTC day (e.g. 6pm local → 00:00 UTC). */
+function getWorkWindowForBooking(workHours, requestedStart) {
+  const y = requestedStart.getUTCFullYear();
+  const m = requestedStart.getUTCMonth();
+  const d = requestedStart.getUTCDate();
+  const startStored = new Date(workHours.start);
+  const endStored = new Date(workHours.end);
+
+  const workStart = new Date(
+    Date.UTC(
+      y,
+      m,
+      d,
+      startStored.getUTCHours(),
+      startStored.getUTCMinutes(),
+      0,
+      0,
+    ),
+  );
+  let workEnd = new Date(
+    Date.UTC(
+      y,
+      m,
+      d,
+      endStored.getUTCHours(),
+      endStored.getUTCMinutes(),
+      0,
+      0,
+    ),
+  );
+
+  if (workEnd <= workStart) {
+    workEnd = new Date(workEnd.getTime() + 24 * 60 * 60 * 1000);
+  }
+
+  return { workStart, workEnd };
+}
+
 // Protected routes - both user and admin need auth
 router.use(auth);
 
@@ -111,9 +149,6 @@ router.post("/book", async (req, res) => {
     });
   }
 
-  const workStart = new Date(scheduleDay.workHours.start);
-  const workEnd = new Date(scheduleDay.workHours.end);
-
   const overlapping = await Appointment.findOne({
     adminId,
     status: {
@@ -142,15 +177,9 @@ router.post("/book", async (req, res) => {
     });
   }
 
-  workStart.setFullYear(
-    requestedStart.getFullYear(),
-    requestedStart.getMonth(),
-    requestedStart.getDate()
-  );
-  workEnd.setFullYear(
-    requestedStart.getFullYear(),
-    requestedStart.getMonth(),
-    requestedStart.getDate()
+  const { workStart, workEnd } = getWorkWindowForBooking(
+    scheduleDay.workHours,
+    requestedStart,
   );
 
   if (
