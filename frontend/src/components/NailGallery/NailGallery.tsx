@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useTechniciansList } from "@/hooks/useTechnicians";
 import { useTechnicianGallery } from "@/hooks/useTechnicians";
-import "./_haircutGallery.scss";
+import "./_nailGallery.scss";
 
 const NailGallery = () => {
   const { data: technicians } = useTechniciansList();

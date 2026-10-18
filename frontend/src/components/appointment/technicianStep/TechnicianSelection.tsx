@@ -1,6 +1,6 @@
 import { useTechniciansList } from "@/hooks/useTechnicians";
 import type { PublicTechnician } from "@/types/technician.types";
-import "./_barberSelection.scss";
+import "./_technicianSelection.scss";
 
 interface TechnicianSelectionProps {
   onSelect: (technician: PublicTechnician) => void;
