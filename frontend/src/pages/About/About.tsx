@@ -1,45 +1,45 @@
 import { Link } from "react-router-dom";
-import { useBarbersList } from "@/hooks/useBarbers";
+import { useTechniciansList } from "@/hooks/useTechnicians";
 import "./_about.scss";
 
 const About = () => {
-  const { data: barbers, isLoading, error } = useBarbersList();
+  const { data: technicians, isLoading, error } = useTechniciansList();
 
-  if (isLoading) return <div className="about">Loading barbers...</div>;
-  if (error) return <div className="about">Failed to load barbers.</div>;
-  if (!barbers?.length) return <div className="about">No barbers yet.</div>;
+  if (isLoading) return <div className="about">Loading technicians...</div>;
+  if (error) return <div className="about">Failed to load technicians.</div>;
+  if (!technicians?.length) return <div className="about">No technicians yet.</div>;
 
   return (
     <div className="about">
       <section className="about-header">
-        <h1>Meet Our Barbers</h1>
+        <h1>Meet Our Nail Technicians</h1>
         <p>Expert stylists ready to give you the perfect look</p>
       </section>
 
-      <section className="barbers-grid">
-        {barbers.map((barber) => (
+      <section className="technicians-grid">
+        {technicians.map((technician) => (
           <Link
-            to={`/barber/${barber._id}`}
-            key={barber._id}
-            className="barber-card"
+            to={`/technician/${technician._id}`}
+            key={technician._id}
+            className="technician-card"
           >
-            <div className="barber-image">
+            <div className="technician-image">
               <img
-                src={barber.profileImage?.url || ""}
-                alt={barber.name}
+                src={technician.profileImage?.url || ""}
+                alt={technician.name}
               />
             </div>
-            <div className="barber-info">
-              <h3>{barber.name}</h3>
+            <div className="technician-info">
+              <h3>{technician.name}</h3>
               <p className="specialty">
-                {barber.specialties?.[0] ?? "Barber"}
+                {technician.specialties?.[0] ?? "Technician"}
               </p>
               <p className="experience">
-                {barber.yearsOfExperience ?? 0} years experience
+                {technician.yearsOfExperience ?? 0} years experience
               </p>
               <p className="bio-preview">
-                {(barber.bio || "").substring(0, 120)}
-                {(barber.bio?.length ?? 0) > 120 ? "..." : ""}
+                {(technician.bio || "").substring(0, 120)}
+                {(technician.bio?.length ?? 0) > 120 ? "..." : ""}
               </p>
               <span className="view-profile">View Profile</span>
             </div>

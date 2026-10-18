@@ -8,7 +8,7 @@ const mongoSanitize = require("express-mongo-sanitize");
 const rateLimit = require("express-rate-limit");
 
 const authRoutes = require("./routes/auth/auth");
-const barbersRoutes = require("./routes/barbers");
+const techniciansRoutes = require("./routes/technicians");
 const adminRoutes = require("./routes/admin");
 const userRoutes = require("./routes/user");
 const appointmentRoutes = require("./routes/appointment/appointment");
@@ -71,12 +71,12 @@ app.use("/api/auth", authLimiter);
 
 // Test route
 app.get("/", (req, res) => {
-  res.json({ message: "Chop Shop API is up and running!" });
+  res.json({ message: "Luxe Nails API is up and running!" });
 });
 
 // Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/barbers", barbersRoutes);
+app.use("/api/technicians", techniciansRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/appointments", appointmentRoutes);

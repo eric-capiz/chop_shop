@@ -103,8 +103,8 @@ const UserReviews = () => {
                     : "Service"}
                 </h3>
                 {typeof review.adminId === "object" && review.adminId?.name ? (
-                  <span className="barber-name">
-                    Barber: {review.adminId.name}
+                  <span className="technician-name">
+                    Technician: {review.adminId.name}
                   </span>
                 ) : null}
                 <span className="date">

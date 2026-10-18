@@ -40,7 +40,7 @@ const Header = () => {
       <header className="header">
         <div className="header-content">
           <Link to="/" onClick={() => setIsMenuOpen(false)} className="logo">
-            BARBER SHOP
+            LUXE NAILS
           </Link>
 
           <button
@@ -57,7 +57,7 @@ const Header = () => {
               onClick={() => setIsMenuOpen(false)}
               className="nav-link"
             >
-              Our Barbers
+              Our Technicians
             </Link>
             <Link
               to="/our-work"

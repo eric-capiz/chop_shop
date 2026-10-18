@@ -132,7 +132,7 @@ const EditDayModal = ({
       if (!isWorking) {
         await onSave({ startTime: null, endTime: null });
       } else {
-        // Build Date in barber's local time, then send as ISO (UTC).
+        // Build Date in technician's local time, then send as ISO (UTC).
         // This ensures work hours stay correct regardless of server timezone.
         const [startH, startM] = startTime.split(":").map(Number);
         const [endH, endM] = endTime.split(":").map(Number);

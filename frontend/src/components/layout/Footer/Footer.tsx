@@ -47,7 +47,7 @@ const Footer = () => {
           <div className="footer-block footer-phone">
             <FaPhone className="footer-icon" aria-hidden />
             <div>
-              <span className="footer-label">Barber Shop</span>
+              <span className="footer-label">Technician Shop</span>
               <a
                 href={`tel:+1${PHONE_RAW}`}
                 className="footer-value footer-link"
@@ -58,7 +58,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="footer-social">
-          <span className="footer-social-label">Barber Shop</span>
+          <span className="footer-social-label">Technician Shop</span>
           <div className="footer-social-links">
             {SOCIAL.map(({ label, href, Icon }) => (
               <a
@@ -67,7 +67,7 @@ const Footer = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="footer-social-link"
-                aria-label={`Chop Shop on ${label}`}
+                aria-label={`Luxe Nails on ${label}`}
               >
                 <Icon aria-hidden />
               </a>

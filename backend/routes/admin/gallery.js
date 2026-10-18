@@ -10,12 +10,12 @@ const {
 
 const GalleryItem = require("../../model/admin/GalleryItem");
 
-// All routes require barber auth (scoped to logged-in barber)
+// All routes require technician auth (scoped to logged-in technician)
 router.use(auth);
 router.use(isAdmin);
 
 // @route   GET /api/admin/gallery
-// @desc    Get logged-in barber's gallery items
+// @desc    Get logged-in technician's gallery items
 // @access  Private/Admin
 router.get("/", async (req, res) => {
   const gallery = await GalleryItem.find({ adminId: req.user.id }).populate(

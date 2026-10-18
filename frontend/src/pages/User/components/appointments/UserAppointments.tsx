@@ -189,7 +189,7 @@ const UserAppointments = () => {
           <thead>
             <tr>
               <th>Service</th>
-              <th>Barber</th>
+              <th>Technician</th>
               <th>Date</th>
               <th>Time</th>
               <th>Status</th>
@@ -213,7 +213,7 @@ const UserAppointments = () => {
               return (
               <tr key={appointment._id}>
                 <td data-label="Service">{appointment.serviceId.name}</td>
-                <td data-label="Barber">
+                <td data-label="Technician">
                   {typeof appointment.adminId === "object" &&
                   appointment.adminId?.name
                     ? appointment.adminId.name
@@ -364,7 +364,7 @@ const UserAppointments = () => {
           <DateTimeSelection
             onSelect={handleDateTimeSelect}
             isReschedule={true}
-            barberId={
+            technicianId={
               selectedAppointmentForReschedule?.adminId
                 ? typeof selectedAppointmentForReschedule.adminId === "object"
                   ? selectedAppointmentForReschedule.adminId._id

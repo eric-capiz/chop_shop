@@ -1,6 +1,6 @@
-# Chop Shop — Multi-Barber Booking (2.0)
+# Luxe Nails — Nail Salon Booking
 
-Multi-barber barbershop booking app. MERN stack: MongoDB, Express, React, Node. Frontend and backend are wired; all data comes from the API (no dummy data). Repo: [chop_shop](https://github.com/eric-capiz/chop_shop). Original single-barber app: [barbershop-booking](https://github.com/eric-capiz/barbershop-booking).
+Nail salon booking app. MERN stack: MongoDB, Express, React, Node. Frontend and backend are wired; all data comes from the API (no dummy data). Repo: [chop_shop](https://github.com/eric-capiz/chop_shop). Original single-barber app: [barbershop-booking](https://github.com/eric-capiz/barbershop-booking).
 
 **Live:** [App](https://chop-shop-ec.vercel.app) · [API](https://chop-shop-guwk.onrender.com)
 
@@ -10,9 +10,9 @@ Multi-barber barbershop booking app. MERN stack: MongoDB, Express, React, Node. 
 
 ### Roles
 
-- **User** — Browse barbers, book appointments, view profile (appointments, reviews). Register or log in.
-- **Admin (barber)** — Dashboard: profile, services, gallery, availability, appointments. Confirm/reject bookings; reject requires a note (shown to user under Notes).
-- **Superadmin** — Same as admin plus **Manage Barbers**: list barbers, add barber, transfer super admin role (then logged out), delete barber (cascade: profile, services, gallery, availability, appointments, reviews, Cloudinary).
+- **User** — Browse nail technicians, book appointments, view profile (appointments, reviews). Register or log in.
+- **Admin (technician)** — Dashboard: profile, services, gallery, availability, appointments. Confirm/reject bookings; reject requires a note (shown to user under Notes).
+- **Superadmin** — Same as admin plus **Manage Technicians**: list technicians, add technician, transfer super admin role (then logged out), delete barber (cascade: profile, services, gallery, availability, appointments, reviews, Cloudinary).
 
 ### Frontend Routes
 
@@ -24,7 +24,7 @@ Multi-barber barbershop booking app. MERN stack: MongoDB, Express, React, Node. 
 | `/our-work`    | Our Work — per-barber gallery + top reviews from API.                                                         |
 | `/book`        | Booking (user only): barber → date/time → service → contact → confirm. Pre-select via `?barber=id`.           |
 | `/profile`     | User profile: appointments (with barber name, rejection note under Notes), reviews.                           |
-| `/dashboard/*` | Admin dashboard: Profile, Services, Gallery, Availability, Appointments; superadmin also sees Manage Barbers. |
+| `/dashboard/*` | Admin dashboard: Profile, Services, Gallery, Availability, Appointments; superadmin also sees Manage Technicians. |
 
 ### Backend (Summary)
 

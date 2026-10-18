@@ -1,8 +1,8 @@
 const nodemailer = require("nodemailer");
 const { format } = require("date-fns");
-const BarberProfile = require("../model/admin/BarberProfile");
+const SalonProfile = require("../model/admin/SalonProfile");
 
-const CHOP_SHOP_PHONE = "915-257-1446";
+const LUXE_NAILS_PHONE = "915-257-1446";
 
 function formatStatus(status) {
   const map = {
@@ -21,8 +21,8 @@ function formatStatus(status) {
 
 function buildAppointmentEmail(data) {
   const {
-    barberName,
-    barberEmail,
+    technicianName,
+    technicianEmail,
     userName,
     serviceName,
     date,
@@ -46,7 +46,7 @@ function buildAppointmentEmail(data) {
     (status === "rejected" || status === "reschedule-rejected") && notes;
 
   const generalNote =
-    recipientRole === "barber"
+    recipientRole === "technician"
       ? "Please log in to update the appointment status."
       : "If you need to make any changes, please do so through the website.";
 
@@ -62,7 +62,7 @@ function buildAppointmentEmail(data) {
 </head>
 <body style="font-family: sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
   <h2 style="margin-top: 0;">Appointment Details</h2>
-  <p><strong>Barber:</strong> ${barberName || "—"}</p>
+  <p><strong>Technician:</strong> ${technicianName || "—"}</p>
   <p><strong>User:</strong> ${userName || "—"}</p>
   <p><strong>Service:</strong> ${serviceName || "—"}</p>
   <p><strong>Date:</strong> ${dateDisplay}</p>
@@ -73,9 +73,9 @@ function buildAppointmentEmail(data) {
   <hr style="border: none; border-top: 1px solid #ddd; margin: 24px 0;">
   <p style="font-size: 14px; color: #666;">
     For any questions, please reach out to:<br>
-    Chop Shop: ${CHOP_SHOP_PHONE}<br>
-    ${barberName || ""}<br>
-    ${barberEmail || ""}
+    Luxe Nails: ${LUXE_NAILS_PHONE}<br>
+    ${technicianName || ""}<br>
+    ${technicianEmail || ""}
   </p>
 </body>
 </html>
@@ -94,7 +94,7 @@ async function sendAppointmentEmail(to, recipientRole, appointmentData) {
     return { success: false, error: "EMAIL_APP_PASSWORD not set" };
   }
 
-  const superAdmin = await BarberProfile.findOne({ role: "superadmin" })
+  const superAdmin = await SalonProfile.findOne({ role: "superadmin" })
     .select("email")
     .lean();
   if (!superAdmin?.email) {
@@ -102,7 +102,7 @@ async function sendAppointmentEmail(to, recipientRole, appointmentData) {
   }
 
   const fromEmail = superAdmin.email;
-  const fromDisplay = `Chop Shop <${fromEmail}>`;
+  const fromDisplay = `Luxe Nails <${fromEmail}>`;
 
   try {
     const transporter = nodemailer.createTransport({

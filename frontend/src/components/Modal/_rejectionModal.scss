@@ -13,9 +13,9 @@
   textarea {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid $gold-dark;
+    border: 1px solid $rose-dark;
     border-radius: 4px;
-    background: $black-light;
+    background: $white;
     color: $silver-light;
     font-family: $font-secondary;
     resize: vertical;
@@ -24,7 +24,7 @@
 
     &:focus {
       outline: none;
-      border-color: $gold-primary;
+      border-color: $rose-primary;
     }
   }
 
@@ -57,11 +57,11 @@
 
       &.btn-cancel {
         background: transparent;
-        border: 1px solid $gold-dark;
-        color: $gold-primary;
+        border: 1px solid $rose-dark;
+        color: $rose-primary;
 
         &:hover {
-          background: rgba($gold-primary, 0.1);
+          background: rgba($rose-primary, 0.1);
         }
       }
 

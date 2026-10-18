@@ -13,7 +13,7 @@
 
     h2 {
       font-family: $font-primary;
-      color: $gold-primary;
+      color: $rose-primary;
       font-size: 2rem;
 
       @media (max-width: 768px) {
@@ -26,7 +26,7 @@
     display: flex;
     gap: 1rem;
     margin-bottom: 2rem;
-    border-bottom: 2px solid $gold-dark;
+    border-bottom: 2px solid $rose-dark;
     padding-bottom: 1rem;
 
     @media (max-width: 768px) {
@@ -35,7 +35,7 @@
       margin-bottom: 1.5rem;
       justify-content: space-between;
       border-bottom: none;
-      background: $black-secondary;
+      background: $cream-secondary;
       border-radius: 8px;
       padding: 0.5rem;
     }
@@ -63,18 +63,18 @@
         }
 
         &.active {
-          background: $gold-primary;
-          color: $black-primary;
+          background: $rose-primary;
+          color: $text-primary;
         }
       }
 
       @media (min-width: 769px) {
         &:hover {
-          color: $gold-light;
+          color: $rose-light;
         }
 
         &.active {
-          color: $gold-primary;
+          color: $rose-primary;
 
           &::after {
             content: "";
@@ -83,7 +83,7 @@
             left: 0;
             width: 100%;
             height: 2px;
-            background: $gold-primary;
+            background: $rose-primary;
           }
         }
       }
@@ -91,7 +91,7 @@
   }
 
   .appointments-table {
-    background: $black-secondary;
+    background: $cream-secondary;
     border-radius: 8px;
     overflow-x: auto;
 
@@ -112,11 +112,11 @@
 
         tr {
           display: block;
-          background: $black-secondary;
+          background: $cream-secondary;
           margin-bottom: 1rem;
           padding: 1rem;
           border-radius: 8px;
-          border: 1px solid $gold-dark;
+          border: 1px solid $rose-dark;
         }
 
         td {
@@ -130,14 +130,14 @@
             font-weight: bold;
             width: 120px;
             min-width: 120px;
-            color: $gold-primary;
+            color: $rose-primary;
           }
         }
 
         .actions {
           flex-wrap: wrap;
           padding-top: 1rem;
-          border-top: 1px solid $gold-dark;
+          border-top: 1px solid $rose-dark;
 
           button {
             flex: 1;
@@ -165,12 +165,12 @@
 
       th,
       tr {
-        border-bottom: 1px solid $gold-dark;
+        border-bottom: 1px solid $rose-dark;
       }
 
       th {
-        background: $black-light;
-        color: $gold-primary;
+        background: $white;
+        color: $rose-primary;
         font-family: $font-primary;
         font-weight: normal;
       }
@@ -188,8 +188,8 @@
       text-transform: capitalize;
 
       &.pending {
-        background: rgba($gold-primary, 0.2);
-        color: $gold-primary;
+        background: rgba($rose-primary, 0.2);
+        color: $rose-primary;
       }
 
       &.confirmed {
@@ -229,8 +229,8 @@
       }
 
       .btn-reschedule {
-        background: $gold-primary;
-        color: $black-primary;
+        background: $rose-primary;
+        color: $text-primary;
       }
 
       .btn-cancel {
@@ -250,20 +250,20 @@
         font-family: $font-secondary;
 
         // Add Review button
-        background: $gradient-gold;
-        color: $black-primary;
+        background: $gradient-rose;
+        color: $text-primary;
 
         &:hover {
           background: linear-gradient(
             135deg,
-            $gold-primary 0%,
-            $gold-light 100%
+            $rose-primary 0%,
+            $rose-light 100%
           );
         }
 
         .star-icon {
           font-size: 1.2em;
-          color: $gold-primary; // For better contrast with both button variants
+          color: $rose-primary; // For better contrast with both button variants
         }
       }
     }
@@ -389,10 +389,10 @@
   .reschedule-notice {
     margin-bottom: 1rem;
     padding: 0.75rem;
-    background: rgba($gold-primary, 0.1);
-    border: 1px solid $gold-dark;
+    background: rgba($rose-primary, 0.1);
+    border: 1px solid $rose-dark;
     border-radius: 4px;
-    color: $gold-light;
+    color: $rose-light;
     font-family: $font-secondary;
   }
 
@@ -402,25 +402,25 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba($black-primary, 0.8);
+    background: rgba($text-primary, 0.8);
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    color: $gold-primary;
+    color: $rose-primary;
     font-family: $font-secondary;
   }
 
   .selected-time {
     margin: 1.5rem 0;
     padding: 1rem;
-    background: rgba($gold-primary, 0.1);
-    border: 1px solid $gold-dark;
+    background: rgba($rose-primary, 0.1);
+    border: 1px solid $rose-dark;
     border-radius: 4px;
     text-align: center;
 
     h4 {
-      color: $gold-primary;
+      color: $rose-primary;
       font-family: $font-primary;
       margin-bottom: 0.5rem;
     }
@@ -437,11 +437,11 @@
     display: flex;
     justify-content: center;
     padding-top: 1.5rem;
-    border-top: 1px solid $gold-dark;
+    border-top: 1px solid $rose-dark;
 
     .btn-confirm {
-      background: $gradient-gold;
-      color: $black-primary;
+      background: $gradient-rose;
+      color: $text-primary;
       padding: 0.75rem 2rem;
       border: none;
       border-radius: 4px;
@@ -454,13 +454,13 @@
 
       &:hover:not(:disabled) {
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba($gold-primary, 0.2);
+        box-shadow: 0 4px 12px rgba($rose-primary, 0.2);
       }
 
       &:disabled {
         opacity: 0.6;
         cursor: not-allowed;
-        background: $black-light;
+        background: $white;
         color: $silver-dark;
       }
     }
@@ -470,8 +470,8 @@
 // Update status badge colors
 .status-badge {
   &.reschedule-pending {
-    background: rgba($gold-primary, 0.2);
-    color: $gold-light;
+    background: rgba($rose-primary, 0.2);
+    color: $rose-light;
   }
 
   &.reschedule-confirmed {

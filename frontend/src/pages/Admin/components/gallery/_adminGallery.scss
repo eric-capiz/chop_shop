@@ -32,13 +32,13 @@
 
     h2 {
       font-family: $font-primary;
-      color: $gold-primary;
+      color: $rose-primary;
       font-size: 2rem;
     }
 
     .btn-primary {
-      background: $gradient-gold;
-      color: $black-primary;
+      background: $gradient-rose;
+      color: $text-primary;
       padding: 0.75rem 1.5rem;
       border: none;
       border-radius: 4px;
@@ -64,8 +64,8 @@
   }
 
   .gallery-item {
-    background: $black-secondary;
-    border: 1px solid $gold-primary;
+    background: $cream-secondary;
+    border: 1px solid $rose-primary;
     border-radius: 8px;
     overflow: hidden;
 
@@ -90,7 +90,7 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba($black-primary, 0.8);
+      background: rgba($text-primary, 0.8);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -105,7 +105,7 @@
       .action-btn {
         background: none;
         border: none;
-        color: $gold-primary;
+        color: $rose-primary;
         font-size: 1.5rem;
         cursor: pointer;
         padding: 0.5rem;
@@ -150,12 +150,12 @@
         gap: 0.5rem;
 
         .tag {
-          background: $black-light;
-          color: $gold-primary;
+          background: $white;
+          color: $rose-primary;
           padding: 0.25rem 0.75rem;
           border-radius: 1rem;
           font-size: 0.875rem;
-          border: 1px solid $gold-dark;
+          border: 1px solid $rose-dark;
         }
       }
     }

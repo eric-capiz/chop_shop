@@ -1,0 +1,54 @@
+@use "@styles/variables" as *;
+
+.nail-gallery {
+  perspective: 1500px;
+  width: 400px;
+  height: 400px;
+  margin-right: 4rem;
+
+  @media (max-width: 1023px) {
+    display: none;
+  }
+
+  .gallery-card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &.flipping {
+      transform: rotateY(180deg);
+    }
+  }
+
+  .card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid $rose-primary;
+    box-shadow: 0 0 20px rgba($rose-primary, 0.3);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: opacity 0.3s ease;
+    }
+
+    &.back {
+      transform: rotateY(180deg);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .nail-gallery {
+    width: 300px;
+    height: 300px;
+    margin: 2rem auto;
+  }
+}

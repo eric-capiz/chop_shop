@@ -32,7 +32,7 @@ const AppointmentSchema = new mongoose.Schema(
   {
     adminId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "BarberProfile",
+      ref: "SalonProfile",
       required: true,
     },
     userId: {

@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const User = require("../../model/user/User");
-const BarberProfile = require("../../model/admin/BarberProfile");
+const SalonProfile = require("../../model/admin/SalonProfile");
 
 // @route   POST /api/auth/register
 // @desc    Register a new user
@@ -70,7 +70,7 @@ router.post("/login", async (req, res) => {
     const { username, password } = req.body;
 
     // Check for admin first
-    let admin = await BarberProfile.findOne({ username });
+    let admin = await SalonProfile.findOne({ username });
 
     if (admin) {
       const isMatch = await bcrypt.compare(password, admin.password);

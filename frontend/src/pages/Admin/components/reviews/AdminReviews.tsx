@@ -3,27 +3,27 @@ import { format } from "date-fns";
 import { FaStar, FaTrash } from "react-icons/fa";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useProfile } from "@hooks/admin/useProfile";
-import { barbersService } from "@/services/barbers.service";
+import { techniciansService } from "@/services/technicians.service";
 import { reviewService } from "@/services/review.service";
-import type { PublicReview } from "@/types/barber.types";
+import type { PublicReview } from "@/types/technician.types";
 import Toast from "@/components/common/Toast";
 import "./_adminReviews.scss";
 
 const AdminReviews = () => {
   const queryClient = useQueryClient();
   const { data: profile } = useProfile();
-  const barberId = profile?._id;
+  const technicianId = profile?._id;
 
   const { data: reviews, isLoading } = useQuery({
-    queryKey: ["barberReviews", barberId],
-    queryFn: () => barbersService.getReviews(barberId!),
-    enabled: !!barberId,
+    queryKey: ["barberReviews", technicianId],
+    queryFn: () => techniciansService.getReviews(technicianId!),
+    enabled: !!technicianId,
   });
 
   const deleteReview = useMutation({
     mutationFn: (reviewId: string) => reviewService.deleteReview(reviewId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["barberReviews", barberId] });
+      queryClient.invalidateQueries({ queryKey: ["barberReviews", technicianId] });
     },
   });
 

@@ -18,7 +18,7 @@
       height: 150px;
       border-radius: 50%;
       overflow: hidden;
-      border: 3px solid $gold-primary;
+      border: 3px solid $rose-primary;
 
       img {
         width: 100%;
@@ -29,12 +29,12 @@
       .profile-image-placeholder {
         width: 100%;
         height: 100%;
-        background: $black-secondary;
+        background: $cream-secondary;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 3rem;
-        color: $gold-primary;
+        color: $rose-primary;
         text-transform: uppercase;
       }
 
@@ -43,7 +43,7 @@
         bottom: 0;
         left: 0;
         right: 0;
-        background: rgba($black-primary, 0.8);
+        background: rgba($text-primary, 0.8);
         padding: 0.5rem;
         display: flex;
         justify-content: center;
@@ -51,12 +51,12 @@
         transition: all 0.3s ease;
 
         svg {
-          color: $gold-primary;
+          color: $rose-primary;
           font-size: 1.2rem;
         }
 
         &:hover {
-          background: rgba($black-primary, 0.9);
+          background: rgba($text-primary, 0.9);
         }
       }
     }
@@ -64,7 +64,7 @@
 
   h2 {
     font-family: $font-primary;
-    color: $gold-primary;
+    color: $rose-primary;
     font-size: 2rem;
     margin-bottom: 3rem;
     text-align: center;
@@ -87,18 +87,18 @@
   }
 
   &__section {
-    background-color: $black-secondary;
-    border: 1px solid $gold-primary;
+    background-color: $text-secondary;
+    border: 1px solid $rose-primary;
     border-radius: 8px;
     padding: 2rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 
     h3 {
       font-family: $font-primary;
-      color: $gold-primary;
+      color: $rose-primary;
       font-size: 1.5rem;
       margin-bottom: 1.5rem;
-      border-bottom: 1px solid $gold-dark;
+      border-bottom: 1px solid $rose-dark;
       padding-bottom: 0.5rem;
 
       @media (max-width: 768px) {
@@ -113,7 +113,7 @@
       margin-bottom: 1rem;
 
       label {
-        color: $gold-light;
+        color: $rose-light;
         width: 200px;
         font-family: $font-secondary;
 
@@ -138,7 +138,7 @@
 
           &:before {
             content: "•";
-            color: $gold-primary;
+            color: $rose-primary;
             margin-right: 0.5rem;
           }
         }
@@ -172,7 +172,7 @@
   .edit-button {
     background: none;
     border: none;
-    color: $gold-primary;
+    color: $rose-primary;
     cursor: pointer;
     padding: 0.5rem;
     transition: opacity 0.3s ease;
@@ -188,10 +188,10 @@
 }
 
 .edit-form {
-  background: $black-secondary;
+  background: $cream-secondary;
   padding: 1.5rem;
   border-radius: 8px;
-  border: 1px solid $gold-dark;
+  border: 1px solid $rose-dark;
 
   @media (max-width: 768px) {
     padding: 1rem;
@@ -206,7 +206,7 @@
 
     label {
       display: block;
-      color: $gold-primary;
+      color: $rose-primary;
       margin-bottom: 0.5rem;
       font-family: $font-secondary;
     }
@@ -214,15 +214,15 @@
     input {
       width: 100%;
       padding: 0.75rem;
-      border: 1px solid $gold-dark;
+      border: 1px solid $rose-dark;
       border-radius: 4px;
-      background: $black-primary;
+      background:$cream-primary;
       color: $silver-light;
       font-family: $font-secondary;
 
       &:focus {
         outline: none;
-        border-color: $gold-primary;
+        border-color: $rose-primary;
       }
     }
   }
@@ -263,8 +263,8 @@
     }
 
     .btn-save {
-      background: $gradient-gold;
-      color: $black-primary;
+      background: $gradient-rose;
+      color: $text-primary;
 
       &:disabled {
         opacity: 0.7;
@@ -273,7 +273,7 @@
     }
 
     .btn-cancel {
-      background: $black-light;
+      background: $white;
       color: $silver-primary;
     }
   }
@@ -286,11 +286,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: $black-primary;
+    background:$cream-primary;
     padding: 0.5rem 1rem;
     margin-bottom: 0.5rem;
     border-radius: 4px;
-    border: 1px solid $gold-dark;
+    border: 1px solid $rose-dark;
 
     span {
       color: $silver-light;
@@ -323,9 +323,9 @@
   input {
     flex: 1;
     padding: 0.75rem;
-    border: 1px solid $gold-dark;
+    border: 1px solid $rose-dark;
     border-radius: 4px;
-    background: $black-primary;
+    background:$cream-primary;
     color: $silver-light;
     min-width: 0;
   }
@@ -337,8 +337,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: $gold-primary;
-    color: $black-primary;
+    background: $rose-primary;
+    color: $text-primary;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -373,9 +373,9 @@
       width: 100%;
       min-height: 150px;
       padding: 0.75rem;
-      border: 1px solid $gold-dark;
+      border: 1px solid $rose-dark;
       border-radius: 4px;
-      background: $black-primary;
+      background:$cream-primary;
       color: $silver-light;
       font-family: $font-secondary;
       resize: vertical;
@@ -383,7 +383,7 @@
 
       &:focus {
         outline: none;
-        border-color: $gold-primary;
+        border-color: $rose-primary;
       }
 
       &::placeholder {
@@ -425,20 +425,20 @@
   .social-input {
     display: flex;
     align-items: center;
-    background: $black-primary;
-    border: 1px solid $gold-dark;
+    background:$cream-primary;
+    border: 1px solid $rose-dark;
     border-radius: 4px;
     overflow: hidden;
 
     &:focus-within {
-      border-color: $gold-primary;
+      border-color: $rose-primary;
     }
 
     .prefix {
       padding: 0.75rem;
-      background: $black-light;
+      background: $white;
       color: $silver-primary;
-      border-right: 1px solid $gold-dark;
+      border-right: 1px solid $rose-dark;
       font-family: $font-secondary;
       font-size: 0.9rem;
     }
@@ -466,7 +466,7 @@
       .prefix {
         width: 100%;
         border-right: none;
-        border-bottom: 1px solid $gold-dark;
+        border-bottom: 1px solid $rose-dark;
       }
 
       input {

@@ -3,7 +3,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const { format, parse, setMinutes } = require("date-fns");
 
-const BarberAvailability = require("../../model/admin/BarberAvailability");
+const SalonAvailability = require("../../model/admin/SalonAvailability");
 const Appointment = require("../../model/appointment/Appointment");
 
 // Slots are "booked" if any active appointment's timeSlot overlaps (single source: Appointment).
@@ -13,11 +13,11 @@ function slotOverlapsAppointment(slotStart, slotEnd, apptStart, apptEnd) {
 }
 
 // @route   GET /api/admin/availability
-// @desc    Get barber's current month availability (booked state from Appointment so cancel/reschedule frees slots)
+// @desc    Get technician's current month availability (booked state from Appointment so cancel/reschedule frees slots)
 // @access  Private/Admin
 router.get("/", async (req, res) => {
   try {
-    const availability = await BarberAvailability.findOne({
+    const availability = await SalonAvailability.findOne({
       adminId: req.user.id,
     });
 
@@ -83,12 +83,12 @@ router.post("/month", async (req, res) => {
       timeSlots: [],
     }));
 
-    let availability = await BarberAvailability.findOne({
+    let availability = await SalonAvailability.findOne({
       adminId: req.user.id,
     });
 
     if (!availability) {
-      availability = new BarberAvailability({
+      availability = new SalonAvailability({
         adminId: req.user.id,
         currentMonth: { month, year, isSet: true },
         schedule,
@@ -126,12 +126,12 @@ router.put("/day/:date", async (req, res) => {
       endTime.setMinutes(0, 0, 0);
     }
 
-    let availability = await BarberAvailability.findOne({
+    let availability = await SalonAvailability.findOne({
       adminId: req.user.id,
     });
 
     if (!availability) {
-      availability = new BarberAvailability({
+      availability = new SalonAvailability({
         adminId: req.user.id,
         currentMonth: {
           month: date.getMonth() + 1,

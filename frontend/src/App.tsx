@@ -5,7 +5,7 @@ import Layout from "./components/layout/Layout";
 import Home from "./pages/Home/Home";
 import About from "./pages/About/About";
 import Gallery from "./pages/Gallery/Gallery";
-import BarberProfile from "./pages/BarberProfile/BarberProfile";
+import TechnicianProfile from "./pages/TechnicianProfile/TechnicianProfile";
 import ProtectedAdminRoute from "./components/auth/ProtectedAdminRoute";
 import ProtectedUserRoute from "./components/auth/ProtectedUserRoute";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
@@ -32,7 +32,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/our-work" element={<Gallery />} />
           <Route path="/about" element={<About />} />
-          <Route path="/barber/:id" element={<BarberProfile />} />
+          <Route path="/technician/:id" element={<TechnicianProfile />} />
           {/* Auth Routes */}
           <Route path="/login" element={<div>Login</div>} />
           <Route path="/register" element={<div>Register</div>} />

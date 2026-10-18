@@ -5,7 +5,7 @@ import AdminServices from "./components/services/AdminServices";
 import AdminGallery from "./components/gallery/AdminGallery";
 import AdminAvailability from "./components/availability/AdminAvailability";
 import AdminAppointments from "./components/appointments/AdminAppointments";
-import AdminBarbers from "./components/barbers/AdminBarbers";
+import AdminTechnicians from "./components/technicians/AdminTechnicians";
 import AdminReviews from "./components/reviews/AdminReviews";
 import "./_adminDashboard.scss";
 
@@ -24,8 +24,8 @@ const AdminDashboard = () => {
         return <AdminAvailability />;
       case "appointments":
         return <AdminAppointments />;
-      case "barbers":
-        return <AdminBarbers />;
+      case "technicians":
+        return <AdminTechnicians />;
       case "reviews":
         return <AdminReviews />;
       default:

@@ -6,7 +6,7 @@ const isAdmin = require("../../middleware/isAdmin");
 router.use("/profile", require("./profile"));
 router.use("/services", require("./services"));
 router.use("/gallery", require("./gallery"));
-router.use("/barbers", require("./barbers"));
+router.use("/technicians", require("./technicians"));
 
 router.use(auth);
 router.use(isAdmin);

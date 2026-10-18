@@ -1,28 +1,28 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
-const BarberAvailability = require("../../model/admin/BarberAvailability");
+const SalonAvailability = require("../../model/admin/SalonAvailability");
 const Appointment = require("../../model/appointment/Appointment");
 
 // @route   GET /api/availability?adminId=...
-// @desc    Get barber's availability (public, for booking)
+// @desc    Get technician's availability (public, for booking)
 // @access  Public
 router.get("/", async (req, res) => {
   const adminId = req.query.adminId;
   if (!adminId || !mongoose.Types.ObjectId.isValid(adminId)) {
     return res.status(400).json({ message: "Valid adminId query is required" });
   }
-  const availability = await BarberAvailability.findOne({ adminId });
+  const availability = await SalonAvailability.findOne({ adminId });
   if (!availability) {
     return res
       .status(404)
-      .json({ message: "No availability found for this barber" });
+      .json({ message: "No availability found for this technician" });
   }
   res.json(availability);
 });
 
 // @route   GET /api/availability/booked-slots?adminId=...
-// @desc    Get booked time slots for a barber (no customer info)
+// @desc    Get booked time slots for a technician (no customer info)
 // @access  Public
 router.get("/booked-slots", async (req, res) => {
   const adminId = req.query.adminId;

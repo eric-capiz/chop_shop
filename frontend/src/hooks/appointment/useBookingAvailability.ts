@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { publicAvailabilityService } from "@/services/appointment/availability.service";
 
-export const useBookingAvailability = (barberId?: string) => {
+export const useBookingAvailability = (technicianId?: string) => {
   return useQuery({
-    queryKey: ["booking-availability", barberId],
+    queryKey: ["booking-availability", technicianId],
     queryFn: async () => {
-      if (!barberId) {
+      if (!technicianId) {
         return {
           adminId: "",
           currentMonth: { month: 0, year: 0, isSet: false },
@@ -14,14 +14,14 @@ export const useBookingAvailability = (barberId?: string) => {
         };
       }
       const [availability, bookedSlots] = await Promise.all([
-        publicAvailabilityService.getBarberAvailability(barberId),
-        publicAvailabilityService.getBookedSlots(barberId),
+        publicAvailabilityService.getBarberAvailability(technicianId),
+        publicAvailabilityService.getBookedSlots(technicianId),
       ]);
       return {
         ...availability,
         bookedSlots: bookedSlots.bookedSlots ?? [],
       };
     },
-    enabled: !!barberId,
+    enabled: !!technicianId,
   });
 };

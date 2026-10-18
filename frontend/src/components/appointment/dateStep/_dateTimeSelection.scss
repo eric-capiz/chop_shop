@@ -112,8 +112,8 @@
 
     .time-slot-button {
       padding: 0.75rem;
-      background-color: $black-secondary;
-      border: 1px solid $gold-dark;
+      background-color: $text-secondary;
+      border: 1px solid $rose-dark;
       border-radius: 8px;
       color: $silver-primary;
       font-family: $font-secondary;
@@ -141,21 +141,21 @@
         }
 
         &:active {
-          background: $gradient-gold;
-          color: $black-primary;
+          background: $gradient-rose;
+          color: $text-primary;
         }
       }
 
       &:hover {
-        background: $gradient-gold;
-        color: $black-primary;
+        background: $gradient-rose;
+        color: $text-primary;
         transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba($black-primary, 0.3);
+        box-shadow: 0 4px 8px rgba($text-primary, 0.3);
       }
 
       &:active {
         transform: translateY(0);
-        background: $gold-dark;
+        background: $rose-dark;
       }
     }
   }

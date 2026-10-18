@@ -1,33 +1,50 @@
-// Core Colors
-$black-primary: #111111;
-$black-secondary: #1a1a1a;
-$black-light: #222222;
+// Luxe Nails — elegant spa palette
+// Light, feminine, high-end nail studio — not a technicianshop
 
-// Metallics
-$gold-primary: #c6a87d;
-$gold-light: #d4bc8d;
-$gold-dark: #b89b70;
+// Backgrounds — warm creams
+$cream-primary: #faf7f2;
+$cream-secondary: #f3ede4;
+$cream-dark: #e9e0d2;
 
-$silver-primary: #d4d4d4;
-$silver-light: #e5e5e5;
-$silver-dark: #adadad;
+// Blush & rose accents
+$blush-primary: #e8b4b8;
+$blush-light: #f5d9dc;
+$blush-pale: #fbeef0;
+
+$rose-primary: #c4838b;
+$rose-light: #d9a7ad;
+$rose-dark: #a76f78;
+
+// Champagne gold accents
+$gold-primary: #c9a96a;
+$gold-light: #ddc08a;
+$gold-pale: #f2e8d5;
+
+// Text — warm darks (no harsh black)
+$text-primary: #3a3430;
+$text-secondary: #6b5f55;
+$text-muted: #a89a8c;
+
+$white: #ffffff;
+
+// Borders & dividers
+$border-light: #e8ddd0;
+$border-rose: #e9c9cd;
+
+// Shadows
+$shadow-soft: 0 4px 24px rgba(196, 131, 139, 0.12);
+$shadow-card: 0 2px 16px rgba(58, 52, 48, 0.08);
 
 // Gradients
-$gradient-dark: linear-gradient(
-  135deg,
-  $black-primary 0%,
-  $black-secondary 100%
-);
-$gradient-gold: linear-gradient(135deg, $gold-dark 0%, $gold-primary 100%);
+$gradient-cream: linear-gradient(135deg, $cream-primary 0%, $cream-secondary 100%);
+$gradient-rose: linear-gradient(135deg, $rose-light 0%, $rose-primary 100%);
+$gradient-blush: linear-gradient(135deg, $blush-pale 0%, $blush-light 100%);
 
 // Typography
 $font-primary: "Playfair Display", serif;
-$font-secondary: "Roboto", sans-serif;
+$font-secondary: "Jost", "Roboto", sans-serif;
 
 // Z-index layers
 $z-background: 1;
 $z-elements: 5;
 $z-content: 10;
-
-// Layout
-$header-height: 56px;

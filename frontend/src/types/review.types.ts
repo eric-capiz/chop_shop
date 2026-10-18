@@ -4,7 +4,7 @@ export interface Review {
     _id: string;
     name: string;
   };
-  /** Barber (admin) - when populated from API */
+  /** Technician (admin) - when populated from API */
   adminId?:
     | string
     | {

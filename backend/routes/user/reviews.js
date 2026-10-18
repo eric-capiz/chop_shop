@@ -189,7 +189,7 @@ router.patch("/:id", upload.single("image"), async (req, res) => {
 });
 
 // @route   DELETE /api/user/reviews/:id
-// @desc    Delete a review (user: own review; barber: review on their profile)
+// @desc    Delete a review (user: own review; technician: review on their profile)
 // @access  Private
 router.delete("/:id", async (req, res) => {
   const session = await mongoose.startSession();
@@ -204,10 +204,10 @@ router.delete("/:id", async (req, res) => {
     }
 
     const isOwnerUser = review.userId && review.userId.toString() === req.user.id;
-    const isOwnerBarber =
+    const isOwnerTechnician =
       (req.user.role === "admin" || req.user.role === "superadmin") &&
       review.adminId.toString() === req.user.id;
-    if (!isOwnerUser && !isOwnerBarber) {
+    if (!isOwnerUser && !isOwnerTechnician) {
       await session.abortTransaction();
       return res.status(403).json({ message: "Not authorized" });
     }

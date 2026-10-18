@@ -1,0 +1,312 @@
+@use "@styles/variables" as *;
+
+.admin-technicians {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+
+  @media (max-width: 768px) {
+    padding: 1rem 0.5rem;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+
+      h2 {
+        font-size: 1.5rem;
+        text-align: center;
+      }
+
+      .btn-primary {
+        width: 100%;
+        max-width: 280px;
+        justify-content: center;
+      }
+    }
+
+    h2 {
+      font-family: $font-primary;
+      color: $rose-primary;
+      margin: 0;
+    }
+
+    .btn-primary {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background-color: $rose-primary;
+      color: $text-primary;
+      font-family: $font-secondary;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: $rose-dark;
+      }
+    }
+  }
+
+  &__content {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+
+  &__card {
+    background-color: $text-secondary;
+    border: 1px solid $rose-primary;
+    border-radius: 8px;
+    padding: 1.5rem;
+    position: relative;
+
+    .technician-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid $rose-dark;
+
+      h3 {
+        font-family: $font-primary;
+        color: $rose-primary;
+        font-size: 1.25rem;
+        margin: 0;
+      }
+
+      .role-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        text-transform: uppercase;
+        background: rgba($rose-primary, 0.2);
+        color: $rose-light;
+      }
+    }
+
+    .technician-details {
+      color: $silver-primary;
+      font-family: $font-secondary;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+
+      p {
+        margin: 0.25rem 0;
+      }
+    }
+
+    .technician-actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+
+      button {
+        font-size: 0.85rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        font-family: $font-secondary;
+        transition: all 0.3s ease;
+
+        &.btn-transfer {
+          background: rgba($rose-primary, 0.2);
+          color: $rose-primary;
+
+          &:hover:not(:disabled) {
+            background: rgba($rose-primary, 0.35);
+          }
+        }
+
+        &.btn-delete {
+          background: rgba(#ff4444, 0.2);
+          color: #ff6666;
+
+          &:hover:not(:disabled) {
+            background: rgba(#ff4444, 0.35);
+          }
+        }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+}
+
+.admin-technicians-modal {
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  .modal-content {
+    background: $cream-secondary;
+    border: 1px solid $rose-primary;
+    border-radius: 8px;
+    padding: 0;
+    max-width: 440px;
+    width: 90%;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid $rose-dark;
+
+    h3 {
+      font-family: $font-primary;
+      color: $rose-primary;
+      margin: 0;
+    }
+
+    .close-button {
+      background: none;
+      border: none;
+      color: $silver-light;
+      cursor: pointer;
+      padding: 0.25rem;
+
+      &:hover {
+        color: $rose-primary;
+      }
+    }
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: $silver-primary;
+      font-family: $font-secondary;
+      font-size: 0.9rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      background:$cream-primary;
+      border: 1px solid $rose-dark;
+      border-radius: 4px;
+      color: $silver-light;
+      font-family: $font-secondary;
+
+      &:focus {
+        outline: none;
+        border-color: $rose-primary;
+      }
+    }
+
+    .password-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+
+      input {
+        flex: 1;
+        padding-right: 2.5rem;
+      }
+
+      .toggle-password {
+        position: absolute;
+        right: 0.5rem;
+        background: none;
+        border: none;
+        color: $silver-dark;
+        cursor: pointer;
+        padding: 0.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+          color: $rose-primary;
+        }
+      }
+    }
+  }
+
+  .modal-body {
+    padding: 1.5rem;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid $rose-dark;
+
+    .btn-save {
+      background: $rose-primary;
+      color: $text-primary;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: $font-secondary;
+
+      &:hover:not(:disabled) {
+        background: $rose-dark;
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+
+    .btn-cancel {
+      background: transparent;
+      color: $silver-light;
+      border: 1px solid $rose-dark;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: $font-secondary;
+
+      &:hover {
+        border-color: $rose-primary;
+        color: $rose-primary;
+      }
+    }
+  }
+}
+
+.delete-technician-modal {
+  .modal-body {
+    padding: 1.5rem;
+    text-align: center;
+
+    .warning-text {
+      color: #ff6666;
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+    }
+  }
+}

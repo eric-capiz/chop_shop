@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
-import type { PublicBarber } from "@/types/barber.types";
+import type { PublicTechnician } from "@/types/technician.types";
 import Toast from "@/components/common/Toast";
 import { useAppointment } from "@/hooks/appointment/useAppointment";
 import "./_confirmBooking.scss";
 
 interface ConfirmBookingProps {
   bookingData: {
-    barber: PublicBarber;
+    technician: PublicTechnician;
     appointmentDateTime: Date;
     service: {
       _id: string;
@@ -42,7 +42,7 @@ const ConfirmBooking = ({ bookingData, onStepChange }: ConfirmBookingProps) => {
     appointmentDate.setUTCHours(0, 0, 0, 0);
     try {
       await createAppointment.mutateAsync({
-        adminId: bookingData.barber._id,
+        adminId: bookingData.technician._id,
         serviceId: bookingData.service._id,
         appointmentDate,
         timeSlot: { start, end },
@@ -52,7 +52,7 @@ const ConfirmBooking = ({ bookingData, onStepChange }: ConfirmBookingProps) => {
         },
       });
       setToast({
-        message: `Appointment request sent to ${bookingData.barber.name}!`,
+        message: `Appointment request sent to ${bookingData.technician.name}!`,
         type: "success",
       });
       setIsSubmitted(true);
@@ -69,9 +69,9 @@ const ConfirmBooking = ({ bookingData, onStepChange }: ConfirmBookingProps) => {
   };
 
   const profileImageUrl =
-    typeof bookingData.barber.profileImage === "string"
-      ? bookingData.barber.profileImage
-      : bookingData.barber.profileImage?.url ?? "";
+    typeof bookingData.technician.profileImage === "string"
+      ? bookingData.technician.profileImage
+      : bookingData.technician.profileImage?.url ?? "";
 
   return (
     <div className="confirm-booking">
@@ -85,17 +85,17 @@ const ConfirmBooking = ({ bookingData, onStepChange }: ConfirmBookingProps) => {
 
       <div className="confirmation-details">
         <section className="detail-section" onClick={() => onStepChange(1)}>
-          <h3>Barber</h3>
-          <div className="detail-content barber-detail">
+          <h3>Technician</h3>
+          <div className="detail-content technician-detail">
             <img
               src={profileImageUrl}
-              alt={bookingData.barber.name}
-              className="barber-thumbnail"
+              alt={bookingData.technician.name}
+              className="technician-thumbnail"
             />
             <div>
-              <p className="barber-name">{bookingData.barber.name}</p>
-              <p className="barber-specialty">
-                {bookingData.barber.specialties?.[0] ?? "Barber"}
+              <p className="technician-name">{bookingData.technician.name}</p>
+              <p className="technician-specialty">
+                {bookingData.technician.specialties?.[0] ?? "Technician"}
               </p>
             </div>
           </div>

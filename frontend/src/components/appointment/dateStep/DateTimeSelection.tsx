@@ -10,21 +10,21 @@ import "./_dateTimeSelection.scss";
 interface DateTimeSelectionProps {
   onSelect: (date: Date, timeSlot: { start: Date; end: Date }) => void;
   isReschedule?: boolean;
-  barberId?: string;
+  technicianId?: string;
 }
 
 // Booked slots from API: { start, end }; dummy may use { date }
 const DateTimeSelection = ({
   onSelect,
   isReschedule = false,
-  barberId,
+  technicianId,
 }: DateTimeSelectionProps) => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedSlot, setSelectedSlot] = useState<{
     start: Date;
     end: Date;
   } | null>(null);
-  const { data: availability, isLoading } = useBookingAvailability(barberId);
+  const { data: availability, isLoading } = useBookingAvailability(technicianId);
 
   const handleDateSelect = (selectInfo: DateSelectArg) => {
     setSelectedDate(selectInfo.start);
@@ -188,7 +188,7 @@ const DateTimeSelection = ({
               ))
             ) : (
               <div className="no-slots-message">
-                Barber is completely booked or unavailable.
+                Technician is completely booked or unavailable.
               </div>
             )}
           </div>

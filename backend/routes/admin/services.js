@@ -5,12 +5,12 @@ const isAdmin = require("../../middleware/isAdmin");
 
 const Service = require("../../model/admin/Service");
 
-// All routes require barber auth (scoped to logged-in barber)
+// All routes require technician auth (scoped to logged-in technician)
 router.use(auth);
 router.use(isAdmin);
 
 // @route   GET /api/admin/services
-// @desc    Get logged-in barber's services
+// @desc    Get logged-in technician's services
 // @access  Private/Admin
 router.get("/", async (req, res) => {
   const services = await Service.find({ adminId: req.user.id });

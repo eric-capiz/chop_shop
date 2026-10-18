@@ -1,24 +1,24 @@
 @use "@styles/variables" as *;
 
 .user-sidebar {
-  background: $black-secondary;
+  background: $cream-secondary;
   min-height: 100%;
   padding: 1rem;
-  border-right: 1px solid $gold-dark;
+  border-right: 1px solid $rose-dark;
 
   @media (max-width: 768px) {
     border-right: none;
-    border-bottom: 1px solid $gold-dark;
+    border-bottom: 1px solid $rose-dark;
   }
 
   .mobile-menu-button {
     display: none;
     width: 100%;
     padding: 0.75rem;
-    background: $gold-primary;
+    background: $rose-primary;
     border: none;
     border-radius: 8px;
-    color: $black-primary;
+    color: $text-primary;
     cursor: pointer;
 
     .current-section {
@@ -59,10 +59,10 @@
       align-items: center;
       gap: 1rem;
       padding: 0.75rem;
-      background: $gold-primary;
+      background: $rose-primary;
       border: none;
       border-radius: 8px;
-      color: $black-primary;
+      color: $text-primary;
       cursor: pointer;
       transition: all 0.3s ease;
       width: 100%;
@@ -73,7 +73,7 @@
       }
 
       &.active {
-        background: $gold-light;
+        background: $rose-light;
       }
 
       .icon {

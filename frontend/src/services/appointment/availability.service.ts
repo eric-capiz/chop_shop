@@ -6,7 +6,7 @@ export const publicAvailabilityService = {
     adminId?: string
   ): Promise<BarberAvailability> => {
     if (!adminId) {
-      throw new Error("adminId (barber id) is required for availability");
+      throw new Error("adminId (technician id) is required for availability");
     }
     const { data } = await axios.get<BarberAvailability>(
       `/api/availability?adminId=${adminId}`

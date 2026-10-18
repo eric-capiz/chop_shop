@@ -6,20 +6,20 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba($black-primary, 0.8);
+  background: rgba($text-primary, 0.8);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
 
   &__content {
-    background: $black-secondary;
+    background: $cream-secondary;
     padding: 2rem;
     border-radius: 8px;
     width: 90%;
     max-width: 320px;
     position: relative;
-    border: 1px solid rgba($gold-primary, 0.2);
+    border: 1px solid rgba($rose-primary, 0.2);
 
     @media (max-width: 480px) {
       padding: 1.5rem;
@@ -29,7 +29,7 @@
     h2 {
       text-align: center;
       margin-bottom: 1.5rem;
-      color: $gold-primary;
+      color: $rose-primary;
     }
 
     form {
@@ -39,15 +39,15 @@
 
       input {
         padding: 0.8rem;
-        border: 1px solid rgba($gold-primary, 0.3);
+        border: 1px solid rgba($rose-primary, 0.3);
         border-radius: 4px;
-        background: rgba($black-primary, 0.5);
+        background: rgba($text-primary, 0.5);
         color: $silver-primary;
         font-size: 1rem;
 
         &:focus {
           outline: none;
-          border-color: $gold-primary;
+          border-color: $rose-primary;
         }
 
         &::placeholder {
@@ -61,8 +61,8 @@
       }
 
       button {
-        background: $gold-primary;
-        color: $black-primary;
+        background: $rose-primary;
+        color: $text-primary;
         padding: 0.8rem;
         border: none;
         border-radius: 4px;
@@ -71,7 +71,7 @@
         transition: all 0.3s ease;
 
         &:hover:not(:disabled) {
-          background: $gold-dark;
+          background: $rose-dark;
         }
 
         &:disabled {
@@ -94,21 +94,21 @@
     padding: 0.2rem 0.5rem;
 
     &:hover {
-      color: $gold-primary;
+      color: $rose-primary;
     }
   }
 
   &__toggle-button {
     background: none;
     border: none;
-    color: $gold-primary;
+    color: $rose-primary;
     cursor: pointer;
     padding: 0;
     font-size: inherit;
     text-decoration: underline;
 
     &:hover:not(:disabled) {
-      color: $gold-light;
+      color: $rose-light;
     }
 
     &:disabled {

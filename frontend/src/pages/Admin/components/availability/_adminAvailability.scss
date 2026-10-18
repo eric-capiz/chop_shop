@@ -15,48 +15,48 @@
     align-items: center;
     margin-bottom: 2rem;
     padding: 1rem;
-    background-color: $black-secondary;
+    background-color: $text-secondary;
     border-radius: 8px;
-    border: 1px solid $gold-dark;
+    border: 1px solid $rose-dark;
 
     h2 {
-      color: $gold-primary;
+      color: $rose-primary;
       font-family: $font-primary;
       margin: 0;
     }
 
     button {
       background: none;
-      border: 1px solid $gold-dark;
-      color: $gold-primary;
+      border: 1px solid $rose-dark;
+      color: $rose-primary;
       padding: 0.5rem 1rem;
       border-radius: 4px;
       cursor: pointer;
       transition: all 0.3s ease;
 
       &:hover {
-        background-color: $gold-primary;
-        color: $black-primary;
+        background-color: $rose-primary;
+        color: $text-primary;
       }
     }
   }
 
   .calendar-grid {
-    background-color: $black-secondary;
+    background-color: $text-secondary;
     border-radius: 8px;
-    border: 1px solid $gold-dark;
+    border: 1px solid $rose-dark;
     overflow: hidden;
 
     .weekdays {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      background-color: $black-light;
-      border-bottom: 1px solid $gold-dark;
+      background-color: $text-muted;
+      border-bottom: 1px solid $rose-dark;
 
       .weekday {
         padding: 1rem;
         text-align: center;
-        color: $gold-primary;
+        color: $rose-primary;
         font-family: $font-secondary;
         font-weight: bold;
       }
@@ -66,12 +66,12 @@
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       gap: 1px;
-      background-color: $black-light;
+      background-color: $text-muted;
 
       .day {
         aspect-ratio: 1;
         padding: 0.5rem;
-        background-color: $black-secondary;
+        background-color: $text-secondary;
         cursor: pointer;
         transition: all 0.3s ease;
         display: flex;
@@ -84,10 +84,10 @@
         }
 
         &.working {
-          border: 1px solid $gold-dark;
+          border: 1px solid $rose-dark;
 
           .date {
-            color: $gold-primary;
+            color: $rose-primary;
           }
         }
 
@@ -105,7 +105,7 @@
           font-size: 0.8rem;
 
           svg {
-            color: $gold-primary;
+            color: $rose-primary;
           }
         }
 
@@ -129,10 +129,10 @@
         }
 
         &.today {
-          border: 2px solid $gold-primary;
+          border: 2px solid $rose-primary;
 
           .date {
-            color: $gold-primary;
+            color: $rose-primary;
             font-weight: bold;
           }
         }
@@ -152,9 +152,9 @@
 
   // FullCalendar custom styles
   .fc {
-    background: $black-secondary;
+    background: $cream-secondary;
     border-radius: 8px;
-    border: 1px solid $gold-dark;
+    border: 1px solid $rose-dark;
 
     // Header/toolbar styling
     .fc-toolbar {
@@ -168,7 +168,7 @@
       }
 
       .fc-toolbar-title {
-        color: $gold-primary;
+        color: $rose-primary;
         font-size: 1.2rem;
 
         @media (max-width: 768px) {
@@ -178,12 +178,12 @@
 
       .fc-button {
         background: none;
-        border: 1px solid $gold-dark;
-        color: $gold-primary;
+        border: 1px solid $rose-dark;
+        color: $rose-primary;
         padding: 0.4rem 0.8rem;
 
         &:hover {
-          background-color: rgba($gold-primary, 0.1);
+          background-color: rgba($rose-primary, 0.1);
         }
 
         &:focus {
@@ -194,7 +194,7 @@
 
     // Calendar grid styling
     .fc-view-harness {
-      background: $black-secondary;
+      background: $cream-secondary;
     }
 
     .fc-daygrid-body {
@@ -211,7 +211,7 @@
       }
 
       &:hover {
-        background: rgba($gold-primary, 0.05);
+        background: rgba($rose-primary, 0.05);
       }
 
       &.fc-day-past {
@@ -220,7 +220,7 @@
       }
 
       &:not(.fc-day-past):hover {
-        background: rgba($gold-primary, 0.05);
+        background: rgba($rose-primary, 0.05);
       }
     }
 
@@ -245,9 +245,9 @@
     }
 
     .working-day {
-      background: rgba($gold-primary, 0.1);
-      border: 1px solid $gold-primary;
-      color: $gold-primary;
+      background: rgba($rose-primary, 0.1);
+      border: 1px solid $rose-primary;
+      color: $rose-primary;
       margin: 1px 0;
       padding: 1px 2px;
       font-size: 0.75rem;
@@ -262,7 +262,7 @@
       }
 
       &:hover {
-        background: rgba($gold-primary, 0.2);
+        background: rgba($rose-primary, 0.2);
       }
 
       &.past-event {
@@ -278,12 +278,12 @@
 
       &.future-event {
         cursor: pointer;
-        background: rgba($gold-primary, 0.1);
-        border-color: $gold-primary;
-        color: $gold-primary;
+        background: rgba($rose-primary, 0.1);
+        border-color: $rose-primary;
+        color: $rose-primary;
 
         &:hover {
-          background: rgba($gold-primary, 0.2);
+          background: rgba($rose-primary, 0.2);
         }
       }
     }
@@ -291,11 +291,11 @@
     // Header cells
     .fc-col-header-cell {
       padding: 6px 2px;
-      background-color: $black-light;
-      border-color: $gold-dark;
+      background-color: $text-muted;
+      border-color: $rose-dark;
 
       .fc-col-header-cell-cushion {
-        color: $gold-primary;
+        color: $rose-primary;
         font-weight: bold;
         text-decoration: none;
         font-size: 0.85rem;
@@ -308,10 +308,10 @@
 
     // Today highlighting
     .fc-day-today {
-      background: rgba($gold-primary, 0.05) !important;
+      background: rgba($rose-primary, 0.05) !important;
 
       .fc-daygrid-day-number {
-        color: $gold-primary;
+        color: $rose-primary;
         font-weight: bold;
       }
     }
@@ -330,7 +330,7 @@
 
     td,
     th {
-      border-color: rgba($gold-dark, 0.3) !important;
+      border-color: rgba($rose-dark, 0.3) !important;
     }
   }
 }
@@ -344,7 +344,7 @@
       gap: 0.5rem;
 
       svg {
-        color: $gold-primary;
+        color: $rose-primary;
       }
     }
   }
@@ -377,15 +377,15 @@
       .form-group {
         label {
           display: block;
-          color: $gold-light;
+          color: $rose-light;
           margin-bottom: 0.5rem;
         }
 
         .time-select {
           width: 100%;
           padding: 0.75rem;
-          background-color: $black-light;
-          border: 1px solid $gold-dark;
+          background-color: $text-muted;
+          border: 1px solid $rose-dark;
           border-radius: 4px;
           color: $silver-primary;
           font-family: $font-secondary;
@@ -399,8 +399,8 @@
 
           &:focus {
             outline: none;
-            border-color: $gold-primary;
-            box-shadow: 0 0 0 2px rgba($gold-primary, 0.2);
+            border-color: $rose-primary;
+            box-shadow: 0 0 0 2px rgba($rose-primary, 0.2);
           }
 
           option {
@@ -414,13 +414,13 @@
         }
 
         select.time-select option {
-          background-color: $black-light;
+          background-color: $text-muted;
           color: $silver-primary;
           padding: 0.5rem;
         }
 
         select.time-select:not([size]):not([multiple]) {
-          background-color: $black-light;
+          background-color: $text-muted;
           transform-origin: top;
           transform: none !important;
         }
@@ -467,7 +467,7 @@
         color: $silver-primary;
 
         &:hover {
-          color: $gold-primary;
+          color: $rose-primary;
         }
       }
     }

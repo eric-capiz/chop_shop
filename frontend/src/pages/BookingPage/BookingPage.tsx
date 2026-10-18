@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import BarberSelection from "@/components/appointment/barberStep/BarberSelection";
+import TechnicianSelection from "@/components/appointment/technicianStep/TechnicianSelection";
 import DateTimeSelection from "@/components/appointment/dateStep/DateTimeSelection";
 import ServiceSelection from "@/components/appointment/serviceStep/ServiceSelection";
 import ContactInfo from "@/components/appointment/contactStep/ContactInfo";
 import ConfirmBooking from "@/components/appointment/confirmStep/ConfirmBooking";
-import { useBarberById } from "@/hooks/useBarbers";
-import type { PublicBarber } from "@/types/barber.types";
+import { useTechnicianById } from "@/hooks/useTechnicians";
+import type { PublicTechnician } from "@/types/technician.types";
 import "./_bookingPage.scss";
 
 interface Service {
@@ -17,7 +17,7 @@ interface Service {
 }
 
 interface BookingData {
-  barber: PublicBarber | null;
+  technician: PublicTechnician | null;
   appointmentDateTime: Date | null;
   service: {
     _id: string;
@@ -33,7 +33,7 @@ interface BookingData {
 }
 
 const initialBookingState: BookingData = {
-  barber: null,
+  technician: null,
   appointmentDateTime: null,
   service: null,
   contactInfo: null,
@@ -42,7 +42,7 @@ const initialBookingState: BookingData = {
 const getStepTitle = (step: number) => {
   switch (step) {
     case 1:
-      return "Choose Barber";
+      return "Choose Technician";
     case 2:
       return "Select Date & Time";
     case 3:
@@ -58,29 +58,29 @@ const getStepTitle = (step: number) => {
 
 const BookingPage = () => {
   const [searchParams] = useSearchParams();
-  const preSelectedBarberId = searchParams.get("barber");
+  const preSelectedBarberId = searchParams.get("technician");
 
   const [currentStep, setCurrentStep] = useState(1);
   const [bookingData, setBookingData] = useState<BookingData>(initialBookingState);
   const [maxVisitedStep, setMaxVisitedStep] = useState(1);
 
-  const { data: preSelectedBarber } = useBarberById(
+  const { data: preSelectedBarber } = useTechnicianById(
     preSelectedBarberId || undefined,
     !!preSelectedBarberId
   );
 
   useEffect(() => {
     if (preSelectedBarberId && preSelectedBarber) {
-      setBookingData((prev) => ({ ...prev, barber: preSelectedBarber }));
+      setBookingData((prev) => ({ ...prev, technician: preSelectedBarber }));
       setCurrentStep(2);
       setMaxVisitedStep(2);
     }
   }, [preSelectedBarberId, preSelectedBarber]);
 
-  const handleBarberSelect = (barber: PublicBarber) => {
+  const handleBarberSelect = (technician: PublicTechnician) => {
     setBookingData((prev) => ({
       ...prev,
-      barber,
+      technician,
     }));
     setCurrentStep(2);
     setMaxVisitedStep(Math.max(maxVisitedStep, 2));
@@ -120,35 +120,35 @@ const BookingPage = () => {
     switch (currentStep) {
       case 1:
         return (
-          <BarberSelection
+          <TechnicianSelection
             onSelect={handleBarberSelect}
-            selectedBarberId={bookingData.barber?._id}
+            selectedBarberId={bookingData.technician?._id}
           />
         );
       case 2:
         return (
           <DateTimeSelection
             onSelect={handleDateTimeSelect}
-            barberId={bookingData.barber?._id}
+            technicianId={bookingData.technician?._id}
           />
         );
       case 3:
         return (
           <ServiceSelection
             onSelect={handleServiceSelect}
-            barberId={bookingData.barber?._id}
+            technicianId={bookingData.technician?._id}
           />
         );
       case 4:
         return <ContactInfo onSubmit={handleContactInfoSubmit} />;
       case 5:
-        return bookingData.barber &&
+        return bookingData.technician &&
           bookingData.appointmentDateTime &&
           bookingData.service &&
           bookingData.contactInfo ? (
           <ConfirmBooking
             bookingData={{
-              barber: bookingData.barber,
+              technician: bookingData.technician,
               appointmentDateTime: bookingData.appointmentDateTime,
               service: bookingData.service,
               contactInfo: bookingData.contactInfo,
@@ -166,8 +166,8 @@ const BookingPage = () => {
       <div className="booking-container">
         <div className="booking-header">
           <h1>Book Your Appointment</h1>
-          {bookingData.barber && (
-            <p className="selected-barber">with {bookingData.barber.name}</p>
+          {bookingData.technician && (
+            <p className="selected-technician">with {bookingData.technician.name}</p>
           )}
         </div>
 

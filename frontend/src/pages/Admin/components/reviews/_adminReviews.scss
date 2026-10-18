@@ -13,7 +13,7 @@
 
     h2 {
       font-family: $font-primary;
-      color: $gold-primary;
+      color: $rose-primary;
       font-size: 2rem;
 
       @media (max-width: 768px) {
@@ -44,8 +44,8 @@
   }
 
   &__card {
-    background: $black-light;
-    border: 1px solid $gold-dark;
+    background: $white;
+    border: 1px solid $rose-dark;
     border-radius: 8px;
     padding: 1.5rem;
     position: relative;
@@ -77,7 +77,7 @@
         color: $silver-dark;
 
         &.filled {
-          color: $gold-primary;
+          color: $rose-primary;
         }
       }
     }

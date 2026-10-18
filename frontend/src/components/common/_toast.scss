@@ -16,13 +16,13 @@
   }
 
   &.success {
-    background: rgba($black-primary, 0.9);
-    border: 1px solid $gold-primary;
-    color: $gold-primary;
+    background: rgba($text-primary, 0.9);
+    border: 1px solid $rose-primary;
+    color: $rose-primary;
   }
 
   &.error {
-    background: rgba($black-primary, 0.9);
+    background: rgba($text-primary, 0.9);
     border: 1px solid #ef4444;
     color: #ef4444;
   }

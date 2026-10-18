@@ -4,7 +4,7 @@
   background: linear-gradient(180deg, $black-secondary 0%, #151515 100%);
   color: $silver-primary;
   width: 100%;
-  border-top: 1px solid rgba($gold-primary, 0.15);
+  border-top: 1px solid rgba($rose-primary, 0.15);
   padding: 2rem 0 1rem;
 
   .footer-inner {
@@ -45,7 +45,7 @@
     @media (max-width: 768px) {
       order: 3;
       padding-top: 0.5rem;
-      border-top: 1px solid rgba($gold-primary, 0.1);
+      border-top: 1px solid rgba($rose-primary, 0.1);
     }
   }
 
@@ -72,7 +72,7 @@
   }
 
   .footer-icon {
-    color: $gold-primary;
+    color: $rose-primary;
     font-size: 1.25rem;
     flex-shrink: 0;
     margin-top: 0.2rem;
@@ -83,7 +83,7 @@
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: rgba($gold-primary, 0.9);
+    color: rgba($rose-primary, 0.9);
     margin-bottom: 0.35rem;
   }
 
@@ -100,7 +100,7 @@
     transition: color 0.2s ease;
 
     &:hover {
-      color: $gold-primary;
+      color: $rose-primary;
     }
   }
 
@@ -109,12 +109,12 @@
     color: rgba($silver-primary, 0.7);
 
     a {
-      color: $gold-primary;
+      color: $rose-primary;
       text-decoration: none;
       transition: color 0.2s ease;
 
       &:hover {
-        color: $gold-light;
+        color: $rose-light;
       }
     }
   }
@@ -127,7 +127,7 @@
     gap: 1rem 1.5rem;
     padding-top: 1.5rem;
     margin-top: 1.5rem;
-    border-top: 1px solid rgba($gold-primary, 0.1);
+    border-top: 1px solid rgba($rose-primary, 0.1);
 
     @media (max-width: 768px) {
       flex-direction: column;
@@ -141,7 +141,7 @@
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: rgba($gold-primary, 0.9);
+    color: rgba($rose-primary, 0.9);
   }
 
   .footer-social-links {
@@ -163,7 +163,7 @@
       transform 0.2s ease;
 
     &:hover {
-      color: $gold-primary;
+      color: $rose-primary;
       transform: scale(1.1);
     }
   }

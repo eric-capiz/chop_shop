@@ -43,7 +43,7 @@ const AdminSidebar = ({
     { id: "reviews", label: "Reviews", icon: <FaStar /> },
   ];
   const superAdminItem = {
-    id: "barbers",
+    id: "technicians",
     label: "Manage Barbers",
     icon: <FaUsersCog />,
   };

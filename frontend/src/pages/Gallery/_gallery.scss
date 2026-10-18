@@ -9,14 +9,14 @@
   > h1 {
     text-align: center;
     margin-bottom: 3rem;
-    color: $gold-primary;
+    color: $rose-primary;
     font-size: 2rem;
   }
 
-  .barber-work-section {
+  .technician-work-section {
     margin-bottom: 4rem;
     padding-bottom: 3rem;
-    border-bottom: 1px solid rgba($gold-primary, 0.2);
+    border-bottom: 1px solid rgba($rose-primary, 0.2);
 
     &:last-child {
       margin-bottom: 0;
@@ -25,7 +25,7 @@
     }
   }
 
-  .barber-section-header {
+  .technician-section-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -33,7 +33,7 @@
     gap: 1rem;
     margin-bottom: 2rem;
 
-    .barber-link {
+    .technician-link {
       display: flex;
       align-items: center;
       gap: 1rem;
@@ -45,16 +45,16 @@
         opacity: 0.9;
 
         h2 {
-          color: $gold-primary;
+          color: $rose-primary;
         }
       }
 
-      .barber-thumb {
+      .technician-thumb {
         width: 64px;
         height: 64px;
         border-radius: 50%;
         object-fit: cover;
-        border: 2px solid rgba($gold-primary, 0.3);
+        border: 2px solid rgba($rose-primary, 0.3);
       }
 
       h2 {
@@ -66,7 +66,7 @@
     }
 
     .view-profile-link {
-      color: $gold-primary;
+      color: $rose-primary;
       text-decoration: none;
       font-size: 0.95rem;
 
@@ -76,7 +76,7 @@
     }
   }
 
-  .barber-section-content {
+  .technician-section-content {
     display: grid;
     gap: 2.5rem;
 
@@ -86,10 +86,10 @@
     }
   }
 
-  .barber-gallery,
-  .barber-reviews {
+  .technician-gallery,
+  .technician-reviews {
     h3 {
-      color: $gold-primary;
+      color: $rose-primary;
       font-size: 1.1rem;
       margin-bottom: 1rem;
       text-transform: uppercase;
@@ -107,9 +107,9 @@
       display: flex;
       flex-direction: column;
       border-radius: 8px;
-      border: 1px solid rgba($gold-primary, 0.2);
+      border: 1px solid rgba($rose-primary, 0.2);
       overflow: hidden;
-      background: $black-secondary;
+      background: $cream-secondary;
 
       .gallery-item-image {
         aspect-ratio: 1;
@@ -128,7 +128,7 @@
         opacity: 0;
         overflow: hidden;
         padding: 0;
-        background: rgba($black-primary, 0.6);
+        background: rgba($text-primary, 0.6);
         color: $silver-primary;
         transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
 
@@ -147,8 +147,8 @@
 
           .tag {
             font-size: 0.75rem;
-            color: $gold-primary;
-            background: rgba($gold-primary, 0.15);
+            color: $rose-primary;
+            background: rgba($rose-primary, 0.15);
             padding: 0.2rem 0.5rem;
             border-radius: 4px;
           }
@@ -177,7 +177,7 @@
       background: rgba($black-secondary, 0.6);
       border-radius: 8px;
       padding: 1rem;
-      border: 1px solid rgba($gold-primary, 0.15);
+      border: 1px solid rgba($rose-primary, 0.15);
 
       .review-header {
         display: flex;
@@ -196,10 +196,10 @@
           gap: 0.15rem;
 
           .star-filled {
-            color: $gold-primary;
+            color: $rose-primary;
           }
           .star-empty {
-            color: rgba($gold-primary, 0.3);
+            color: rgba($rose-primary, 0.3);
           }
         }
       }
@@ -239,7 +239,7 @@
   @media (max-width: 768px) {
     padding: 1rem;
 
-    .barber-section-content {
+    .technician-section-content {
       grid-template-columns: 1fr;
     }
 
@@ -248,7 +248,7 @@
       gap: 0.5rem;
     }
 
-    .barber-section-header {
+    .technician-section-header {
       flex-direction: column;
       align-items: flex-start;
     }

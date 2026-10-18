@@ -5,6 +5,6 @@ module.exports = (req, res, next) => {
   ) {
     next();
   } else {
-    res.status(403).json({ message: "Access denied. Barber only." });
+    res.status(403).json({ message: "Access denied. Technician only." });
   }
 };

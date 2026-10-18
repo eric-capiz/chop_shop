@@ -9,17 +9,17 @@ const {
 } = require("../../cloudinary/cloudinaryUtils");
 const bcrypt = require("bcryptjs");
 
-const BarberProfile = require("../../model/admin/BarberProfile");
+const SalonProfile = require("../../model/admin/SalonProfile");
 
-// All routes require barber auth (dashboard "my profile")
+// All routes require technician auth (dashboard "my profile")
 router.use(auth);
 router.use(isAdmin);
 
 // @route   GET /api/admin/profile
-// @desc    Get logged-in barber's profile (dashboard)
+// @desc    Get logged-in technician's profile (dashboard)
 // @access  Private/Admin
 router.get("/", async (req, res) => {
-  const profile = await BarberProfile.findById(req.user.id).select("-password");
+  const profile = await SalonProfile.findById(req.user.id).select("-password");
   if (!profile) {
     return res.status(404).json({ message: "Profile not found" });
   }
@@ -27,7 +27,7 @@ router.get("/", async (req, res) => {
 });
 
 // @route   PUT /api/admin/profile
-// @desc    Update barber profile
+// @desc    Update technician profile
 // @access  Private/Admin
 router.put("/", async (req, res) => {
   try {
@@ -42,7 +42,7 @@ router.put("/", async (req, res) => {
       password,
     } = req.body;
 
-    let profile = await BarberProfile.findById(req.user.id);
+    let profile = await SalonProfile.findById(req.user.id);
 
     if (!profile) {
       return res.status(404).json({ message: "Profile not found" });
@@ -50,14 +50,14 @@ router.put("/", async (req, res) => {
 
     // Check unique fields
     if (username && username !== profile.username) {
-      const existingUser = await BarberProfile.findOne({ username });
+      const existingUser = await SalonProfile.findOne({ username });
       if (existingUser) {
         return res.status(400).json({ message: "Username already exists" });
       }
     }
 
     if (email && email !== profile.email) {
-      const existingUser = await BarberProfile.findOne({ email });
+      const existingUser = await SalonProfile.findOne({ email });
       if (existingUser) {
         return res.status(400).json({ message: "Email already exists" });
       }
@@ -82,7 +82,7 @@ router.put("/", async (req, res) => {
     await profile.save();
 
     // Return updated profile without password
-    const updatedProfile = await BarberProfile.findById(req.user.id).select(
+    const updatedProfile = await SalonProfile.findById(req.user.id).select(
       "-password"
     );
     res.json(updatedProfile);
@@ -97,7 +97,7 @@ router.put("/", async (req, res) => {
 // @access  Private/Admin
 router.put("/image", upload.single("image"), async (req, res) => {
   try {
-    let profile = await BarberProfile.findById(req.user.id);
+    let profile = await SalonProfile.findById(req.user.id);
 
     if (!profile) {
       return res.status(404).json({ message: "Profile not found" });
@@ -137,7 +137,7 @@ router.put("/image", upload.single("image"), async (req, res) => {
 // @access  Private/Admin
 router.delete("/image", async (req, res) => {
   try {
-    let profile = await BarberProfile.findById(req.user.id);
+    let profile = await SalonProfile.findById(req.user.id);
 
     if (!profile) {
       return res.status(404).json({ message: "Profile not found" });

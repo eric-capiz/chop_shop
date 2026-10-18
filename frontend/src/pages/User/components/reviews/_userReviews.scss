@@ -7,7 +7,7 @@
     margin-bottom: 2rem;
 
     h2 {
-      color: $gold-primary;
+      color: $rose-primary;
       font-family: $font-primary;
       font-size: 2rem;
     }
@@ -20,8 +20,8 @@
   }
 
   .review-card {
-    background: $black-light;
-    border: 1px solid $gold-dark;
+    background: $white;
+    border: 1px solid $rose-dark;
     border-radius: 8px;
     padding: 1.5rem;
     transition: transform 0.2s ease;
@@ -38,12 +38,12 @@
 
       .service-info {
         h3 {
-          color: $gold-primary;
+          color: $rose-primary;
           font-family: $font-primary;
           margin-bottom: 0.25rem;
         }
 
-        .barber-name {
+        .technician-name {
           display: block;
           color: $silver-primary;
           font-size: 0.9rem;
@@ -65,7 +65,7 @@
           color: $silver-dark;
 
           &.filled {
-            color: $gold-primary;
+            color: $rose-primary;
           }
         }
       }
@@ -107,24 +107,24 @@
         font-family: $font-secondary;
 
         &.btn-delete {
-          background: $black-secondary;
+          background: $cream-secondary;
           color: #ef4444;
           border: 1px solid #ef4444;
 
           &:hover:not(:disabled) {
             background: #ef4444;
-            color: $black-primary;
+            color: $text-primary;
           }
         }
 
         &.btn-edit {
-          background: $black-secondary;
-          color: $gold-primary;
-          border: 1px solid $gold-primary;
+          background: $cream-secondary;
+          color: $rose-primary;
+          border: 1px solid $rose-primary;
 
           &:hover:not(:disabled) {
-            background: $gold-primary;
-            color: $black-primary;
+            background: $rose-primary;
+            color: $text-primary;
           }
         }
 
@@ -142,7 +142,7 @@
     color: $silver-dark;
 
     h3 {
-      color: $gold-primary;
+      color: $rose-primary;
       margin-bottom: 1rem;
       font-family: $font-primary;
     }

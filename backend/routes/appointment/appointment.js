@@ -3,8 +3,8 @@ const router = express.Router();
 const auth = require("../../middleware/auth");
 const isAdmin = require("../../middleware/isAdmin");
 const Appointment = require("../../model/appointment/Appointment");
-const BarberAvailability = require("../../model/admin/BarberAvailability");
-const BarberProfile = require("../../model/admin/BarberProfile");
+const SalonAvailability = require("../../model/admin/SalonAvailability");
+const SalonProfile = require("../../model/admin/SalonProfile");
 const Service = require("../../model/admin/Service");
 const User = require("../../model/user/User");
 const { sendAppointmentEmail } = require("../../services/emailService");
@@ -93,18 +93,18 @@ router.post("/book", async (req, res) => {
   });
   if (!service) {
     return res.status(400).json({
-      message: "Service not found or does not belong to this barber",
+      message: "Service not found or does not belong to this technician",
     });
   }
 
-  const availability = await BarberAvailability.findOne({
+  const availability = await SalonAvailability.findOne({
     adminId,
   });
 
   if (!availability) {
     return res
       .status(400)
-      .json({ message: "No availability found for this barber/date" });
+      .json({ message: "No availability found for this technician/date" });
   }
 
   const scheduleDay = availability.schedule.find((day) => {
@@ -128,7 +128,7 @@ router.post("/book", async (req, res) => {
     !scheduleDay.workHours.end
   ) {
     return res.status(400).json({
-      message: "Barber has no working hours set for this day",
+      message: "Technician has no working hours set for this day",
     });
   }
 
@@ -212,13 +212,13 @@ router.post("/book", async (req, res) => {
   const saved = await newAppointment.save();
 
   try {
-    const [barber, user] = await Promise.all([
-      BarberProfile.findById(adminId).select("name email").lean(),
+    const [technician, user] = await Promise.all([
+      SalonProfile.findById(adminId).select("name email").lean(),
       User.findById(req.user.id).select("name email").lean(),
     ]);
     const appointmentData = {
-      barberName: barber?.name,
-      barberEmail: barber?.email,
+      technicianName: technician?.name,
+      technicianEmail: technician?.email,
       userName: user?.name,
       userEmail: user?.email,
       serviceName: service.name,
@@ -229,8 +229,8 @@ router.post("/book", async (req, res) => {
     };
     if (user?.email)
       await sendAppointmentEmail(user.email, "user", appointmentData);
-    if (barber?.email)
-      await sendAppointmentEmail(barber.email, "barber", appointmentData);
+    if (technician?.email)
+      await sendAppointmentEmail(technician.email, "technician", appointmentData);
   } catch (err) {}
 
   const appointment = await Appointment.findById(saved._id)
@@ -275,12 +275,12 @@ router.put("/:id/reschedule", async (req, res) => {
     .populate("review");
 
   try {
-    const barber = updated.adminId;
+    const technician = updated.adminId;
     const user = updated.userId;
     const rr = updated.rescheduleRequest;
     const appointmentData = {
-      barberName: barber?.name,
-      barberEmail: barber?.email,
+      technicianName: technician?.name,
+      technicianEmail: technician?.email,
       userName: user?.name,
       userEmail: user?.email,
       serviceName: updated.serviceId?.name,
@@ -291,8 +291,8 @@ router.put("/:id/reschedule", async (req, res) => {
     };
     if (user?.email)
       await sendAppointmentEmail(user.email, "user", appointmentData);
-    if (barber?.email)
-      await sendAppointmentEmail(barber.email, "barber", appointmentData);
+    if (technician?.email)
+      await sendAppointmentEmail(technician.email, "technician", appointmentData);
   } catch (err) {}
 
   res.json(updated);
@@ -305,10 +305,10 @@ router.put("/:id/status", async (req, res) => {
     return res.status(404).json({ message: "Appointment not found" });
   }
   const isOwnerUser = appointment.userId.toString() === req.user.id;
-  const isOwnerBarber =
+  const isOwnerTechnician =
     (req.user.role === "admin" || req.user.role === "superadmin") &&
     appointment.adminId.toString() === req.user.id;
-  if (!isOwnerUser && !isOwnerBarber) {
+  if (!isOwnerUser && !isOwnerTechnician) {
     return res.status(403).json({ message: "Not authorized" });
   }
   if (isOwnerUser && status !== "cancelled") {
@@ -359,11 +359,11 @@ router.put("/:id/status", async (req, res) => {
 
   try {
     const requestedStatus = req.body.status;
-    const barber = updated.adminId;
+    const technician = updated.adminId;
     const user = updated.userId;
     const baseData = {
-      barberName: barber?.name,
-      barberEmail: barber?.email,
+      technicianName: technician?.name,
+      technicianEmail: technician?.email,
       userName: user?.name,
       userEmail: user?.email,
       serviceName: updated.serviceId?.name,
@@ -374,8 +374,8 @@ router.put("/:id/status", async (req, res) => {
     if (requestedStatus === "cancelled") {
       const data = { ...baseData, status: "cancelled" };
       if (user?.email) await sendAppointmentEmail(user.email, "user", data);
-      if (barber?.email)
-        await sendAppointmentEmail(barber.email, "barber", data);
+      if (technician?.email)
+        await sendAppointmentEmail(technician.email, "technician", data);
     } else if (
       requestedStatus === "confirmed" ||
       requestedStatus === "reschedule-rejected"
@@ -395,10 +395,10 @@ router.put("/:id/status", async (req, res) => {
   res.json(updated);
 });
 
-// Barber routes (logged-in barber's appointments)
+// Technician routes (logged-in technician's appointments)
 router.use(isAdmin);
 
-router.get("/barber", async (req, res) => {
+router.get("/technician", async (req, res) => {
   const appointments = await Appointment.find({ adminId: req.user.id })
     .populate("userId", "name email")
     .populate("serviceId", "name duration price")
@@ -443,11 +443,11 @@ router.put("/:id/reschedule-response", async (req, res) => {
     .populate("review");
 
   try {
-    const barber = updated.adminId;
+    const technician = updated.adminId;
     const user = updated.userId;
     const baseData = {
-      barberName: barber?.name,
-      barberEmail: barber?.email,
+      technicianName: technician?.name,
+      technicianEmail: technician?.email,
       userName: user?.name,
       userEmail: user?.email,
       serviceName: updated.serviceId?.name,

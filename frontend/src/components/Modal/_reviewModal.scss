@@ -22,16 +22,16 @@
 
       .star {
         transition: all 200ms ease;
-        color: $gold-dark;
+        color: $rose-dark;
         font-size: 2rem;
 
         &.filled {
-          color: $gold-primary;
+          color: $rose-primary;
         }
 
         &:hover {
           transform: scale(1.1);
-          color: $gold-light;
+          color: $rose-light;
         }
       }
     }
@@ -42,16 +42,16 @@
     min-height: 120px;
     padding: 1rem;
     border-radius: 8px;
-    background: $black-light;
-    border: 1px solid $gold-dark;
+    background: $white;
+    border: 1px solid $rose-dark;
     color: $silver-primary;
     font-family: $font-secondary;
     resize: vertical;
 
     &:focus {
       outline: none;
-      border-color: $gold-primary;
-      box-shadow: 0 0 0 2px rgba($gold-primary, 0.1);
+      border-color: $rose-primary;
+      box-shadow: 0 0 0 2px rgba($rose-primary, 0.1);
     }
 
     &::placeholder {
@@ -71,10 +71,10 @@
       gap: 0.5rem;
       width: 100%;
       padding: 1.5rem;
-      background: $black-light;
-      border: 2px dashed $gold-dark;
+      background: $white;
+      border: 2px dashed $rose-dark;
       border-radius: 8px;
-      color: $gold-primary;
+      color: $rose-primary;
       cursor: pointer;
       transition: all 0.3s ease;
 
@@ -83,8 +83,8 @@
       }
 
       &:hover {
-        background: rgba($gold-primary, 0.1);
-        border-color: $gold-primary;
+        background: rgba($rose-primary, 0.1);
+        border-color: $rose-primary;
       }
     }
 
@@ -101,8 +101,8 @@
       width: 100%;
       border-radius: 8px;
       overflow: hidden;
-      border: 2px solid $gold-dark;
-      background: $black-light;
+      border: 2px solid $rose-dark;
+      background: $white;
 
       img {
         width: 100%;
@@ -120,8 +120,8 @@
         top: 0.5rem;
         right: 0.5rem;
         background: rgba($black-secondary, 0.9);
-        border: 1px solid $gold-dark;
-        color: $gold-primary;
+        border: 1px solid $rose-dark;
+        color: $rose-primary;
         width: 24px;
         height: 24px;
         border-radius: 50%;
@@ -133,16 +133,16 @@
         z-index: 2;
 
         &:hover {
-          background: $gold-primary;
-          color: $black-primary;
+          background: $rose-primary;
+          color: $text-primary;
         }
       }
     }
   }
 
   .submit-review {
-    background: $gradient-gold;
-    color: $black-primary;
+    background: $gradient-rose;
+    color: $text-primary;
     border: none;
     border-radius: 8px;
     padding: 1rem;
@@ -153,7 +153,7 @@
     font-family: $font-secondary;
 
     &:hover:not(:disabled) {
-      background: linear-gradient(135deg, $gold-primary 0%, $gold-light 100%);
+      background: linear-gradient(135deg, $rose-primary 0%, $rose-light 100%);
       transform: translateY(-1px);
     }
 

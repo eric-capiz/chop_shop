@@ -101,9 +101,10 @@ const EditServiceModal = ({ service, onClose }: EditServiceModalProps) => {
               onChange={(e) => setCategory(e.target.value)}
               required
             >
-              <option value="haircut">Haircut</option>
-              <option value="facial-hair">Facial Hair</option>
-              <option value="eyebrows">Eyebrows</option>
+              <option value="manicure">Manicure</option>
+              <option value="pedicure">Pedicure</option>
+              <option value="extensions">Extensions</option>
+              <option value="nail-art">Nail Art</option>
               <option value="combo">Combo</option>
               <option value="other">Other</option>
             </select>

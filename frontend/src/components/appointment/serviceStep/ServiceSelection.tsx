@@ -1,9 +1,9 @@
-import { useBarberServices } from "@/hooks/useBarbers";
-import type { PublicService } from "@/types/barber.types";
+import { useTechnicianServices } from "@/hooks/useTechnicians";
+import type { PublicService } from "@/types/technician.types";
 import "./_serviceSelection.scss";
 
 interface ServiceSelectionProps {
-  barberId?: string;
+  technicianId?: string;
   onSelect: (service: {
     _id: string;
     name: string;
@@ -12,12 +12,12 @@ interface ServiceSelectionProps {
   }) => void;
 }
 
-const ServiceSelection = ({ barberId, onSelect }: ServiceSelectionProps) => {
-  const { data: services, isLoading } = useBarberServices(barberId);
+const ServiceSelection = ({ technicianId, onSelect }: ServiceSelectionProps) => {
+  const { data: services, isLoading } = useTechnicianServices(technicianId);
 
   if (isLoading) return <div className="service-selection">Loading services...</div>;
-  if (!barberId) return <div className="service-selection">Select a barber first.</div>;
-  if (!services?.length) return <div className="service-selection">No services for this barber.</div>;
+  if (!technicianId) return <div className="service-selection">Select a technician first.</div>;
+  if (!services?.length) return <div className="service-selection">No services for this technician.</div>;
 
   const handleServiceClick = (service: PublicService) => {
     onSelect({

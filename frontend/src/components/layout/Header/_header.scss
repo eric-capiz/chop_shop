@@ -9,8 +9,8 @@
   height: $header-height;
   display: flex;
   align-items: center;
-  background: rgba($black-primary, 0.95);
-  border-bottom: 1px solid rgba($gold-primary, 0.1);
+  background: rgba($text-primary, 0.95);
+  border-bottom: 1px solid rgba($rose-primary, 0.1);
 }
 
 .header-content {
@@ -25,7 +25,7 @@
 
 .logo {
   font-family: $font-primary;
-  color: $gold-primary;
+  color: $rose-primary;
   font-size: 1.2rem;
   font-weight: 700;
 }
@@ -36,7 +36,7 @@
   justify-content: center;
   background: none;
   border: none;
-  color: $gold-primary;
+  color: $rose-primary;
   cursor: pointer;
   padding: 0.5rem;
   z-index: 101;
@@ -48,7 +48,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: $black-primary;
+  background:$cream-primary;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -68,7 +68,7 @@
   transition: color 0.3s ease;
 
   &:hover {
-    color: $gold-primary;
+    color: $rose-primary;
   }
 }
 
@@ -79,7 +79,7 @@
   margin-top: 2rem;
 
   .username {
-    color: $gold-primary;
+    color: $rose-primary;
     font-size: 1rem;
     display: flex;
     align-items: center;
@@ -88,22 +88,22 @@
 
   .auth-link {
     padding: 0.5rem 1.5rem;
-    border: 1px solid $gold-primary;
+    border: 1px solid $rose-primary;
     border-radius: 4px;
     cursor: pointer;
 
     &.signup {
-      background: $gold-primary;
-      color: $black-primary;
+      background: $rose-primary;
+      color: $text-primary;
 
       &:hover {
-        background: $gold-dark;
-        border-color: $gold-dark;
+        background: $rose-dark;
+        border-color: $rose-dark;
       }
     }
     &.login,
     &.logout {
-      background: $black-primary;
+      background:$cream-primary;
     }
   }
 
@@ -111,7 +111,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    color: $gold-primary;
+    color: $rose-primary;
     transition: color 0.3s ease;
 
     .profile-icon {
@@ -119,7 +119,7 @@
     }
 
     &:hover {
-      color: $gold-light;
+      color: $rose-light;
     }
 
     @media (max-width: 768px) {
@@ -159,7 +159,7 @@
   gap: 1rem;
 
   .username {
-    color: $gold-primary;
+    color: $rose-primary;
     font-size: 0.9rem;
   }
 }
