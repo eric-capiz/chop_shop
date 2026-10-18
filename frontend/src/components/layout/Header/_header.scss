@@ -63,9 +63,10 @@
 }
 
 .nav-link {
-  color: $silver-primary;
+  color: $text-primary;
   font-size: 1.2rem;
   transition: color 0.3s ease;
+  font-weight: 500;
 
   &:hover {
     color: $rose-primary;
@@ -144,6 +145,11 @@
 
   .nav-link {
     font-size: 1rem;
+    color: $cream-primary;
+
+    &:hover {
+      color: $rose-light;
+    }
   }
 
   .auth-links {
