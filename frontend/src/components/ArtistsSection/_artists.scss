@@ -1,0 +1,81 @@
+@use "@styles/variables" as *;
+
+.luxe-artists {
+  background: linear-gradient(180deg, $blush-pale 0%, $cream-primary 100%);
+  padding: 3.5rem 1.25rem;
+}
+
+.luxe-artists-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.luxe-artist-card {
+  text-decoration: none;
+  text-align: center;
+  background: $white;
+  border-radius: 1.5rem;
+  padding: 1.5rem 1.25rem 1.75rem;
+  box-shadow: 0 8px 28px rgba($rose-dark, 0.1);
+  transition: transform 0.2s ease;
+  display: block;
+}
+
+.luxe-artist-card:active {
+  transform: scale(0.98);
+}
+
+.luxe-artist-img {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid $blush-light;
+}
+
+.luxe-artist-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.luxe-artist-card h3 {
+  font-family: $font-primary;
+  font-size: 1.25rem;
+  color: $text-primary;
+  margin: 0 0 0.25rem;
+}
+
+.luxe-artist-title {
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: $rose-primary;
+  margin: 0 0 0.5rem;
+  font-weight: 600;
+}
+
+.luxe-artist-specs {
+  font-size: 0.88rem;
+  color: $text-secondary;
+  margin: 0;
+}
+
+@media (min-width: 720px) {
+  .luxe-artists {
+    padding: 5rem 2rem;
+  }
+
+  .luxe-artists-row {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .luxe-artist-card:hover {
+    transform: translateY(-4px);
+  }
+}

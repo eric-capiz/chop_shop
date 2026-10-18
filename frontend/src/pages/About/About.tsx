@@ -1,50 +1,58 @@
 import { Link } from "react-router-dom";
-import { useTechniciansList } from "@/hooks/useTechnicians";
+import { artists } from "@/data/artists";
 import "./_about.scss";
 
 const About = () => {
-  const { data: technicians, isLoading, error } = useTechniciansList();
-
-  if (isLoading) return <div className="about">Loading technicians...</div>;
-  if (error) return <div className="about">Failed to load technicians.</div>;
-  if (!technicians?.length) return <div className="about">No technicians yet.</div>;
-
   return (
     <div className="about">
-      <section className="about-header">
-        <h1>Meet Our Nail Technicians</h1>
-        <p>Expert stylists ready to give you the perfect look</p>
+      <section className="about-hero">
+        <div className="about-hero-inner">
+          <span className="luxe-eyebrow">Our Story</span>
+          <h1>
+            A studio built for <em>the love of nails</em>
+          </h1>
+          <p>
+            Luxe Nails began with a simple belief: a nail appointment
+            should feel like a retreat, not a rush job. Our artists
+            train in the latest techniques — from Japanese gel to
+            hand-painted art — and every service starts with the health
+            of your natural nails.
+          </p>
+        </div>
+        <div className="about-hero-img">
+          <img src="https://images.unsplash.com/photo-1600948836101-f9ffda59d250?w=800&q=80" alt="Inside the Luxe Nails studio" />
+        </div>
       </section>
 
-      <section className="technicians-grid">
-        {technicians.map((technician) => (
-          <Link
-            to={`/technician/${technician._id}`}
-            key={technician._id}
-            className="technician-card"
-          >
-            <div className="technician-image">
-              <img
-                src={technician.profileImage?.url || ""}
-                alt={technician.name}
-              />
-            </div>
-            <div className="technician-info">
-              <h3>{technician.name}</h3>
-              <p className="specialty">
-                {technician.specialties?.[0] ?? "Technician"}
-              </p>
-              <p className="experience">
-                {technician.yearsOfExperience ?? 0} years experience
-              </p>
-              <p className="bio-preview">
-                {(technician.bio || "").substring(0, 120)}
-                {(technician.bio?.length ?? 0) > 120 ? "..." : ""}
-              </p>
-              <span className="view-profile">View Profile</span>
-            </div>
-          </Link>
-        ))}
+      <section className="about-artists">
+        <div className="luxe-section-inner">
+          <span className="luxe-eyebrow luxe-eyebrow-center">The Team</span>
+          <h2>
+            Meet our <em>nail artists</em>
+          </h2>
+          <div className="about-artists-grid">
+            {artists.map((artist) => (
+              <Link
+                to={`/technician/${artist.id}`}
+                key={artist.id}
+                className="about-artist-card"
+              >
+                <div className="about-artist-img">
+                  <img src={artist.image} alt={artist.name} loading="lazy" />
+                </div>
+                <h3>{artist.name}</h3>
+                <p className="about-artist-title">{artist.title}</p>
+                <p className="about-artist-exp">
+                  {artist.yearsOfExperience} years of experience
+                </p>
+                <p className="about-artist-bio">
+                  {artist.bio.substring(0, 140)}...
+                </p>
+                <span className="about-artist-link">View profile →</span>
+              </Link>
+            ))}
+          </div>
+        </div>
       </section>
     </div>
   );

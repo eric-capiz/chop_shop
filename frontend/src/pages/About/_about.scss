@@ -1,126 +1,166 @@
 @use "@styles/variables" as *;
 
 .about {
-  width: 100%;
-  max-width: 1200px;
+  background: $cream-primary;
+}
+
+.about-hero {
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 3rem 1.25rem 2.5rem;
+  display: grid;
+  gap: 2rem;
+  align-items: center;
+}
 
-  // Header Section
-  .about-header {
-    text-align: center;
-    margin-bottom: 3rem;
+.about-hero-inner .luxe-eyebrow {
+  margin-bottom: 1rem;
+}
 
-    h1 {
-      color: $rose-primary;
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-    }
+.about-hero h1 {
+  font-family: $font-primary;
+  font-size: 2.4rem;
+  line-height: 1.12;
+  color: $text-primary;
+  margin: 0 0 1rem;
+  font-weight: 600;
 
-    p {
-      color: rgba($silver-primary, 0.8);
-      font-size: 1.1rem;
-    }
+  em {
+    font-style: italic;
+    color: $rose-primary;
+  }
+}
+
+.about-hero p {
+  font-size: 1.02rem;
+  line-height: 1.7;
+  color: $text-secondary;
+  margin: 0;
+  max-width: 34rem;
+}
+
+.about-hero-img img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 1.5rem;
+  box-shadow: 0 20px 50px rgba($rose-dark, 0.18);
+  display: block;
+}
+
+.about-artists {
+  background: $white;
+  padding: 3.5rem 1.25rem;
+}
+
+.about-artists h2 {
+  font-family: $font-primary;
+  font-size: 2rem;
+  text-align: center;
+  color: $text-primary;
+  margin: 0 0 2rem;
+  font-weight: 600;
+
+  em {
+    font-style: italic;
+    color: $rose-primary;
+  }
+}
+
+.about-artists-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.about-artist-card {
+  text-decoration: none;
+  background: $cream-primary;
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 6px 24px rgba($rose-dark, 0.07);
+  transition: transform 0.2s ease;
+  display: block;
+}
+
+.about-artist-card:active {
+  transform: scale(0.98);
+}
+
+.about-artist-img {
+  width: 110px;
+  height: 110px;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid $blush-light;
+}
+
+.about-artist-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.about-artist-card h3 {
+  font-family: $font-primary;
+  font-size: 1.2rem;
+  color: $text-primary;
+  margin: 0 0 0.2rem;
+}
+
+.about-artist-title {
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: $rose-primary;
+  font-weight: 600;
+  margin: 0 0 0.3rem;
+}
+
+.about-artist-exp {
+  font-size: 0.85rem;
+  color: $text-muted;
+  margin: 0 0 0.7rem;
+}
+
+.about-artist-bio {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: $text-secondary;
+  margin: 0 0 0.9rem;
+}
+
+.about-artist-link {
+  color: $rose-dark;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+@media (min-width: 720px) {
+  .about-hero {
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    padding: 4.5rem 2rem 4rem;
   }
 
-  // Barbers Grid
-  .technicians-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 2rem;
+  .about-hero h1 {
+    font-size: 3rem;
   }
 
-  // Barber Card
-  .technician-card {
-    background: rgba($black-secondary, 0.6);
-    border-radius: 12px;
-    border: 1px solid rgba($rose-primary, 0.2);
-    overflow: hidden;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    display: flex;
-    flex-direction: column;
-
-    &:hover {
-      border-color: $rose-primary;
-      transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba($rose-primary, 0.15);
-
-      .technician-image img {
-        transform: scale(1.05);
-      }
-
-      .view-profile {
-        color: $rose-primary;
-      }
-    }
-
-    .technician-image {
-      width: 100%;
-      height: 280px;
-      overflow: hidden;
-
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.3s ease;
-      }
-    }
-
-    .technician-info {
-      padding: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-
-      h3 {
-        color: $rose-primary;
-        font-size: 1.4rem;
-        margin-bottom: 0.5rem;
-      }
-
-      .specialty {
-        color: $silver-primary;
-        font-size: 1rem;
-        margin-bottom: 0.25rem;
-      }
-
-      .experience {
-        color: rgba($silver-primary, 0.7);
-        font-size: 0.9rem;
-        margin-bottom: 1rem;
-      }
-
-      .bio-preview {
-        color: rgba($silver-primary, 0.8);
-        font-size: 0.95rem;
-        line-height: 1.6;
-        flex-grow: 1;
-        margin-bottom: 1rem;
-      }
-
-      .view-profile {
-        color: rgba($rose-primary, 0.8);
-        font-size: 0.95rem;
-        font-weight: 500;
-        transition: color 0.3s ease;
-        align-self: flex-start;
-      }
-    }
+  .about-artists {
+    padding: 5rem 2rem;
   }
 
-  @media (max-width: 768px) {
-    padding: 1rem;
+  .about-artists-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 
-    .about-header {
-      h1 {
-        font-size: 2rem;
-      }
-    }
-
-    .technicians-grid {
-      grid-template-columns: 1fr;
-    }
+  .about-artist-card:hover {
+    transform: translateY(-4px);
   }
 }

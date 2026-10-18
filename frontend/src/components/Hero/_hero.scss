@@ -1,95 +1,151 @@
 @use "@styles/variables" as *;
 
-.hero {
-  height: 100%;
-  background-image: url("/images/hero/hero.jpg");
-  background-size: cover;
-  background-position: center;
+.luxe-hero {
+  background: linear-gradient(180deg, $cream-primary 0%, $blush-pale 100%);
+  padding: 3rem 1.25rem 2.5rem;
+  overflow: hidden;
+}
+
+.luxe-hero-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  gap: 2rem;
+  align-items: center;
+}
+
+.luxe-eyebrow {
+  display: inline-block;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: $rose-dark;
+  border: 1px solid $rose-light;
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  margin-bottom: 1rem;
+  background: rgba($white, 0.6);
+}
+
+.luxe-hero-copy h1 {
+  font-family: $font-primary;
+  font-size: 2.6rem;
+  line-height: 1.08;
+  color: $text-primary;
+  margin: 0 0 1rem;
+  font-weight: 600;
+
+  em {
+    font-style: italic;
+    color: $rose-primary;
+  }
+}
+
+.luxe-lede {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: $text-secondary;
+  margin: 0 0 1.75rem;
+  max-width: 34rem;
+}
+
+.luxe-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  margin-bottom: 1.25rem;
+}
+
+.luxe-btn {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 0.85rem 1.7rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.luxe-btn-primary {
+  background: $rose-primary;
+  color: $white;
+  box-shadow: 0 8px 20px rgba($rose-primary, 0.35);
+}
+
+.luxe-btn-primary:active {
+  transform: scale(0.97);
+}
+
+.luxe-btn-ghost {
+  border: 1.5px solid $rose-primary;
+  color: $rose-dark;
+  background: transparent;
+}
+
+.luxe-hero-meta {
+  font-size: 0.85rem;
+  color: $text-muted;
+}
+
+.luxe-hero-media {
   position: relative;
+  justify-self: center;
+  width: 100%;
+  max-width: 380px;
+}
 
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba($text-primary, 0.5);
+.luxe-hero-media img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 1.75rem 1.75rem 1.75rem 0.35rem;
+  box-shadow: 0 24px 60px rgba($rose-dark, 0.25);
+  display: block;
+}
+
+.luxe-hero-badge {
+  position: absolute;
+  left: -1rem;
+  bottom: 1.5rem;
+  background: $white;
+  border-radius: 1rem;
+  padding: 0.7rem 1.1rem;
+  box-shadow: 0 12px 30px rgba($text-primary, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.luxe-hero-badge-num {
+  font-family: $font-primary;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $rose-primary;
+}
+
+.luxe-hero-badge-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $text-muted;
+}
+
+@media (min-width: 768px) {
+  .luxe-hero {
+    padding: 4.5rem 2rem 4rem;
   }
 
-  .hero-content {
-    position: relative;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 2rem;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    @media (max-width: 1023px) {
-      justify-content: center;
-    }
+  .luxe-hero-inner {
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 3rem;
   }
 
-  .hero-text {
-    color: $silver-primary;
-    max-width: 600px;
-    padding-top: 120px;
-    padding-left: 4rem;
-    font-family: $font-primary;
-
-    h1 {
-      font-size: 3.5rem;
-      margin-bottom: 1rem;
-      font-weight: 600;
-      color: $rose-primary;
-    }
-
-    p {
-      font-size: 1.5rem;
-      margin-bottom: 2rem;
-      opacity: 0.9;
-      letter-spacing: 1px;
-      font-family: $font-secondary;
-    }
-
-    .book-button {
-      padding: 1rem 2.5rem;
-      font-size: 1.2rem;
-
-      background: $rose-dark;
-      color: $text-primary;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-family: $font-secondary;
-
-      &:hover {
-        background:$cream-primary;
-        color: $silver-primary;
-      }
-    }
-
-    @media (max-width: 1023px) {
-      text-align: center;
-      padding-left: 0;
-      max-width: 100%;
-    }
+  .luxe-hero-copy h1 {
+    font-size: 3.6rem;
   }
 
-  @media (max-width: 768px) {
-    .hero-text {
-      text-align: center;
-      padding-left: 0;
-
-      h1 {
-        font-size: 2.5rem;
-      }
-
-      p {
-        font-size: 1.2rem;
-      }
-    }
+  .luxe-hero-media {
+    max-width: 420px;
+    justify-self: end;
   }
 }

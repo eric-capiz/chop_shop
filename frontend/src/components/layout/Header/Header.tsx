@@ -57,7 +57,7 @@ const Header = () => {
               onClick={() => setIsMenuOpen(false)}
               className="nav-link"
             >
-              Our Technicians
+              Our Nail Artists
             </Link>
             <Link
               to="/our-work"

@@ -1,171 +1,90 @@
-import { useParams, useNavigate } from "react-router-dom";
-import {
-  useTechnicianById,
-  useTechnicianServices,
-  useTechnicianGallery,
-} from "@/hooks/useTechnicians";
-import { useAuthStore } from "@/store/authStore";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { artists } from "@/data/artists";
+import { services } from "@/data/services";
+import { galleryImages } from "@/data/gallery";
 import "./_technicianProfile.scss";
 
 const TechnicianProfile = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
-  const isAdmin = useAuthStore((s) => s.isAdmin);
-  const canBook = isAuthenticated && !isAdmin;
 
-  const { data: technician, isLoading, error } = useTechnicianById(id);
-  const { data: services = [] } = useTechnicianServices(id);
-  const { data: gallery = [] } = useTechnicianGallery(id);
+  const artist = artists.find((a) => a.id === id);
 
-  if (isLoading) return <div className="technician-profile">Loading...</div>;
-  if (error || !technician) {
+  if (!artist) {
     return (
-      <div className="technician-profile">
-        <div className="not-found">
-          <h2>Technician not found</h2>
-          <button onClick={() => navigate("/about")}>View All Technicians</button>
+      <div className="luxe-artist-profile">
+        <div className="luxe-section-inner luxe-center">
+          <h2>Artist not found</h2>
+          <button
+            className="luxe-btn luxe-btn-primary"
+            onClick={() => navigate("/about")}
+          >
+            View All Nail Artists
+          </button>
         </div>
       </div>
     );
   }
 
-  const profileImageUrl = technician.profileImage?.url || "";
-  const socialMedia = technician.socialMedia || {
-    instagram: "",
-    facebook: "",
-    twitter: "",
-  };
-
-  const handleBookNow = () => {
-    navigate(`/book?technician=${technician._id}`);
-  };
+  const artistServices = services.slice(0, 4);
 
   return (
-    <div className="technician-profile">
-      <section className="profile-hero">
-        <div className="profile-image">
-          <img src={profileImageUrl} alt={technician.name} />
+    <div className="luxe-artist-profile">
+      <section className="luxe-artist-hero">
+        <div className="luxe-artist-hero-img">
+          <img src={artist.image} alt={artist.name} />
         </div>
-        <div className="profile-intro">
-          <h1>{technician.name}</h1>
-          <p className="experience">
-            {technician.yearsOfExperience ?? 0} Years of Experience
+        <div className="luxe-artist-hero-copy">
+          <span className="luxe-eyebrow">{artist.title}</span>
+          <h1>{artist.name}</h1>
+          <p className="luxe-artist-exp">
+            {artist.yearsOfExperience} years of artistry
           </p>
-          <div className="specialties">
-            {(technician.specialties || []).map((specialty, index) => (
-              <span key={index} className="specialty-tag">
-                {specialty}
+          <div className="luxe-artist-specs">
+            {artist.specialties.map((s) => (
+              <span key={s} className="luxe-spec-tag">
+                {s}
               </span>
             ))}
           </div>
-          {canBook && (
-            <button className="book-cta" onClick={handleBookNow}>
-              Book Me
-            </button>
-          )}
+          <p className="luxe-artist-bio">{artist.bio}</p>
+          <Link to="/book" className="luxe-btn luxe-btn-primary">
+            Book with {artist.name.split(" ")[0]}
+          </Link>
         </div>
       </section>
 
-      {technician.bio && (
-        <section className="profile-bio">
-          <h2>About Me</h2>
-          <p>{technician.bio}</p>
-        </section>
-      )}
-
-      <section className="profile-gallery">
-        <h2>My Work</h2>
-        <div className="gallery-grid">
-          {gallery.map((item) => (
-            <div key={item._id} className="gallery-item">
-              <div className="gallery-item-image">
-                <img src={item.image?.url || ""} alt={item.description || ""} />
+      <section className="luxe-artist-services">
+        <div className="luxe-section-inner">
+          <h2>
+            Signature <em>services</em>
+          </h2>
+          <div className="luxe-mini-services">
+            {artistServices.map((s) => (
+              <div key={s.id} className="luxe-mini-service">
+                <div>
+                  <h4>{s.name}</h4>
+                  <span>{s.durationMin} min</span>
+                </div>
+                <span className="luxe-mini-price">${s.price}</span>
               </div>
-              <div className="gallery-item-info">
-                <p>{item.description || ""}</p>
-                {item.tags?.length ? (
-                  <div className="gallery-item-tags">
-                    {item.tags.map((tag, i) => (
-                      <span key={i} className="tag">#{tag}</span>
-                    ))}
-                  </div>
-                ) : null}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="profile-services">
-        <h2>Services & Pricing</h2>
-        <div className="services-grid">
-          {services.map((service) => (
-            <div key={service._id} className="service-card">
-              <div className="service-header">
-                <h3>{service.name}</h3>
-                <span className="price">${service.price}</span>
-              </div>
-              {service.description && <p>{service.description}</p>}
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {(socialMedia.instagram || socialMedia.facebook || socialMedia.twitter) && (
-        <section className="profile-social">
-          <h2>Follow Me</h2>
-          <div className="social-links">
-            {socialMedia.instagram && (
-              <a
-                href={
-                  socialMedia.instagram.startsWith("http")
-                    ? socialMedia.instagram
-                    : `https://instagram.com/${socialMedia.instagram.replace("@", "")}`
-                }
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {socialMedia.instagram}
-              </a>
-            )}
-            {socialMedia.facebook && (
-              <a
-                href={
-                  socialMedia.facebook.startsWith("http")
-                    ? socialMedia.facebook
-                    : `https://facebook.com/${socialMedia.facebook}`
-                }
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {socialMedia.facebook}
-              </a>
-            )}
-            {socialMedia.twitter && (
-              <a
-                href={
-                  socialMedia.twitter.startsWith("http")
-                    ? socialMedia.twitter
-                    : `https://twitter.com/${socialMedia.twitter.replace("@", "")}`
-                }
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {socialMedia.twitter}
-              </a>
-            )}
+            ))}
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
-      {canBook && (
-        <section className="profile-cta">
-          <button className="book-cta-large" onClick={handleBookNow}>
-            Book an Appointment with {technician.name.split(" ")[0]}
-          </button>
-        </section>
-      )}
+      <section className="luxe-artist-work">
+        <div className="luxe-section-inner">
+          <h2>
+            Recent <em>work</em>
+          </h2>
+          <div className="luxe-artist-work-grid">
+            {galleryImages.slice(0, 4).map((g) => (
+              <img key={g.id} src={g.src} alt={g.alt} loading="lazy" />
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 };

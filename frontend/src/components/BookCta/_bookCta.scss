@@ -1,0 +1,54 @@
+@use "@styles/variables" as *;
+
+.luxe-book-cta {
+  background: linear-gradient(135deg, $rose-primary 0%, $rose-dark 60%, $text-primary 130%);
+  padding: 4rem 1.25rem;
+  text-align: center;
+}
+
+.luxe-book-cta-inner {
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.luxe-eyebrow-light {
+  color: $blush-pale;
+  border-color: rgba($white, 0.4);
+  background: rgba($white, 0.12);
+}
+
+.luxe-book-cta h2 {
+  font-family: $font-primary;
+  font-size: 2rem;
+  color: $white;
+  margin: 1rem 0 0.75rem;
+  font-weight: 600;
+  line-height: 1.2;
+
+  em {
+    font-style: italic;
+    color: $gold-pale;
+  }
+}
+
+.luxe-book-cta p {
+  color: rgba($white, 0.85);
+  line-height: 1.65;
+  margin: 0 0 1.75rem;
+}
+
+.luxe-btn-light {
+  background: $white;
+  color: $rose-dark;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.2);
+}
+
+@media (min-width: 768px) {
+  .luxe-book-cta {
+    padding: 5.5rem 2rem;
+  }
+
+  .luxe-book-cta h2 {
+    font-size: 2.8rem;
+  }
+}
