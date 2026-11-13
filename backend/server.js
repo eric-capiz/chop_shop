@@ -19,12 +19,13 @@ require("dotenv").config();
 
 const app = express();
 
-// CORS configuration - allows localhost and Vercel deployments (*.vercel.app)
+// CORS configuration - allows localhost, Vercel deployments (*.vercel.app) and Surge deployments (*.surge.sh)
 const isAllowedOrigin = (origin) => {
   if (!origin) return true;
   if (origin === "http://localhost:5173" || origin === "http://localhost:3000")
     return true;
   if (origin.endsWith(".vercel.app")) return true;
+  if (origin.endsWith(".surge.sh")) return true;
   return false;
 };
 
